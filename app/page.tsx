@@ -30,17 +30,19 @@ const Icons = {
 };
 
 const fourfoldGospel = [
-  { id: 1, icon: Icons.Regeneration, title: '중생', en: 'Regeneration', bg: 'bg-red-50', text: 'text-red-700', hoverBg: 'group-hover:bg-red-700', desc: '죄인이 예수를 믿어 영적으로 새로운 생명을 얻는 변화 (예 = 요 3:3)' },
-  { id: 2, icon: Icons.Sanctification, title: '성결', en: 'Sanctification', bg: 'bg-slate-100', text: 'text-slate-700', hoverBg: 'group-hover:bg-slate-700', desc: '그리스도의 보혈로 마음이 정결케 되고 성령의 세례를 받는 은혜 (예 = 살전 5:23)' },
-  { id: 3, icon: Icons.DivineHealing, title: '신유', en: 'Divine Healing', bg: 'bg-yellow-50', text: 'text-yellow-700', hoverBg: 'group-hover:bg-yellow-700', desc: '하나님의 능력이 믿음을 통해 병든 몸을 고치시는 육체적 구원 (예 = 약 5:15)' },
-  { id: 4, icon: Icons.SecondComing, title: '재림', en: 'Second Coming', bg: 'bg-blue-50', text: 'text-blue-700', hoverBg: 'group-hover:bg-blue-700', desc: '부활하신 예수께서 다시 오셔서 세상을 심판하시는 소망의 완성 (예 = 행 1:11)' },
+  { id: 1, icon: Icons.Regeneration, title: '중생', bg: 'bg-red-50', text: 'text-red-700', desc: '죄인이 예수를 믿어 영적으로 새로운 생명을 얻는 변화 (예 = 요 3:3)' },
+  { id: 2, icon: Icons.Sanctification, title: '성결', bg: 'bg-slate-100', text: 'text-slate-700', desc: '그리스도의 보혈로 마음이 정결케 되고 성령의 세례를 받는 은혜 (예 = 살전 5:23)' },
+  { id: 3, icon: Icons.DivineHealing, title: '신유', bg: 'bg-yellow-50', text: 'text-yellow-700', desc: '하나님의 능력이 믿음을 통해 병든 몸을 고치시는 육체적 구원 (예 = 약 5:15)' },
+  { id: 4, icon: Icons.SecondComing, title: '재림', bg: 'bg-blue-50', text: 'text-blue-700', desc: '부활하신 예수께서 다시 오셔서 세상을 심판하시는 소망의 완성 (예 = 행 1:11)' },
 ];
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const [leftIndex, setLeftIndex] = useState(0);
   const [rightIndex, setRightIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const leftFigures = [
     { name: '이명직 목사', title: '성결교회의 사부', img: '/leemyungjikleft.png' },
@@ -49,12 +51,13 @@ export default function Home() {
 
   const rightFigures = [
     { name: '마틴 냅 목사', title: '성결의 불꽃', img: '/knappright.png' },
-    { name: '찰스 카우만, 레티 카우만 선교사 부부', title: '동양선교회 창립자', img: '/lettiecowmanright.png' }
+    { name: '찰스 카우만 선교사 부부', title: '동양선교회 창립자', img: '/lettiecowmanright.png' }
   ];
 
   useEffect(() => { 
     setIsLoaded(true); 
     fetchLatestPosts();
+    fetchActivities();
     const timer = setInterval(() => {
       setLeftIndex((prev) => (prev + 1) % leftFigures.length);
       setRightIndex((prev) => (prev + 1) % rightFigures.length);
@@ -63,8 +66,17 @@ export default function Home() {
   }, []);
 
   const fetchLatestPosts = async () => {
-    const { data } = await supabase.from('archive').select('*').order('created_at', { ascending: false }).limit(5);
+    const { data } = await supabase.from('archive').select('*').order('created_at', { ascending: false }).limit(8);
     if (data) setPosts(data);
+  };
+
+  const fetchActivities = async () => {
+    const { data } = await supabase
+      .from('Activity')
+      .select('id, title, image_url, created_at')
+      .order('created_at', { ascending: false })
+      .limit(8);
+    if (data) setActivities(data);
   };
 
   return (
@@ -98,38 +110,42 @@ export default function Home() {
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 */}
+      {/* 1. 히어로 섹션 (GIFT 주황색 포인트 복구됨) */}
       <section className="relative z-30 flex h-[85vh] items-center justify-center bg-gradient-to-br from-emerald-100/90 via-emerald-50/40 to-emerald-100/80 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle,rgba(251,191,36,0.1)_0%,transparent_65%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
-        <div className="hidden lg:block absolute left-4 xl:left-12 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
-          <div key={`left-${leftIndex}`} className="animate-figure-majestic-left">
-            <div className="relative"><img src={leftFigures[leftIndex].img} alt={leftFigures[leftIndex].name} className="relative w-full h-auto object-contain drop-shadow-xl sepia-[.10]" /></div>
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter opacity-90 drop-shadow-md">{leftFigures[leftIndex].title} <br/><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
+        <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
+          <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
+            <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{leftFigures[leftIndex].title}<br/><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-600 bg-emerald-100/60 rounded-full animate-fadeInUp">THE GOOD NEWS</span>
           <h1 className="text-6xl font-black tracking-tighter text-slate-900 md:text-8xl leading-[1.1] animate-fadeInUp">성결의 빛, <br/><span className="text-glory drop-shadow-sm">온 누리에</span></h1>
-          <p className="mt-8 text-sm md:text-lg font-bold text-slate-500 tracking-wide animate-fadeInUp uppercase leading-relaxed" style={{ animationDelay: '0.2s' }}>
-            <span className="text-[#f68d2e] text-xl md:text-2xl">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl">I</span>nstitute for the <br className="hidden md:block" /><span className="text-[#f68d2e] text-xl md:text-2xl">F</span>ourfold-gospel <span className="text-[#f68d2e] text-xl md:text-2xl">T</span>heology
+          
+          {/* 주황색 포인트 텍스트 부분 */}
+          <p className="mt-8 text-sm md:text-lg font-bold text-slate-500 tracking-wide animate-fadeInUp uppercase leading-relaxed">
+            <span className="text-[#f68d2e] text-xl md:text-2xl">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl">I</span>nstitute for the <br className="hidden md:block" />
+            <span className="text-[#f68d2e] text-xl md:text-2xl">F</span>ourfold-gospel <span className="text-[#f68d2e] text-xl md:text-2xl">T</span>heology
           </p>
-          <div className="mt-12 animate-fadeInUp" style={{ animationDelay: '0.4s' }}><Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white transition-all hover:bg-emerald-600 hover:scale-105 shadow-[0_20px_40px_rgba(16,185,129,0.25)]">연구소 자료실 바로가기</Link></div>
+
+          <div className="mt-12 animate-fadeInUp"><Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-xl transition-all">연구소 자료실 바로가기</Link></div>
         </div>
-        <div className="hidden lg:block absolute right-4 xl:right-12 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
-          <div key={`right-${rightIndex}`} className="animate-figure-majestic-right">
-            <div className="relative"><img src={rightFigures[rightIndex].img} alt={rightFigures[rightIndex].name} className="relative w-full h-auto object-contain drop-shadow-xl sepia-[.10]" /></div>
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter opacity-90 drop-shadow-md">{rightFigures[rightIndex].title} <br/><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
+        <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
+          <div key={`right-${rightIndex}`} className="animate-figure-majestic-right text-center">
+            <img src={rightFigures[rightIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{rightFigures[rightIndex].title}<br/><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
           </div>
         </div>
       </section>
 
-      {/* 2. 북 섹션 (슬레이트 배경 + 보강된 텍스트 및 정렬) */}
-      <section className="relative z-20 bg-slate-800 py-32 px-8 overflow-hidden shadow-inner">
+   {/* 2. 북 섹션 (슬레이트 배경 + 보강된 텍스트 및 정렬) */}
+   <section className="relative z-20 bg-slate-800 py-32 px-8 overflow-hidden shadow-inner">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,rgba(16,185,129,0.1),transparent_50%)] pointer-events-none"></div>
         <div className="mx-auto max-w-[1300px] relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
-              <div className="relative w-full max-w-[400px] flex justify-center items-center flex-col">
+              <div className="relative w-full max-w-[550px] flex justify-center items-center flex-col">
                 <img src="/holyjumpers3d.png" alt="Holy Jumpers 3D" className="w-full h-auto object-contain animate-book-float drop-shadow-[0_40px_70px_rgba(0,0,0,0.6)] relative z-10" />
                 <div className="absolute -bottom-10 w-[60%] h-6 bg-black/40 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
               </div>
@@ -153,44 +169,141 @@ export default function Home() {
       </section>
 
       {/* 3. 사중복음 섹션 */}
-      <section className="relative z-10 bg-[#faf7f2] py-32 px-8 shadow-[0_20px_50px_rgba(0,0,0,0.03)] text-center">
-        <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-20">사중복음의 은혜 <br/><span className="text-lg font-medium text-emerald-600 uppercase tracking-[0.3em]">Grace of Fourfold Gospel</span></h2>
-        <div className="mx-auto max-w-[1300px] grid gap-8 md:grid-cols-2 lg:grid-cols-4 text-left">
+      <section className="bg-[#faf7f2] py-32 px-8 text-center w-full">
+        <h2 className="text-4xl font-black text-slate-900 mb-20 tracking-tighter">사중복음의 은혜</h2>
+        <div className="mx-auto max-w-[1200px] grid gap-8 md:grid-cols-2 lg:grid-cols-4 text-left">
           {fourfoldGospel.map((item) => (
-            <div key={item.id} className="group relative rounded-[2.5rem] bg-white border border-slate-100/50 p-10 transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_30px_60px_rgba(0,0,0,0.06)] shadow-sm">
-              <div className={`mb-10 flex h-20 w-20 items-center justify-center rounded-3xl ${item.bg} ${item.text} group-hover:scale-110 transition-transform duration-500`}><item.icon /></div>
+            <div key={item.title} className="bg-white p-10 rounded-[2.5rem] shadow-sm hover:-translate-y-2 transition-all">
+              <div className={`mb-10 flex h-20 w-20 items-center justify-center rounded-3xl ${item.bg} ${item.text}`}><item.icon /></div>
               <h3 className="text-2xl font-black text-slate-900">{item.title}</h3>
-              <p className="mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{item.en}</p>
-              <p className="mt-8 text-[15px] leading-relaxed text-slate-500 font-medium group-hover:text-slate-700 transition-colors">{item.desc}</p>
+              <p className="mt-8 text-slate-500 font-medium leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 4. 자료실 섹션 (Supabase 연동 로직 포함 복구) */}
-      <section className="bg-gradient-to-br from-slate-50 via-emerald-50/30 to-slate-100 py-32 px-8 relative">
+      {/* 4. 활동 갤러리 섹션 */}
+      <section className="py-32 bg-white px-8 border-t border-slate-100 w-full text-left">
         <div className="mx-auto max-w-[1200px]">
-          <div className="bg-white/60 backdrop-blur-2xl rounded-[3rem] p-10 md:p-16 shadow-[0_30px_80px_rgba(0,0,0,0.05)] border border-white/60 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-[#f68d2e]"></div>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter">연구소 자료실</h2>
-              <p className="mt-2 text-sm font-bold text-emerald-600 uppercase tracking-[0.3em]">Latest Archives</p>
-              <div className="mt-4"><Link href="/archive" className="text-sm font-black text-emerald-500 border-b-2 border-emerald-500/20 hover:border-emerald-500">전체보기 →</Link></div>
-            </div>
+          <h2 className="text-4xl font-black text-slate-900 mb-16 tracking-tighter">최근 활동 갤러리</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {activities.length > 0 ? (
+              activities.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => item.image_url && setSelectedImage(item.image_url)}
+                  className="group rounded-2xl overflow-hidden bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="aspect-[4/3] overflow-hidden bg-slate-200">
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.title || '활동 이미지'}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-400">
+                        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <p className="text-base font-bold text-slate-800 line-clamp-2">{item.title || '제목 없음'}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full py-20 text-center text-slate-400 font-medium">등록된 활동이 없습니다.</div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. 자료실 섹션 */}
+      <section className="bg-slate-50 py-32 px-10 w-full text-left">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="bg-white rounded-[3rem] p-10 md:p-16 shadow-xl border border-white/60">
+            <h2 className="text-4xl font-black text-slate-900 text-center mb-16 tracking-tighter">연구소 자료실</h2>
             <div className="flex flex-col gap-2">
               {posts.map((post) => (
-                <Link href={`/archive/${post.id}`} key={post.id} className="group bg-white/50 backdrop-blur-sm rounded-2xl p-4 flex items-center justify-between hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-emerald-100/50">
-                  <div className="flex items-center gap-6 w-full">
-                    <span className="w-24 px-3 py-1.5 rounded-full bg-emerald-100/40 text-emerald-700 font-black text-[11px] uppercase tracking-widest text-center">{post.category}</span>
-                    <h3 className="flex-1 font-bold text-slate-700 text-lg group-hover:text-emerald-700 truncate pr-4">{post.title}</h3>
-                  </div>
-                  <span className="w-32 text-right text-sm font-medium text-slate-400">{new Date(post.created_at).toLocaleDateString()}</span>
+                <Link href={`/archive/${post.id}`} key={post.id} className="group bg-slate-50/50 rounded-2xl p-4 flex items-center justify-between hover:bg-white hover:shadow-md transition-all">
+                  <span className="w-24 px-3 py-1 bg-emerald-100 text-emerald-700 font-black text-[11px] rounded-full text-center uppercase">{post.category}</span>
+                  <h3 className="flex-1 font-bold text-slate-700 text-lg ml-6 truncate group-hover:text-emerald-700">{post.title}</h3>
+                  <span className="text-sm text-slate-400 font-medium">{new Date(post.created_at).toLocaleDateString()}</span>
                 </Link>
               ))}
             </div>
           </div>
         </div>
       </section>
+
+      {/* 6. 푸터 (Footer) */}
+      <footer className="bg-slate-50 pt-20 pb-10 border-t border-slate-200 w-full text-left">
+        <div className="mx-auto max-w-[1200px] px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 pb-16 border-b border-slate-200">
+            <div className="space-y-4">
+              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tighter">연구소 정보</h4>
+              <ul className="space-y-3 text-xs font-bold text-slate-500">
+                <li><Link href="/about" className="hover:text-emerald-600">인사말 / 연혁</Link></li>
+                <li><Link href="/about" className="hover:text-emerald-600">정관 및 사명</Link></li>
+                <li><Link href="/about" className="hover:text-emerald-600">연구진 소개</Link></li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tighter">아카이브</h4>
+              <ul className="space-y-3 text-xs font-bold text-slate-500">
+                <li><Link href="/archive" className="hover:text-emerald-600">학술 논문</Link></li>
+                <li><Link href="/archive" className="hover:text-emerald-600">연구소 간행물</Link></li>
+                <li><Link href="/archive" className="hover:text-emerald-600">도서 시리즈</Link></li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tighter">고객 지원</h4>
+              <ul className="space-y-3 text-xs font-bold text-slate-500">
+                <li><Link href="/contact" className="hover:text-emerald-600">문의 및 요청</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-600">오시는 길</Link></li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tighter">시스템</h4>
+              <ul className="space-y-3 text-xs font-bold text-slate-500">
+                <li><Link href="/admin" className="hover:text-emerald-600">관리자 로그인</Link></li>
+              </ul>
+            </div>
+          </div>
+          <div className="pt-10 space-y-4">
+            <p className="text-[11px] font-bold text-slate-400 leading-relaxed">
+              소장: 이용호 | 주소: 경기도 부천시 소사구 호현로 489번길 52, 서울신학대학교 100주년기념관 306호<br />
+              전화: 032-340-9271 | 호스팅: Vercel Inc.
+            </p>
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-slate-100 pt-6">
+              <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Copyright © 2026 GLOBAL INSTITUTE FOR THE FOURFOLD-GOSPEL THEOLOGY.</p>
+              <div className="flex gap-4 text-[11px] font-black text-slate-500">
+                <Link href="/legal" className="hover:underline">개인정보 처리방침</Link>
+                <Link href="/legal" className="hover:underline">웹 사이트 이용 약관</Link>
+                <Link href="/legal" className="hover:underline">법적 고지</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* 7. 사진 확대 모달 */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fadeIn" onClick={() => setSelectedImage(null)}>
+          <button className="absolute top-10 right-10 text-white hover:text-emerald-400"><svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" /></svg></button>
+          <img src={selectedImage} className="max-w-full max-h-[90vh] rounded-xl shadow-2xl animate-scaleUp" alt="" onClick={(e) => e.stopPropagation()} />
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+        .animate-scaleUp { animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+      `}</style>
     </div>
   )
 }

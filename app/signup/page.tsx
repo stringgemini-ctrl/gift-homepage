@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -26,6 +27,12 @@ export default function SignupPage() {
           <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border p-3" required />
           <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-lg border p-3" required />
           <button type="submit" className="w-full rounded-lg bg-[#1d1d1f] py-3 font-bold text-white">가입하기</button>
+          <p className="mt-6 text-center text-sm text-slate-500">
+            이미 계정이 있으신가요?{' '}
+            <Link href="/login" className="font-bold text-[#0098a6] hover:underline">
+              로그인
+            </Link>
+          </p>
         </form>
       </div>
     </div>
