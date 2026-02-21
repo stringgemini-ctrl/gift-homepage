@@ -72,3 +72,5 @@ COMMENT ON COLUMN public.archive.min_role IS '최소 열람 권한: user(기본)
 -- (선택) 첫 관리자 지정: 아래에서 이메일을 본인 계정으로 변경 후 실행
 -- ------------------------------------------------------------
 -- UPDATE public.profiles SET role = 'admin' WHERE email = 'your-admin@email.com';
+
+
