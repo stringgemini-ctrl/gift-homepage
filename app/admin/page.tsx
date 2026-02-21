@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function AdminPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -48,7 +49,12 @@ export default function AdminPage() {
 
   return (
     <div className="max-w-md mx-auto mt-20 p-8 border rounded-xl shadow-lg bg-white">
-      <h1 className="text-2xl font-black mb-6 text-center text-slate-900">활동 갤러리 관리자</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-black text-slate-900">활동 갤러리 관리자</h1>
+        <Link href="/admin/users" className="text-sm font-bold text-[#0098a6] hover:underline">
+          회원 관리 →
+        </Link>
+      </div>
       <form onSubmit={handleUpload} className="space-y-4">
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-1">행사 제목</label>
