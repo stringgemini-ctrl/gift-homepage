@@ -83,7 +83,7 @@ const historyData = [
     { date: '19.11.17', content: '미주 사중복음연구소 개소식 참여 및 특강' },
     { date: '19.10.21', content: '<제6차 사중복음 국제학술제> 영국, 맨체스터 공동주최' },
     { date: '19.07.01', content: '제주지방회와 함께하는 제5차 사중복음컨퍼런스' },
-    { date: '19.05.23', content: '<제12회 사중복음 학술세미나> 주제: 사중복음의 윤리적 가능성 모색' },
+    { date: '19.05.23', content: '<제12회 사중복음 학술세미나> 주제: 사중복음과 사회적 실천 모색' },
     { date: '19.03.25', content: '미성대 사중복음 집중강의' },
     { date: '19.03.15', content: '미국 웨슬리학회 참석' },
     { date: '19.03.06', content: '글로벌 사중복음 연구소 교수운영위원회' },
@@ -156,7 +156,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/20 to-slate-100 py-32 px-6">
       <div className="mx-auto max-w-[1000px]">
         
-        <div className="flex justify-center mb-20 animate-fadeInUp">
+        <div className="flex justify-center mb-20">
           <div className="inline-flex bg-white/60 backdrop-blur-2xl p-1.5 rounded-2xl border border-white/80 shadow-sm overflow-x-auto hide-scrollbar">
             {['greeting', 'mission', 'bylaws', 'family', 'history'].map((tab) => (
               <button 
