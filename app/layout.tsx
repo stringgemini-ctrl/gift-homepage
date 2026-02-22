@@ -1,6 +1,6 @@
 import './globals.css'
 import Link from 'next/link'
-import NavAuth from '@/components/NavAuth'
+import NavAuth from '@/features/auth/components/NavAuth'
 
 export const metadata = {
   title: 'GIFT - 글로벌사중복음연구소',
@@ -18,7 +18,7 @@ export default function RootLayout({
         {/* 상단 헤더: 화면 끝까지 늘어나는 레이아웃 */}
         <nav className="fixed top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-100">
           <div className="w-full px-10 h-20 flex items-center justify-between">
-            
+
             {/* 왼쪽: 로고 영역 */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center gap-3">
@@ -37,11 +37,11 @@ export default function RootLayout({
               <Link href="/about" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
                 연구소 소개
               </Link>
-              
+
               <Link href="/archive" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
                 자료실
               </Link>
-              
+
               <Link href="/contact" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
                 문의 및 요청
               </Link>

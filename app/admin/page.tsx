@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/features/database/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -19,7 +19,7 @@ export default function AdminPage() {
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
-      
+
       const { error: storageError } = await supabase.storage
         .from('activity-images')
         .upload(fileName, file);
@@ -31,7 +31,7 @@ export default function AdminPage() {
         .getPublicUrl(fileName);
 
       const { error: dbError } = await supabase
-        .from('Activity') 
+        .from('Activity')
         .insert([{ title, image_url: publicUrl }]);
 
       if (dbError) throw dbError;
@@ -78,9 +78,8 @@ export default function AdminPage() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-3 rounded-md text-white font-black transition ${
-            loading ? 'bg-slate-400' : 'bg-emerald-600 hover:bg-emerald-700'
-          }`}
+          className={`w-full py-3 rounded-md text-white font-black transition ${loading ? 'bg-slate-400' : 'bg-emerald-600 hover:bg-emerald-700'
+            }`}
         >
           {loading ? '업로드 중...' : '갤러리에 올리기'}
         </button>

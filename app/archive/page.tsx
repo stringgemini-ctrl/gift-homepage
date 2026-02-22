@@ -1,6 +1,6 @@
 'use client'
 
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -17,7 +17,7 @@ export default function ArchivePage() {
       .from('archive')
       .select('*')
       .order('created_at', { ascending: false })
-    
+
     if (data) setPosts(data)
     setLoading(false)
   }
@@ -31,7 +31,7 @@ export default function ArchivePage() {
             <h1 className="text-4xl font-black text-slate-900 tracking-tighter">연구소 자료실</h1>
             <p className="mt-3 text-sm font-bold text-emerald-600 uppercase tracking-[0.3em]">Total Archives ({posts.length})</p>
             <div className="mt-6 flex justify-center">
-               <Link href="/" className="text-xs font-bold text-slate-400 hover:text-emerald-600 transition-colors">← 메인으로 돌아가기</Link>
+              <Link href="/" className="text-xs font-bold text-slate-400 hover:text-emerald-600 transition-colors">← 메인으로 돌아가기</Link>
             </div>
           </div>
 
@@ -47,9 +47,9 @@ export default function ArchivePage() {
               <div className="text-center py-20 text-slate-400 font-medium">자료를 불러오는 중입니다...</div>
             ) : posts.length > 0 ? (
               posts.map((post) => (
-                <Link 
-                  href={`/archive/${post.id}`} 
-                  key={post.id} 
+                <Link
+                  href={`/archive/${post.id}`}
+                  key={post.id}
                   className="group relative bg-white/50 backdrop-blur-sm rounded-xl p-3 flex items-center justify-between hover:bg-white hover:shadow-[0_10px_25px_rgba(16,185,129,0.08)] hover:-translate-y-0.5 transition-all duration-200 border border-transparent hover:border-emerald-100/50"
                 >
                   <div className="flex items-center gap-8 w-full">

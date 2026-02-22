@@ -1,6 +1,6 @@
 'use client'
 
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -20,10 +20,10 @@ export default function ArchiveDetailPage() {
     setLoading(true)
     // 1. 현재 게시글 호출
     const { data: current } = await supabase.from('archive').select('*').eq('id', id).single()
-    
+
     if (current) {
       setPost(current)
-      
+
       // 2. 이전글 호출 (현재보다 과거)
       const { data: prev } = await supabase.from('archive')
         .select('id, title')
@@ -31,7 +31,7 @@ export default function ArchiveDetailPage() {
         .order('created_at', { ascending: false })
         .limit(1)
         .single()
-      
+
       // 3. 다음글 호출 (현재보다 미래)
       const { data: next } = await supabase.from('archive')
         .select('id, title')
@@ -39,7 +39,7 @@ export default function ArchiveDetailPage() {
         .order('created_at', { ascending: true })
         .limit(1)
         .single()
-      
+
       setPrevPost(prev)
       setNextPost(next)
     }
@@ -52,7 +52,7 @@ export default function ArchiveDetailPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/20 to-slate-100 py-24 px-6">
       <div className="mx-auto max-w-[780px]"> {/* 가독성을 위해 너비를 900px에서 780px로 축소 */}
-        
+
         <div className="mb-10 animate-fadeInUp">
           <Link href="/archive" className="group inline-flex items-center gap-2 text-sm font-black text-emerald-600 hover:text-emerald-700 transition-all">
             <span className="group-hover:-translate-x-1 transition-transform">←</span> 연구소 자료실 목록
@@ -71,7 +71,7 @@ export default function ArchiveDetailPage() {
                 {new Date(post.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
               </span>
             </div>
-            
+
             <h1 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight tracking-tighter mb-4">
               {post.title}
             </h1>

@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, use } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/features/database/lib/supabase'
 import { useRouter } from 'next/navigation'
 
 export default function EditPage({ params }: { params: Promise<{ id: string }> }) {

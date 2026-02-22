@@ -1,5 +1,5 @@
 'use client'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/features/database/lib/supabase'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -25,15 +25,15 @@ export default function Header() {
   return (
     <header className="fixed top-0 z-[100] w-full border-b border-gray-100 bg-white/80 backdrop-blur-md shadow-sm transition-all">
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-8">
-        
+
         {/* 좌측 영역: 로고 및 내비게이션 메뉴 */}
         <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center gap-4 shrink-0 group">
             <div className="flex h-12 w-12 items-center justify-center overflow-hidden">
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                className="h-full w-full object-contain transition-transform group-hover:scale-105" 
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="h-full w-full object-contain transition-transform group-hover:scale-105"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://ui-avatars.com/api/?name=GIFT&background=0098a6&color=fff';
                 }}
@@ -61,16 +61,16 @@ export default function Header() {
               <span className="hidden sm:inline text-xs text-gray-500 font-medium">{user.email?.split('@')[0]} 연구원</span>
               {/* 로그인한 사용자에게만 데이터 입력 권한 노출 */}
               <Link href="/write" className="text-xs font-bold text-[#0098a6] hover:underline">자료 등록</Link>
-              <button 
-                onClick={handleLogout} 
+              <button
+                onClick={handleLogout}
                 className="rounded-full bg-[#1d1d1f] px-5 py-2 text-xs font-bold text-white hover:bg-gray-800 transition-all active:scale-95 shadow-sm"
               >
                 로그아웃
               </button>
             </>
           ) : (
-            <Link 
-              href="/login" 
+            <Link
+              href="/login"
               className="rounded-full bg-[#0098a6] px-6 py-2 text-xs font-bold text-white hover:bg-[#007c88] transition-all shadow-sm"
             >
               로그인

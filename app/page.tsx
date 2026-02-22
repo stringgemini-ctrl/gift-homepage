@@ -1,6 +1,6 @@
 'use client'
 
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -54,8 +54,8 @@ export default function Home() {
     { name: '찰스 카우만 선교사 부부', title: '동양선교회 창립자', img: '/lettiecowmanright.png' }
   ];
 
-  useEffect(() => { 
-    setIsLoaded(true); 
+  useEffect(() => {
+    setIsLoaded(true);
     fetchLatestPosts();
     fetchActivities();
     const timer = setInterval(() => {
@@ -116,13 +116,13 @@ export default function Home() {
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
             <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{leftFigures[leftIndex].title}<br/><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{leftFigures[leftIndex].title}<br /><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-600 bg-emerald-100/60 rounded-full animate-fadeInUp">THE GOOD NEWS</span>
-          <h1 className="text-6xl font-black tracking-tighter text-slate-900 md:text-8xl leading-[1.1] animate-fadeInUp">성결의 빛, <br/><span className="text-glory drop-shadow-sm">온 누리에</span></h1>
-          
+          <h1 className="text-6xl font-black tracking-tighter text-slate-900 md:text-8xl leading-[1.1] animate-fadeInUp">성결의 빛, <br /><span className="text-glory drop-shadow-sm">온 누리에</span></h1>
+
           {/* 주황색 포인트 텍스트 부분 */}
           <p className="mt-8 text-sm md:text-lg font-bold text-slate-500 tracking-wide animate-fadeInUp uppercase leading-relaxed">
             <span className="text-[#f68d2e] text-xl md:text-2xl">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl">I</span>nstitute for the <br className="hidden md:block" />
@@ -134,13 +134,13 @@ export default function Home() {
         <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`right-${rightIndex}`} className="animate-figure-majestic-right text-center">
             <img src={rightFigures[rightIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{rightFigures[rightIndex].title}<br/><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{rightFigures[rightIndex].title}<br /><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
           </div>
         </div>
       </section>
 
-   {/* 2. 북 섹션 (슬레이트 배경 + 보강된 텍스트 및 정렬) */}
-   <section className="relative z-20 bg-slate-800 py-32 px-8 overflow-hidden shadow-inner">
+      {/* 2. 북 섹션 (슬레이트 배경 + 보강된 텍스트 및 정렬) */}
+      <section className="relative z-20 bg-slate-800 py-32 px-8 overflow-hidden shadow-inner">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,rgba(16,185,129,0.1),transparent_50%)] pointer-events-none"></div>
         <div className="mx-auto max-w-[1300px] relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-20">
@@ -152,7 +152,7 @@ export default function Home() {
             </div>
             <div className="w-full lg:w-1/2 text-left">
               <span className="text-emerald-400 font-black tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
-              <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br/><span className="text-2xl text-slate-400 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
+              <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-slate-400 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
               <p className="text-slate-300 text-lg leading-relaxed mb-12 font-medium">
                 윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 '메트로폴리탄교회연합(MCA)'의 역사를 다룬 선구적인 연구서입니다. '점퍼스'라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
               </p>

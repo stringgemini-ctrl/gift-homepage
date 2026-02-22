@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/features/database/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -100,11 +100,10 @@ export default function AdminUsersPage() {
                     </p>
                   </div>
                   <span
-                    className={`ml-4 shrink-0 px-3 py-1.5 rounded-lg text-[13px] font-semibold ${
-                      p.role === 'admin'
+                    className={`ml-4 shrink-0 px-3 py-1.5 rounded-lg text-[13px] font-semibold ${p.role === 'admin'
                         ? 'bg-[#0098a6]/10 text-[#0098a6]'
                         : 'bg-slate-100 text-slate-600'
-                    }`}
+                      }`}
                   >
                     {p.role}
                   </span>

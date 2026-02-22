@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/features/database/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -127,11 +127,10 @@ export default function MyPage() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 rounded-xl text-[15px] font-medium transition-colors ${
-                activeTab === tab.id
+              className={`flex-1 py-3 rounded-xl text-[15px] font-medium transition-colors ${activeTab === tab.id
                   ? 'bg-[#0098a6] text-white'
                   : 'text-slate-500 hover:text-[#1d1d1f]'
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -194,9 +193,8 @@ export default function MyPage() {
               </div>
               {passwordMessage && (
                 <p
-                  className={`text-[14px] font-medium ${
-                    passwordMessage.type === 'success' ? 'text-[#0098a6]' : 'text-red-500'
-                  }`}
+                  className={`text-[14px] font-medium ${passwordMessage.type === 'success' ? 'text-[#0098a6]' : 'text-red-500'
+                    }`}
                 >
                   {passwordMessage.text}
                 </p>
