@@ -1,31 +1,27 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useAuth } from './AuthProvider'
 import { supabase } from '@/features/database/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function NavAuth() {
-  const [user, setUser] = useState<{ id: string } | null>(null)
+  const { user, isLoading } = useAuth()
   const router = useRouter()
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const { data: { user: u } } = await supabase.auth.getUser()
-      setUser(u ?? null)
-    }
-    loadUser()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/')
     router.refresh()
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-6">
+        <div className="h-5 w-16 bg-slate-100 animate-pulse rounded"></div>
+        <div className="h-5 w-16 bg-slate-100 animate-pulse rounded"></div>
+      </div>
+    )
   }
 
   if (user) {
@@ -40,7 +36,7 @@ export default function NavAuth() {
         <button
           type="button"
           onClick={handleLogout}
-          className="text-[15px] font-bold text-slate-600 hover:text-[#0098a6] transition-colors"
+          className="text-[15px] font-bold text-slate-600 hover:text-[#0098a6] transition-colors cursor-pointer"
         >
           로그아웃
         </button>

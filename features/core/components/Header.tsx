@@ -1,19 +1,13 @@
 'use client'
+
+import { useAuth } from '@/features/auth/components/AuthProvider'
 import { supabase } from '@/features/database/lib/supabase'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function Header() {
-  const [user, setUser] = useState<any>(null)
+  const { user, isLoading } = useAuth()
   const router = useRouter()
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -56,14 +50,16 @@ export default function Header() {
 
         {/* 우측 영역: 사용자 상태 및 컨트롤 */}
         <div className="flex items-center gap-5 shrink-0">
-          {user ? (
+          {isLoading ? (
+            <div className="h-8 w-20 bg-slate-100 animate-pulse rounded-full"></div>
+          ) : user ? (
             <>
               <span className="hidden sm:inline text-xs text-gray-500 font-medium">{user.email?.split('@')[0]} 연구원</span>
               {/* 로그인한 사용자에게만 데이터 입력 권한 노출 */}
               <Link href="/write" className="text-xs font-bold text-[#0098a6] hover:underline">자료 등록</Link>
               <button
                 onClick={handleLogout}
-                className="rounded-full bg-[#1d1d1f] px-5 py-2 text-xs font-bold text-white hover:bg-gray-800 transition-all active:scale-95 shadow-sm"
+                className="rounded-full bg-[#1d1d1f] px-5 py-2 text-xs font-bold text-white hover:bg-gray-800 transition-all active:scale-95 shadow-sm cursor-pointer"
               >
                 로그아웃
               </button>
