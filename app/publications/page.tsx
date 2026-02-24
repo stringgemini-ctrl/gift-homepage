@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import BookCard from '@/features/publications/components/BookCard'
 
 type Book = {
     id: string
@@ -37,118 +38,79 @@ export default async function PublicationsPage() {
     const rest = books.filter(b => !b.is_featured)
 
     return (
-        <div className="min-h-screen bg-white pt-28 pb-32">
-            {/* 페이지 헤더 */}
-            <div className="max-w-6xl mx-auto px-6 mb-20 text-center">
-                <p className="text-[11px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-4">Publications</p>
-                <h1 className="text-[42px] md:text-[52px] font-black text-slate-900 tracking-tighter leading-[1.1] mb-5">
-                    연구소 출간 도서
-                </h1>
-                <p className="text-[17px] text-slate-500 max-w-lg mx-auto leading-relaxed">
-                    글로벌사중복음연구소에서 펴낸<br className="hidden md:block" />신학 연구 도서 시리즈를 소개합니다.
-                </p>
-            </div>
+        <div className="min-h-screen bg-[#fafafa]">
+            {/* ─── 영웅 헤더 ─── */}
+            <div className="relative bg-slate-950 overflow-hidden">
+                {/* 세련된 배경 그라디언트 노이즈 */}
+                <div className="absolute inset-0 opacity-30"
+                    style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16,185,129,0.35), transparent)' }} />
+                <div className="absolute inset-0 opacity-10"
+                    style={{ background: 'radial-gradient(ellipse 60% 50% at 80% 60%, rgba(246,141,46,0.6), transparent)' }} />
 
-            {books.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-40 gap-6">
-                    <div className="w-24 h-24 rounded-[2rem] bg-slate-50 flex items-center justify-center text-5xl shadow-inner">📚</div>
-                    <div className="text-center">
-                        <p className="text-[18px] font-bold text-slate-500 mb-1">아직 등록된 도서가 없습니다.</p>
-                        <p className="text-[14px] text-slate-400">곧 소개될 도서를 기대해 주세요.</p>
+                <div className="relative max-w-6xl mx-auto px-6 pt-44 pb-28 text-center">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full mb-8 backdrop-blur-sm">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[11px] font-bold text-white/60 uppercase tracking-[0.2em]">Publications</span>
+                    </div>
+                    <h1 className="text-[52px] md:text-[72px] font-black text-white tracking-[-0.04em] leading-[1.0] mb-6">
+                        연구소<br />출간 도서
+                    </h1>
+                    <p className="text-[17px] text-white/50 max-w-md mx-auto leading-relaxed">
+                        글로벌사중복음연구소가 탐구해온<br />신학 연구의 결실을 소개합니다.
+                    </p>
+                    <div className="mt-10 flex items-center justify-center gap-6 text-[13px] text-white/30 font-semibold">
+                        <span>총 {books.length}권</span>
+                        {featured.length > 0 && <><span>·</span><span>추천 {featured.length}권</span></>}
                     </div>
                 </div>
-            ) : (
-                <div className="max-w-6xl mx-auto px-6 space-y-24">
-                    {/* 추천 도서 섹션 */}
-                    {featured.length > 0 && (
-                        <section>
-                            <div className="flex items-center gap-3 mb-10">
-                                <div className="h-5 w-1 rounded-full bg-[#f68d2e]" />
-                                <h2 className="text-[13px] font-black text-slate-400 uppercase tracking-widest">추천 도서</h2>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {featured.map(book => <BookCard key={book.id} book={book} />)}
-                            </div>
-                        </section>
-                    )}
+            </div>
 
-                    {/* 전체 도서 섹션 */}
-                    {rest.length > 0 && (
-                        <section>
-                            <div className="flex items-center gap-3 mb-10">
-                                <div className="h-5 w-1 rounded-full bg-emerald-500" />
-                                <h2 className="text-[13px] font-black text-slate-400 uppercase tracking-widest">전체 도서</h2>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
-                                {rest.map(book => <BookCard key={book.id} book={book} />)}
-                            </div>
-                        </section>
-                    )}
-                </div>
-            )}
+            <div className="max-w-6xl mx-auto px-6 py-24 space-y-28">
+                {books.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-40 gap-6">
+                        <div className="w-24 h-24 rounded-[2rem] bg-slate-100 flex items-center justify-center text-5xl">📚</div>
+                        <div className="text-center">
+                            <p className="text-[20px] font-bold text-slate-500 mb-2">아직 등록된 도서가 없습니다.</p>
+                            <p className="text-[15px] text-slate-400">곧 소개될 도서를 기대해 주세요.</p>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {/* 추천 도서 */}
+                        {featured.length > 0 && (
+                            <section>
+                                <SectionLabel color="orange" label="FEATURED BOOKS" sub="편집부 추천 도서" />
+                                {/* 추천 도서는 큼직하게 2~3열 */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                                    {featured.map(book => <BookCard key={book.id} book={book} />)}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* 전체 도서 */}
+                        {rest.length > 0 && (
+                            <section>
+                                <SectionLabel color="green" label="ALL BOOKS" sub="전체 출간 도서" />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                                    {rest.map(book => <BookCard key={book.id} book={book} />)}
+                                </div>
+                            </section>
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     )
 }
 
-function BookCard({ book }: { book: Book }) {
+function SectionLabel({ color, label, sub }: { color: 'orange' | 'green'; label: string; sub: string }) {
     return (
-        <article className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-300">
-            {/* 표지 */}
-            <div className="relative aspect-[3/4] bg-slate-50 overflow-hidden">
-                {book.cover_url ? (
-                    <img
-                        src={book.cover_url}
-                        alt={book.title}
-                        className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-5xl text-slate-200">📖</div>
-                )}
-
-                {/* 구매 버튼 오버레이 */}
-                {book.buy_link && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                        {book.description && (
-                            <p className="text-white/80 text-[12px] leading-relaxed line-clamp-3 mb-3">
-                                {book.description}
-                            </p>
-                        )}
-                        <a
-                            href={book.buy_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={e => e.stopPropagation()}
-                            className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-white text-slate-900 text-[13px] font-black rounded-xl shadow hover:bg-emerald-50 transition-colors"
-                        >
-                            구매하기 →
-                        </a>
-                    </div>
-                )}
-
-                {/* 추천 뱃지 */}
-                {book.is_featured && (
-                    <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#f68d2e] text-white text-[10px] font-black rounded-lg shadow">
-                        ★ 추천
-                    </div>
-                )}
+        <div className="flex items-center gap-5 mb-12">
+            <div className={`h-8 w-1 rounded-full ${color === 'orange' ? 'bg-[#f68d2e]' : 'bg-emerald-500'}`} />
+            <div>
+                <p className={`text-[10px] font-black uppercase tracking-[0.2em] ${color === 'orange' ? 'text-[#f68d2e]' : 'text-emerald-500'}`}>{label}</p>
+                <p className="text-[22px] font-black text-slate-900 tracking-tight">{sub}</p>
             </div>
-
-            {/* 텍스트 정보 */}
-            <div className="px-5 py-4 flex-1 flex flex-col">
-                {book.series && (
-                    <p className="text-[11px] font-black text-emerald-600 uppercase tracking-wider mb-1">{book.series}</p>
-                )}
-                <h3 className="text-[15px] font-black text-slate-900 leading-snug line-clamp-2 mb-2">{book.title}</h3>
-                <p className="text-[13px] text-slate-400 mt-auto">
-                    {book.author}
-                    {book.translator && <span className="text-slate-300"> · 역 {book.translator}</span>}
-                </p>
-                {(book.publisher || book.published_year) && (
-                    <p className="text-[11px] text-slate-300 mt-1">
-                        {[book.publisher, book.published_year].filter(Boolean).join(' · ')}
-                    </p>
-                )}
-            </div>
-        </article>
+        </div>
     )
 }
