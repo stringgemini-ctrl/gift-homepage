@@ -106,7 +106,6 @@ export default function MemberManagement() {
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100">
                                 <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest">회원</th>
-                                <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest">가입일</th>
                                 <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">권한</th>
                                 <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">변경</th>
                             </tr>
@@ -122,13 +121,10 @@ export default function MemberManagement() {
                                             <span className="font-semibold text-slate-700">{p.email || '이메일 없음'}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-slate-400 font-medium">
-                                        {new Date(p.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'short', day: 'numeric' })}
-                                    </td>
                                     <td className="px-6 py-4 text-center">
                                         <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider ${p.role?.toUpperCase() === 'ADMIN'
-                                                ? 'bg-[#f68d2e]/10 text-[#f68d2e] ring-1 ring-[#f68d2e]/20'
-                                                : 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100'
+                                            ? 'bg-[#f68d2e]/10 text-[#f68d2e] ring-1 ring-[#f68d2e]/20'
+                                            : 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100'
                                             }`}>
                                             {p.role?.toUpperCase()}
                                         </span>

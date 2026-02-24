@@ -6,7 +6,6 @@ export type Profile = {
     id: string
     email: string | null
     role: string
-    created_at: string
 }
 
 // Service Role Key를 사용하는 서버 전용 어드민 클라이언트
@@ -34,8 +33,7 @@ export async function getAllProfiles(): Promise<{ data: Profile[] | null; error:
         const admin = getAdminClient()
         const { data, error } = await admin
             .from('profiles')
-            .select('id, email, role, created_at')
-            .order('created_at', { ascending: false })
+            .select('id, email, role')
 
         if (error) {
             console.error('[Server Action] getAllProfiles error:', error.message)
