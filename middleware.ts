@@ -37,7 +37,12 @@ export async function middleware(request: NextRequest) {
     if (!user) {
       const url = request.nextUrl.clone()
       url.pathname = '/unauthorized'
-      return NextResponse.redirect(url)
+      const response = NextResponse.redirect(url)
+      // 세션 쿠키를 리다이렉트 응답에 복사
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        response.cookies.set(cookie.name, cookie.value)
+      })
+      return response
     }
 
     const { data: profile } = await supabase
@@ -51,7 +56,12 @@ export async function middleware(request: NextRequest) {
     if (userRole !== 'admin') {
       const url = request.nextUrl.clone()
       url.pathname = '/unauthorized'
-      return NextResponse.redirect(url)
+      const response = NextResponse.redirect(url)
+      // 세션 쿠키를 리다이렉트 응답에 복사
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        response.cookies.set(cookie.name, cookie.value)
+      })
+      return response
     }
   }
 

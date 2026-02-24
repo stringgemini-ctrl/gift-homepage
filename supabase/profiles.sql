@@ -45,8 +45,8 @@ begin
 end;
 $$ language plpgsql security definer;
 
--- 트리거 설정
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
+-- 7. 기존 가입자 정보 동기화 (기존 유저들도 profiles 테이블에 생성)
+insert into public.profiles (id, email, role)
+select id, email, coalesce(raw_user_meta_data->>'role', 'user')
+from auth.users
+on conflict (id) do nothing;
