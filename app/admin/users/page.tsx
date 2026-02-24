@@ -24,7 +24,7 @@ export default function AdminUsersPage() {
     if (isAuthLoading) return
 
     // AuthProvider에서 가져온 role 확인 (미들웨어에서도 걸러지지만 클라이언트 보호용 2차 확인)
-    if (!user || role !== 'admin') {
+    if (!user || role?.toUpperCase() !== 'ADMIN') {
       router.replace('/unauthorized')
       return
     }
@@ -140,23 +140,23 @@ export default function AdminUsersPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         <span
-                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider ${p.role === 'admin'
-                              ? 'bg-[#f68d2e]/10 text-[#f68d2e] ring-1 ring-[#f68d2e]/20'
-                              : 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/10'
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider ${p.role?.toUpperCase() === 'ADMIN'
+                            ? 'bg-[#f68d2e]/10 text-[#f68d2e] ring-1 ring-[#f68d2e]/20'
+                            : 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/10'
                             }`}
                         >
-                          {p.role}
+                          {p.role?.toUpperCase()}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <select
-                          value={p.role}
+                          value={p.role?.toUpperCase()}
                           onChange={(e) => handleRoleChange(p.id, e.target.value)}
                           disabled={isUpdating === p.id}
                           className="bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 block w-full sm:w-auto ml-auto p-2 cursor-pointer outline-none transition-all hover:bg-white disabled:opacity-50"
                         >
-                          <option value="user">USER (일반 회원)</option>
-                          <option value="admin">ADMIN (관리자)</option>
+                          <option value="USER">USER (일반 회원)</option>
+                          <option value="ADMIN">ADMIN (관리자)</option>
                         </select>
                       </td>
                     </tr>

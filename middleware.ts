@@ -53,7 +53,7 @@ export async function middleware(request: NextRequest) {
 
     const userRole = profile?.role || user.user_metadata?.role
 
-    if (userRole !== 'admin') {
+    if (userRole?.toUpperCase() !== 'ADMIN') {
       const url = request.nextUrl.clone()
       url.pathname = '/unauthorized'
       const response = NextResponse.redirect(url)
