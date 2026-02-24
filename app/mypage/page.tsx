@@ -2,14 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/features/database/lib/supabase'
+import { useAuth } from '@/features/auth/components/AuthProvider'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-
-type Profile = {
-  id: string
-  email: string | null
-  role: string
-}
 
 type ArchivePost = {
   id: string
@@ -19,8 +14,9 @@ type ArchivePost = {
 }
 
 export default function MyPage() {
-  const [user, setUser] = useState<{ id: string; email?: string } | null>(null)
-  const [profile, setProfile] = useState<Profile | null>(null)
+  // AuthProvider에서 role을 직접 가져옵니다.
+  // 이미 DB의 profiles 테이블에서 읽어온 값이므로 가장 신뢰할 수 있는 소스입니다.
+  const { user, role, isLoading: isAuthLoading } = useAuth()
   const [myPosts, setMyPosts] = useState<ArchivePost[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'posts'>('profile')
@@ -33,35 +29,26 @@ export default function MyPage() {
   const router = useRouter()
 
   useEffect(() => {
-    async function fetchUserData() {
-      const { data: { user: currentUser } } = await supabase.auth.getUser()
+    if (isAuthLoading) return
 
-      if (!currentUser) {
-        router.push('/login')
-        return
-      }
-      setUser(currentUser)
+    if (!user) {
+      router.push('/login')
+      return
+    }
 
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('id, email, role')
-        .eq('id', currentUser.id)
-        .single()
-
-      if (profileData) setProfile(profileData)
-
+    async function fetchPosts() {
       const { data: posts } = await supabase
         .from('archive')
         .select('id, title, category, created_at')
-        .eq('user_id', currentUser.id)
+        .eq('user_id', user!.id)
         .order('created_at', { ascending: false })
 
       if (posts) setMyPosts(posts)
       setLoading(false)
     }
 
-    fetchUserData()
-  }, [router])
+    fetchPosts()
+  }, [user, isAuthLoading, router])
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -88,7 +75,7 @@ export default function MyPage() {
     setConfirmPassword('')
   }
 
-  if (loading) {
+  if (isAuthLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f5f5f7]">
         <div className="text-[#6e6e73] text-sm font-medium">불러오는 중...</div>
@@ -96,16 +83,18 @@ export default function MyPage() {
     )
   }
 
-  const roleBadge =
-    profile?.role === 'admin' ? (
-      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0098a6]/10 text-[#0098a6] text-[13px] font-semibold">
-        👑 최고 관리자
-      </span>
-    ) : (
-      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-[13px] font-semibold">
-        👤 일반 회원
-      </span>
-    )
+  // 대소문자 무관하게 ADMIN 체크 (DB에 'ADMIN' 또는 'admin' 어느 쪽으로 있어도 동작)
+  const isAdmin = role?.toUpperCase() === 'ADMIN'
+
+  const roleBadge = isAdmin ? (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f68d2e]/10 text-[#f68d2e] text-[13px] font-semibold">
+      👑 최고 관리자
+    </span>
+  ) : (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-[13px] font-semibold">
+      👤 일반 회원
+    </span>
+  )
 
   const tabs = [
     { id: 'profile' as const, label: '내 정보' },
@@ -120,6 +109,23 @@ export default function MyPage() {
           마이페이지
         </h1>
 
+        {/* ─── 관리자 전용 센터 카드 (ADMIN 역할일 때만 렌더링) ─── */}
+        {isAdmin && (
+          <div className="mb-6 bg-gradient-to-r from-[#f68d2e]/10 to-emerald-50 border border-[#f68d2e]/20 rounded-2xl p-5 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[11px] font-black text-[#f68d2e] uppercase tracking-widest mb-1">관리자 전용</p>
+              <p className="text-[16px] font-bold text-slate-800">관리자 센터</p>
+              <p className="text-[13px] text-slate-500 mt-0.5">회원 목록 조회 및 권한 관리</p>
+            </div>
+            <Link
+              href="/admin/users"
+              className="shrink-0 flex items-center gap-2 bg-[#f68d2e] text-white text-[13px] font-bold px-5 py-2.5 rounded-xl hover:bg-orange-600 transition-colors shadow-sm"
+            >
+              입장하기 →
+            </Link>
+          </div>
+        )}
+
         {/* 탭 메뉴 */}
         <div className="flex gap-1 p-1 bg-white rounded-2xl shadow-sm border border-slate-100 mb-8">
           {tabs.map((tab) => (
@@ -128,8 +134,8 @@ export default function MyPage() {
               type="button"
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-3 rounded-xl text-[15px] font-medium transition-colors ${activeTab === tab.id
-                  ? 'bg-[#0098a6] text-white'
-                  : 'text-slate-500 hover:text-[#1d1d1f]'
+                ? 'bg-[#0098a6] text-white'
+                : 'text-slate-500 hover:text-[#1d1d1f]'
                 }`}
             >
               {tab.label}
