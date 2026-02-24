@@ -26,53 +26,54 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         // DB에서 최신 profile role을 가져오는 헬퍼 함수
+        // RLS나 네트워크 오류가 발생해도 null을 반환해 흐름이 끊기지 않게 처리
         const fetchRole = async (userId: string | undefined): Promise<string | null> => {
             if (!userId) return null
-            const { data, error } = await supabase.from('profiles').select('role').eq('id', userId).single()
-            console.log('[AuthProvider Debug] fetchRole - userId:', userId);
-            console.log('[AuthProvider Debug] fetchRole - error:', error);
-            console.log('[AuthProvider Debug] fetchRole - data:', data);
-            return data?.role || null
+            try {
+                const { data } = await supabase.from('profiles').select('role').eq('id', userId).single()
+                return data?.role ?? null
+            } catch {
+                console.error('[AuthProvider] fetchRole 실패')
+                return null
+            }
         }
 
         // 1. 초기 세션 및 유저 정보 가져오기
+        // try/finally로 isLoading이 반드시 false가 되도록 보장
         const initAuth = async () => {
-            const { data: { session: initialSession }, error: authError } = await supabase.auth.getSession()
-            console.log('[AuthProvider Debug] initAuth - initialSession user:', initialSession?.user?.id);
-            console.log('[AuthProvider Debug] initAuth - authError:', authError);
-
-            setSession(initialSession)
-            setUser(initialSession?.user ?? null)
-
-            const fetchedRole = await fetchRole(initialSession?.user?.id)
-            const fallbackRole = initialSession?.user?.user_metadata?.role ?? null
-            const finalRole = fetchedRole ?? fallbackRole
-            console.log('[AuthProvider Debug] initAuth - fetchedRole:', fetchedRole, 'fallbackRole:', fallbackRole, 'finalRole:', finalRole);
-
-            setRole(finalRole)
-            setIsLoading(false)
+            try {
+                const { data: { session: initialSession } } = await supabase.auth.getSession()
+                setSession(initialSession)
+                setUser(initialSession?.user ?? null)
+                const fetchedRole = await fetchRole(initialSession?.user?.id)
+                const finalRole = fetchedRole ?? initialSession?.user?.user_metadata?.role ?? null
+                setRole(finalRole)
+            } catch (e) {
+                console.error('[AuthProvider] initAuth 실패:', e)
+            } finally {
+                // 어떤 상황에서도 로딩 상태를 해제
+                setIsLoading(false)
+            }
         }
 
         initAuth()
 
         // 2. 인증 상태 변화 구독
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
-            console.log('[AuthProvider Debug] onAuthStateChange - event:', _event, 'user:', currentSession?.user?.id);
-            setSession(currentSession)
-            setUser(currentSession?.user ?? null)
-
-            const fetchedRole = await fetchRole(currentSession?.user?.id)
-            const fallbackRole = currentSession?.user?.user_metadata?.role ?? null
-            const finalRole = fetchedRole ?? fallbackRole
-            console.log('[AuthProvider Debug] onAuthStateChange - fetchedRole:', fetchedRole, 'fallbackRole:', fallbackRole, 'finalRole:', finalRole);
-
-            setRole(finalRole)
-            setIsLoading(false)
+            try {
+                setSession(currentSession)
+                setUser(currentSession?.user ?? null)
+                const fetchedRole = await fetchRole(currentSession?.user?.id)
+                const finalRole = fetchedRole ?? currentSession?.user?.user_metadata?.role ?? null
+                setRole(finalRole)
+            } catch (e) {
+                console.error('[AuthProvider] onAuthStateChange 실패:', e)
+            } finally {
+                setIsLoading(false)
+            }
         })
 
-        return () => {
-            subscription.unsubscribe()
-        }
+        return () => { subscription.unsubscribe() }
     }, [])
 
     return (

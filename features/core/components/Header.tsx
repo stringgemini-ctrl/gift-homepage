@@ -44,6 +44,7 @@ export default function Header() {
             <Link href="/about" className="text-sm font-bold text-[#1d1d1f] hover:text-[#0098a6] transition-colors">연구소 소개</Link>
             <Link href="/news" className="text-sm font-bold text-[#1d1d1f] hover:text-[#0098a6] transition-colors">행사 및 소식</Link>
             <Link href="/archive" className="text-sm font-bold text-[#1d1d1f] hover:text-[#0098a6] transition-colors">자료실</Link>
+            <Link href="/publications" className="text-sm font-bold text-[#1d1d1f] hover:text-[#0098a6] transition-colors">출간 도서</Link>
             <Link href="/board" className="text-sm font-bold text-[#1d1d1f] hover:text-[#0098a6] transition-colors">자유게시판</Link>
           </nav>
         </div>
@@ -55,7 +56,7 @@ export default function Header() {
           ) : user ? (
             <>
               <span className="hidden sm:inline text-xs text-gray-500 font-medium">{user.email?.split('@')[0]} 연구원</span>
-              {/* 로그인한 사용자에게만 데이터 입력 권한 노출 */}
+              <Link href="/mypage" className="text-xs font-bold text-[#0098a6] hover:underline">마이페이지</Link>
               <Link href="/write" className="text-xs font-bold text-[#0098a6] hover:underline">자료 등록</Link>
               <button
                 onClick={handleLogout}
