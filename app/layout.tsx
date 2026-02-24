@@ -44,6 +44,10 @@ export default function RootLayout({
                   자료실
                 </Link>
 
+                <Link href="/publications" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
+                  출간 도서
+                </Link>
+
                 <Link href="/contact" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
                   문의 및 요청
                 </Link>

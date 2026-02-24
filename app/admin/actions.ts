@@ -72,3 +72,60 @@ export async function updateUserRole(
         return { error: msg }
     }
 }
+
+// ================================================================
+// 📚 도서(books) 관련 서버 액션
+// ================================================================
+
+export type Book = {
+    id: string
+    title: string
+    author: string
+    description: string | null
+    cover_url: string | null
+    buy_link: string | null
+    is_featured: boolean
+    created_at: string
+}
+
+/** 전체 도서 목록 조회 */
+export async function getAllBooks(): Promise<{ data: Book[] | null; error: string | null }> {
+    try {
+        const admin = getAdminClient()
+        const { data, error } = await admin
+            .from('books')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (error) return { data: null, error: error.message }
+        return { data, error: null }
+    } catch (e) {
+        return { data: null, error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
+/** 도서 등록 */
+export async function createBook(
+    payload: Omit<Book, 'id' | 'created_at'>
+): Promise<{ error: string | null }> {
+    try {
+        const admin = getAdminClient()
+        const { error } = await admin.from('books').insert([payload])
+        if (error) return { error: error.message }
+        return { error: null }
+    } catch (e) {
+        return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
+/** 도서 삭제 */
+export async function deleteBook(id: string): Promise<{ error: string | null }> {
+    try {
+        const admin = getAdminClient()
+        const { error } = await admin.from('books').delete().eq('id', id)
+        if (error) return { error: error.message }
+        return { error: null }
+    } catch (e) {
+        return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
