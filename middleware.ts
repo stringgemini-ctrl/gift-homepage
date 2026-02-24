@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -7,7 +8,8 @@ export async function middleware(request: NextRequest) {
     request,
   })
 
-  const supabase = createServerClient(
+  // 1단계: 유저 식별 (ANON 키 활용 - 쿠키 기반 세션 확인)
+  const supabaseAuth = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -28,44 +30,45 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // IMPORTANT: DO NOT USE getSession(). Use getUser() as it validates the token on the server.
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabaseAuth.auth.getUser()
+
+  console.log('1. User ID:', user?.id)
 
   if (request.nextUrl.pathname.startsWith('/admin')) {
     if (!user) {
+      console.log('User not logged in. Redirecting to /unauthorized.')
       const url = request.nextUrl.clone()
       url.pathname = '/unauthorized'
       const response = NextResponse.redirect(url)
-      // 세션 쿠키를 리다이렉트 응답에 복사
       supabaseResponse.cookies.getAll().forEach((cookie) => {
         response.cookies.set(cookie.name, cookie.value)
       })
       return response
     }
 
-    const { data: profile, error } = await supabase
+    // 2단계: 권한 조회 (SERVICE ROLE 키 활용 - RLS 완전 우회)
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    const { data: profile, error } = await supabaseAdmin
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    const userRole = profile?.role || user.user_metadata?.role
+    console.log('2. Profile Role:', profile?.role, '| Error:', error?.message)
 
-    console.log('[Middleware Debug] path:', request.nextUrl.pathname);
-    console.log('[Middleware Debug] user.id:', user.id);
-    console.log('[Middleware Debug] profile fetch error:', error);
-    console.log('[Middleware Debug] profile fetched data:', profile);
-    console.log('[Middleware Debug] user_metadata role:', user.user_metadata?.role);
-    console.log('[Middleware Debug] evaluated userRole:', userRole);
-    console.log('[Middleware Debug] Check result (userRole?.toUpperCase() !== "ADMIN"):', userRole?.toUpperCase() !== 'ADMIN');
+    const userRole = profile?.role
 
-    if (userRole?.toUpperCase() !== 'ADMIN') {
+    if (!userRole || userRole.toUpperCase() !== 'ADMIN') {
+      console.log('User is not ADMIN. Redirecting to /unauthorized.')
       const url = request.nextUrl.clone()
       url.pathname = '/unauthorized'
       const response = NextResponse.redirect(url)
-      // 세션 쿠키를 리다이렉트 응답에 복사
       supabaseResponse.cookies.getAll().forEach((cookie) => {
         response.cookies.set(cookie.name, cookie.value)
       })
