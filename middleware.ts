@@ -45,13 +45,21 @@ export async function middleware(request: NextRequest) {
       return response
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
     const userRole = profile?.role || user.user_metadata?.role
+
+    console.log('[Middleware Debug] path:', request.nextUrl.pathname);
+    console.log('[Middleware Debug] user.id:', user.id);
+    console.log('[Middleware Debug] profile fetch error:', error);
+    console.log('[Middleware Debug] profile fetched data:', profile);
+    console.log('[Middleware Debug] user_metadata role:', user.user_metadata?.role);
+    console.log('[Middleware Debug] evaluated userRole:', userRole);
+    console.log('[Middleware Debug] Check result (userRole?.toUpperCase() !== "ADMIN"):', userRole?.toUpperCase() !== 'ADMIN');
 
     if (userRole?.toUpperCase() !== 'ADMIN') {
       const url = request.nextUrl.clone()
