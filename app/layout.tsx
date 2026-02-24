@@ -48,12 +48,6 @@ export default function RootLayout({
                   문의 및 요청
                 </Link>
 
-                {/* 관리자 아이콘 */}
-                <Link href="/admin" className="p-2 bg-slate-50 rounded-full hover:bg-emerald-50 transition-colors">
-                  <svg className="w-5 h-5 text-slate-400 hover:text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </Link>
 
                 {/* 로그인 / 마이페이지·로그아웃 */}
                 <NavAuth />

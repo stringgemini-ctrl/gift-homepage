@@ -266,12 +266,7 @@ export default function Home() {
                 <li><Link href="/contact" className="hover:text-emerald-600">오시는 길</Link></li>
               </ul>
             </div>
-            <div className="space-y-4">
-              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tighter">시스템</h4>
-              <ul className="space-y-3 text-xs font-bold text-slate-500">
-                <li><Link href="/admin" className="hover:text-emerald-600">관리자 로그인</Link></li>
-              </ul>
-            </div>
+
           </div>
           <div className="pt-10 space-y-4">
             <p className="text-[11px] font-bold text-slate-400 leading-relaxed">
