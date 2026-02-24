@@ -10,6 +10,7 @@ import {
 const EMPTY_FORM = {
     title: '', author: '', translator: '', publisher: '',
     published_year: '', series: '', description: '', buy_link: '',
+    price: '',
     is_featured: false,
 }
 
@@ -64,6 +65,7 @@ export default function BookManagement() {
             series: book.series ?? '',
             description: book.description ?? '',
             buy_link: book.buy_link ?? '',
+            price: book.price?.toString() ?? '',
             is_featured: book.is_featured,
         })
         setCoverPreview(book.cover_url)
@@ -113,6 +115,7 @@ export default function BookManagement() {
                 description: form.description || null,
                 cover_url: coverUrl,
                 buy_link: form.buy_link || null,
+                price: form.price ? parseInt(form.price) : null,
                 is_featured: form.is_featured,
             }
 
@@ -202,6 +205,15 @@ export default function BookManagement() {
                             <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">구매 링크</label>
                             <input
                                 value={form.buy_link} onChange={e => setField('buy_link', e.target.value)} placeholder="https://..."
+                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] transition-all"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">정가 (원)</label>
+                            <input
+                                type="number" min={0}
+                                value={form.price} onChange={e => setField('price', e.target.value)}
+                                placeholder="예: 25000"
                                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] transition-all"
                             />
                         </div>
