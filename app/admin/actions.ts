@@ -20,6 +20,7 @@ export type Book = {
     description: string | null
     cover_url: string | null
     buy_link: string | null
+    price: number | null
     is_featured: boolean
     created_at: string
 }

@@ -13,6 +13,7 @@ type Book = {
     description: string | null
     cover_url: string | null
     buy_link: string | null
+    price: number | null
     is_featured: boolean
 }
 
@@ -45,6 +46,7 @@ export default async function BookDetailPage({
         { label: '출판사', value: book.publisher },
         { label: '출판 연도', value: book.published_year?.toString() },
         { label: '시리즈', value: book.series },
+        { label: '정가', value: book.price ? '₩' + book.price.toLocaleString('ko-KR') : null },
     ].filter((m): m is { label: string; value: string } => Boolean(m.value))
 
     return (
