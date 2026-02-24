@@ -1,89 +1,110 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { supabase } from '@/features/database/lib/supabase';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from 'react'
+import Link from 'next/link'
+import { useAuth } from '@/features/auth/components/AuthProvider'
+import MemberManagement from '@/features/admin/components/MemberManagement'
+import GalleryUpload from '@/features/admin/components/GalleryUpload'
 
-export default function AdminPage() {
-  const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState('');
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+// 사이드바 메뉴 정의
+const NAV_ITEMS = [
+  {
+    id: 'members',
+    label: '회원 관리',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'gallery',
+    label: '갤러리 업로드',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    ),
+  },
+] as const
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!file || !title) return alert('사진과 제목을 모두 입력해주세요!');
+type TabId = typeof NAV_ITEMS[number]['id']
 
-    setLoading(true);
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-
-      const { error: storageError } = await supabase.storage
-        .from('activity-images')
-        .upload(fileName, file);
-
-      if (storageError) throw storageError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('activity-images')
-        .getPublicUrl(fileName);
-
-      const { error: dbError } = await supabase
-        .from('Activity')
-        .insert([{ title, image_url: publicUrl }]);
-
-      if (dbError) throw dbError;
-
-      alert('업로드 성공!');
-      setTitle('');
-      setFile(null);
-      router.refresh();
-    } catch (error: any) {
-      alert('에러 발생: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+export default function AdminDashboardPage() {
+  const { user } = useAuth()
+  // 기본 랜딩 탭: 회원 관리
+  const [activeTab, setActiveTab] = useState<TabId>('members')
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-8 border rounded-xl shadow-lg bg-white">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-black text-slate-900">활동 갤러리 관리자</h1>
-        <Link href="/admin/users" className="text-sm font-bold text-[#0098a6] hover:underline">
-          회원 관리 →
-        </Link>
+    <div className="min-h-screen bg-slate-50 pt-20">
+      <div className="max-w-7xl mx-auto flex">
+
+        {/* ─── 사이드바 ─── */}
+        <aside className="w-64 shrink-0 min-h-[calc(100vh-80px)] bg-white border-r border-slate-100 flex flex-col pt-8 px-4">
+          {/* 관리자 프로필 영역 */}
+          <div className="mb-8 px-2">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">ADMIN PANEL</p>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-black text-sm shrink-0">
+                {user?.email?.[0]?.toUpperCase() ?? 'A'}
+              </div>
+              <div className="min-w-0">
+                <p className="text-[13px] font-bold text-slate-700 truncate">{user?.email?.split('@')[0]}</p>
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[#f68d2e]/10 text-[#f68d2e] text-[10px] font-black uppercase">
+                  👑 Admin
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* 구분선 */}
+          <div className="h-px bg-slate-100 mb-4 mx-2" />
+
+          {/* 내비게이션 메뉴 */}
+          <nav className="flex-1">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-2">관리 메뉴</p>
+            <ul className="space-y-1">
+              {NAV_ITEMS.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => setActiveTab(item.id)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-semibold transition-all ${activeTab === item.id
+                        ? 'bg-slate-900 text-white'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      }`}
+                  >
+                    <span className={activeTab === item.id ? 'text-emerald-400' : 'text-slate-400'}>
+                      {item.icon}
+                    </span>
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* 하단 링크 */}
+          <div className="mt-auto pb-8 px-2">
+            <div className="h-px bg-slate-100 mb-4" />
+            <Link
+              href="/mypage"
+              className="flex items-center gap-2 text-[13px] font-semibold text-slate-400 hover:text-slate-700 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              마이페이지로
+            </Link>
+          </div>
+        </aside>
+
+        {/* ─── 콘텐츠 영역 ─── */}
+        <main className="flex-1 p-8 min-h-[calc(100vh-80px)]">
+          {activeTab === 'members' && <MemberManagement />}
+          {activeTab === 'gallery' && <GalleryUpload />}
+        </main>
+
       </div>
-      <form onSubmit={handleUpload} className="space-y-4">
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">행사 제목</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border rounded-md text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none"
-            placeholder="제목을 입력하세요"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">사진 선택</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-emerald-50 file:text-emerald-700"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full py-3 rounded-md text-white font-black transition ${loading ? 'bg-slate-400' : 'bg-emerald-600 hover:bg-emerald-700'
-            }`}
-        >
-          {loading ? '업로드 중...' : '갤러리에 올리기'}
-        </button>
-      </form>
     </div>
-  );
+  )
 }
