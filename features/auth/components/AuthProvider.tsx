@@ -25,13 +25,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
+        // DB에서 최신 profile role을 가져오는 헬퍼 함수
+        const fetchRole = async (userId: string | undefined): Promise<string | null> => {
+            if (!userId) return null
+            const { data } = await supabase.from('profiles').select('role').eq('id', userId).single()
+            return data?.role || null
+        }
+
         // 1. 초기 세션 및 유저 정보 가져오기
         const initAuth = async () => {
             const { data: { session: initialSession } } = await supabase.auth.getSession()
 
             setSession(initialSession)
             setUser(initialSession?.user ?? null)
-            setRole(initialSession?.user?.user_metadata?.role ?? null)
+
+            const fetchedRole = await fetchRole(initialSession?.user?.id)
+            setRole(fetchedRole ?? initialSession?.user?.user_metadata?.role ?? null)
             setIsLoading(false)
         }
 
@@ -41,7 +50,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
             setSession(currentSession)
             setUser(currentSession?.user ?? null)
-            setRole(currentSession?.user?.user_metadata?.role ?? null)
+
+            const fetchedRole = await fetchRole(currentSession?.user?.id)
+            setRole(fetchedRole ?? currentSession?.user?.user_metadata?.role ?? null)
             setIsLoading(false)
         })
 

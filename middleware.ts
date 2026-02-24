@@ -40,7 +40,14 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
-    const userRole = user.user_metadata?.role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    const userRole = profile?.role || user.user_metadata?.role
+
     if (userRole !== 'admin') {
       const url = request.nextUrl.clone()
       url.pathname = '/unauthorized'
