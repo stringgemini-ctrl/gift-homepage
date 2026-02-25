@@ -16,6 +16,8 @@ type Book = {
     buy_link: string | null
     download_url: string | null
     price: number | null
+    journal_name: string | null
+    volume_issue: string | null
     is_featured: boolean
 }
 
@@ -27,7 +29,7 @@ async function getBooks(): Promise<Book[]> {
     )
     const { data, error } = await admin
         .from('books')
-        .select('id, title, author, translator, publisher, published_year, series, category, description, cover_url, buy_link, download_url, price, is_featured')
+        .select('id, title, author, translator, publisher, published_year, series, category, description, cover_url, buy_link, download_url, price, journal_name, volume_issue, is_featured')
         // 최신간(출판 연도 높은 것)이 먼저 → 연도가 같으면 등록 순 역순
         .order('published_year', { ascending: false })
         .order('created_at', { ascending: false })
