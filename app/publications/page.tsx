@@ -132,18 +132,36 @@ export default async function PublicationsPage() {
                         이곳에 조심스럽게 꺼내어 놓습니다.
                     </p>
 
-                    {/* 구분선 + 통계 */}
+                    {/* 구분선 + 통계 (4개 고정 항목, 쓰레기값 침투 불가) */}
                     <div
-                        className="mt-10 pt-8 flex items-center justify-center gap-10"
+                        className="mt-10 pt-8 flex items-center justify-center gap-8 flex-wrap"
                         style={{ borderTop: '1px solid rgba(255,255,255,0.09)' }}
                     >
-                        {/* 총 도서 수: 유효 카테고리(faith/theology/journal) 합산만 */}
-                        <Stat number={books.filter(b => b.category && ['faith', 'theology', 'journal', '신앙시리즈', '신학시리즈', '영문저널'].includes(b.category)).length} label="총 도서" />
+                        {/* 총 도서: 유효 카테고리 3종 합산만 */}
+                        <Stat
+                            number={books.filter(b => b.category && ['faith', 'theology', 'journal', '신앙시리즈', '신학시리즈', '영문저널'].includes(b.category)).length}
+                            label="총 도서"
+                        />
                         <Divider />
-                        <Stat number={books.filter(b => b.category === 'journal' || b.category === '영문저널').length} label="영문 저널" />
+                        {/* 신학시리즈 */}
+                        <Stat
+                            number={books.filter(b => b.category === 'theology' || b.category === '신학시리즈').length}
+                            label="신학시리즈"
+                        />
                         <Divider />
-                        <Stat number={books.filter(b => b.is_featured).length} label="추천" />
+                        {/* 신앙시리즈 */}
+                        <Stat
+                            number={books.filter(b => b.category === 'faith' || b.category === '신앙시리즈').length}
+                            label="신앙시리즈"
+                        />
+                        <Divider />
+                        {/* 영문저널 */}
+                        <Stat
+                            number={books.filter(b => b.category === 'journal' || b.category === '영문저널').length}
+                            label="영문저널"
+                        />
                     </div>
+
                 </div>
             </div>
 
