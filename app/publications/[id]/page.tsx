@@ -31,7 +31,7 @@ async function getBook(id: string): Promise<Book | null> {
     return data
 }
 
-export const revalidate = 60
+export const revalidate = 0 // 이미지 업로드 즉시 반영을 위해 캐시 비활성화
 
 // Next.js 16+: params는 반드시 await해야 합니다 (Promise로 변경됨)
 export default async function BookDetailPage({
@@ -72,41 +72,66 @@ export default async function BookDetailPage({
             <div className="max-w-6xl mx-auto px-6 py-20">
                 <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
 
-                    {/* ── 좌측: 정갈한 3D 책 표지 ── */}
-                    <div className="shrink-0 w-full max-w-[260px] lg:max-w-[300px] mx-auto lg:mx-0 lg:sticky lg:top-36">
-                        {/*
-              CSS perspective로 물리적인 책처럼 비스듬히 서 있는 느낌
-              rotateY(-12deg)로 책 왼쪽 면(책등)이 살짝 보이는 구조
-            */}
-                        <div
-                            className="relative rounded-xl overflow-hidden"
-                            style={{
-                                transform: 'perspective(1200px) rotateY(-10deg) rotateX(2deg)',
-                                boxShadow: '-8px 12px 40px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
-                                transition: 'transform 0.6s ease, box-shadow 0.6s ease',
-                            }}
-                        >
-                            {book.cover_url ? (
-                                <img
-                                    src={book.cover_url}
-                                    alt={book.title}
-                                    className="w-full aspect-[3/4] object-cover"
+                    {/* ── 좌측: BookCard와 동일한 15단계 종이 box-shadow 3D ── */}
+                    <div className="shrink-0 w-full max-w-[300px] lg:max-w-[340px] mx-auto lg:mx-0 lg:sticky lg:top-36">
+                        <div style={{ perspective: '800px' }}>
+                            {/*
+                              BookCard와 완전히 동일한 2도 기울기 + 15단계 종이 질감:
+                              - rotate(2deg) + transformOrigin bottom-left
+                              - 1~15px 흰색/밝은회색 box-shadow + 짝수마다 어두운 경계선
+                            */}
+                            <div
+                                className="relative overflow-hidden rounded-r-[2px]"
+                                style={{
+                                    transform: 'rotate(2deg)',
+                                    transformOrigin: 'bottom left',
+                                    boxShadow: `
+                                        1px 0 0 #f9f9f9,
+                                        2px 0 0 #d0d0d0,
+                                        3px 0 0 #f5f5f5,
+                                        4px 0 0 #ececec,
+                                        5px 0 0 #c8c8c8,
+                                        6px 0 0 #f2f2f2,
+                                        7px 0 0 #e8e8e8,
+                                        8px 0 0 #c0c0c0,
+                                        9px 0 0 #eeeeee,
+                                        10px 0 0 #e5e5e5,
+                                        11px 0 0 #bebebe,
+                                        12px 0 0 #ebebeb,
+                                        13px 0 0 #e2e2e2,
+                                        14px 0 0 #b8b8b8,
+                                        15px 0 0 #e8e8e8,
+                                        8px 8px 24px rgba(0,0,0,0.20),
+                                        14px 16px 40px rgba(0,0,0,0.12),
+                                        20px 24px 60px rgba(0,0,0,0.07)
+                                    `,
+                                    marginRight: '15px',
+                                }}
+                            >
+                                {book.cover_url ? (
+                                    // next/image 대신 <img> 사용: 서버 컴포넌트에서 도메인 제한 없이 안전하게 렌더링
+                                    <img
+                                        src={book.cover_url}
+                                        alt={book.title}
+                                        className="w-full aspect-[2/3] object-cover block"
+                                    />
+                                ) : (
+                                    <div
+                                        className="w-full aspect-[2/3] flex flex-col items-center justify-center gap-3"
+                                        style={{ background: 'linear-gradient(160deg, #0d2b22, #0a1f18)' }}
+                                    >
+                                        <span className="text-5xl opacity-20">📖</span>
+                                        <p className="text-[10px] font-bold text-emerald-700/50 uppercase tracking-widest text-center">
+                                            이미지 준비 중
+                                        </p>
+                                    </div>
+                                )}
+                                {/* 광택 레이어 */}
+                                <div
+                                    className="absolute inset-0 pointer-events-none"
+                                    style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 55%)' }}
                                 />
-                            ) : (
-                                <div className="w-full aspect-[3/4] bg-slate-200 flex items-center justify-center text-5xl text-slate-400">
-                                    📖
-                                </div>
-                            )}
-                            {/* 광택 레이어 */}
-                            <div
-                                className="absolute inset-0 pointer-events-none"
-                                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%)' }}
-                            />
-                            {/* 책등 두께감 (좌측 세로 그림자 선) */}
-                            <div
-                                className="absolute top-0 left-0 bottom-0 w-4 pointer-events-none"
-                                style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.25), transparent)' }}
-                            />
+                            </div>
                         </div>
 
                         {/* 구매 버튼 */}

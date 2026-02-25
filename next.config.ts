@@ -4,10 +4,11 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        // Supabase Storage 버킷 이미지 허용 (book-covers 등)
+        // Supabase Storage 버킷 이미지 허용
+        // 형식: https://[project-id].supabase.co/storage/v1/object/public/...
         protocol: 'https',
         hostname: '*.supabase.co',
-        pathname: '/storage/v1/object/public/**',
+        pathname: '/**',          // 모든 경로 허용 (storage path 변동 가능)
       },
     ],
   },
