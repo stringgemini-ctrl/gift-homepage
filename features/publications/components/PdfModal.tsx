@@ -19,6 +19,18 @@ export default function PdfModal({ pdfUrl, title, onClose }: PdfModalProps) {
     const backdropRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
+        /*
+          pdfUrl이 비어있거나 절대경로가 아니면 콘솔에 경고 — 인셉션 버그 추적용
+          실제 배포에서도 남겨두어 Vercel 함수 로그로 확인 가능
+        */
+        if (!pdfUrl) {
+            console.error('[PdfModal] pdfUrl이 비어있습니다. iframe을 렌더링하지 않습니다.')
+        } else if (!pdfUrl.startsWith('http')) {
+            console.warn('[PdfModal] pdfUrl이 절대경로가 아닙니다:', pdfUrl)
+        } else {
+            console.log('[PdfModal] iframe src:', pdfUrl)
+        }
+
         // Esc 키로 닫기
         const handleKey = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose()
@@ -30,12 +42,19 @@ export default function PdfModal({ pdfUrl, title, onClose }: PdfModalProps) {
             document.removeEventListener('keydown', handleKey)
             document.body.style.overflow = ''
         }
-    }, [onClose])
+    }, [onClose, pdfUrl])
 
     const handleBackdropClick = (e: React.MouseEvent) => {
         // backdrop 자체를 클릭했을 때만 닫기 (모달 내부 클릭 제외)
         if (e.target === backdropRef.current) onClose()
     }
+
+    /*
+      인셉션 버그 원천 차단:
+      pdfUrl이 없거나 http/https로 시작하지 않으면 iframe 렌더링 자체를 막음.
+      브라우저는 빈 src나 상대경로를 현재 페이지 URL로 해석하여 자기 자신을 렌더링.
+    */
+    const isSafeUrl = !!pdfUrl && pdfUrl.startsWith('http')
 
     return (
         <div
@@ -121,14 +140,27 @@ export default function PdfModal({ pdfUrl, title, onClose }: PdfModalProps) {
                     </button>
                 </div>
 
-                {/* PDF iframe */}
+                {/* PDF iframe — URL이 안전한 절대경로일 때만 렌더링 */}
                 <div className="flex-1 bg-slate-100">
-                    <iframe
-                        src={pdfUrl}
-                        className="w-full h-full border-none"
-                        title={title}
-                        allowFullScreen
-                    />
+                    {isSafeUrl ? (
+                        <iframe
+                            src={`${pdfUrl}#view=FitH`}
+                            className="w-full h-full border-none"
+                            title={title}
+                            allowFullScreen
+                        />
+                    ) : (
+                        /* URL 없거나 비정상일 때: 인셉션 방지 에러 UI */
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-4">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.5">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <p className="text-white/60 text-sm font-medium">PDF 경로를 불러올 수 없습니다.</p>
+                            <p className="text-white/30 text-xs">관리자 페이지에서 PDF 파일을 다시 업로드해 주세요.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
