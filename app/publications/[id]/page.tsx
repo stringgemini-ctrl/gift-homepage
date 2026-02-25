@@ -73,7 +73,7 @@ export default async function BookDetailPage({
                 <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
 
                     {/* ── 좌측: BookCard와 동일한 15단계 종이 box-shadow 3D ── */}
-                    <div className="shrink-0 w-full max-w-[300px] lg:max-w-[340px] mx-auto lg:mx-0 lg:sticky lg:top-36">
+                    <div className="shrink-0 w-full max-w-[300px] lg:max-w-[340px] mx-auto lg:mx-0">
                         <div style={{ perspective: '800px' }}>
                             {/*
                               BookCard와 완전히 동일한 2도 기울기 + 15단계 종이 질감:
