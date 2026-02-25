@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import GallerySection from '@/features/main/components/GallerySection'
 import ResourceSection from '@/features/main/components/ResourceSection'
+import HeroParticles from '@/features/publications/components/HeroParticles'
 
 const Icons = {
   Regeneration: ({ color }: { color: string }) => (
@@ -31,35 +32,43 @@ const Icons = {
   ),
 };
 
-// 스펙 문서(5.8) 기준: 사중복음 4색 테마 (Crimson, Pure Gold, Sage Green, Slate Blue)
+// 사중복음 4색 테마 (스펙 5.8 기준: Crimson / Pure Gold / Sage Green / Slate Blue)
 const fourfoldGospel = [
   {
     id: 1, Icon: Icons.Regeneration,
     title: '중생', subtitle: 'Regeneration',
-    iconColor: '#9f1239', // Crimson (rose-800)
-    bgHover: 'hover:bg-rose-50',
+    iconColor: '#9f1239', // Crimson
+    borderColor: 'rgba(159,18,57,0.20)',
+    glowColor: 'rgba(159,18,57,0.08)',
     desc: '천국 시민의 자격을 갖추는 기독교의 입문입니다. 십자가에 달려 속죄의 피를 흘리신 예수 그리스도를 믿을 때, 성령의 역사로 새 생명을 얻어 심령과 인격 전체에 근본적인 변혁이 일어나는 영적 신비입니다.',
+    scripture: '요한복음 3:3',
   },
   {
     id: 2, Icon: Icons.Sanctification,
     title: '성결', subtitle: 'Sanctification',
-    iconColor: '#b45309', // Pure Gold (amber-700)
-    bgHover: 'hover:bg-amber-50',
+    iconColor: '#b45309', // Pure Gold
+    borderColor: 'rgba(180,83,9,0.20)',
+    glowColor: 'rgba(180,83,9,0.08)',
     desc: '구원받은 신자가 마땅히 사모해야 할 성령 세례의 은혜입니다. 오순절 다락방에 임했던 성령의 역사처럼, 죄의 본성을 정결케 하고 하나님을 향한 온전한 사랑과 거룩한 삶의 능력을 덧입는 과정입니다.',
+    scripture: '히브리서 12:14',
   },
   {
     id: 3, Icon: Icons.DivineHealing,
     title: '신유', subtitle: 'Divine Healing',
-    iconColor: '#0f766e', // Sage Green (teal-700)
-    bgHover: 'hover:bg-teal-50',
+    iconColor: '#0f766e', // Sage Green
+    borderColor: 'rgba(15,118,110,0.20)',
+    glowColor: 'rgba(15,118,110,0.08)',
     desc: '하나님의 보호하심 아래 육신의 강건함을 누리며, 병들었을 때 기도함으로 나음을 얻는 은사입니다. 이는 단순한 기적을 넘어, 깨어진 육신을 안전케 하시는 주님의 전인적인 구원과 사랑의 표적입니다.',
+    scripture: '마가복음 16:17–18',
   },
   {
     id: 4, Icon: Icons.SecondComing,
     title: '재림', subtitle: 'Second Coming',
-    iconColor: '#1e40af', // Slate Blue (blue-800)
-    bgHover: 'hover:bg-blue-50',
+    iconColor: '#1e40af', // Slate Blue
+    borderColor: 'rgba(30,64,175,0.20)',
+    glowColor: 'rgba(30,64,175,0.08)',
     desc: '신약성경 예언의 중심이자 우리 신앙의 궁극적인 소망입니다. \'내가 속히 오리라\' 하신 약속을 믿으며, 주님의 공중 재림과 지상 재림을 대망하여 오늘을 깨어 있는 신앙으로 살아가게 하는 원동력입니다.',
+    scripture: '요한계시록 22:20',
   },
 ];
 
@@ -149,15 +158,22 @@ export default function Home() {
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 (스펙 기준 순정 에메랄드) */}
+      {/* 1. 히어로 섹션 — 에메랄드 그라디언트 배경 + 주황 파티클 */}
       <section className="relative z-30 flex h-[85vh] items-center justify-center bg-gradient-to-br from-emerald-100/90 via-emerald-50/40 to-emerald-100/80 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+        {/* 주황 방사형 후광 */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle,rgba(251,191,36,0.1)_0%,transparent_65%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
+        {/* 주황/앰버 파티클 */}
+        <HeroParticles />
+
+        {/* 좌측 인물 */}
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
             <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
             <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{leftFigures[leftIndex].title}<br /><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
+
+        {/* 중앙 텍스트 */}
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-600 bg-emerald-100/60 rounded-full animate-fadeInUp">THE GOOD NEWS</span>
           <h1 className="text-6xl font-black tracking-tighter text-slate-900 md:text-8xl leading-[1.1] animate-fadeInUp">성결의 빛, <br /><span className="text-glory drop-shadow-sm">온 누리에</span></h1>
@@ -165,8 +181,12 @@ export default function Home() {
             <span className="text-[#f68d2e] text-xl md:text-2xl">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl">I</span>nstitute for the <br className="hidden md:block" />
             <span className="text-[#f68d2e] text-xl md:text-2xl">F</span>ourfold-gospel <span className="text-[#f68d2e] text-xl md:text-2xl">T</span>heology
           </p>
-          <div className="mt-12 animate-fadeInUp"><Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-xl transition-all">연구소 자료실 바로가기</Link></div>
+          <div className="mt-12 animate-fadeInUp">
+            <Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-xl transition-all">연구소 자료실 바로가기</Link>
+          </div>
         </div>
+
+        {/* 우측 인물 */}
         <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`right-${rightIndex}`} className="animate-figure-majestic-right text-center">
             <img src={rightFigures[rightIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
@@ -175,7 +195,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. 북 섹션 */}
+      {/* 2. 북 섹션 — 슬레이트 다크 배경 + 3D 플로팅 */}
       <section className="relative z-20 bg-slate-800 py-32 px-8 overflow-hidden shadow-inner">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,rgba(16,185,129,0.1),transparent_50%)] pointer-events-none"></div>
         <div className="mx-auto max-w-[1300px] relative z-10">
@@ -204,7 +224,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. 사중복음 섹션 (순정 스펙: 기둥형 카드 + 워터마크 기법 + 기본 4색 테마) */}
+      {/* 3. 사중복음 섹션 (스펙 5.3·5.4·5.8 기준: 기둥형 카드 + 4색 테마 + 워터마크) */}
       <section className="py-32 bg-slate-50 px-8 w-full text-left">
         <div className="mx-auto max-w-[1200px]">
           <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter">사중복음의 은혜</h2>
@@ -214,13 +234,20 @@ export default function Home() {
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className={`relative overflow-hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-default ${item.bgHover}`}
+                className="relative overflow-hidden bg-white p-8 rounded-3xl shadow-sm border transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-default"
+                style={{ borderColor: item.borderColor }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.06)`
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = ''
+                }}
               >
-                {/* 워터마크 효과 */}
+                {/* 워터마크 — 우측 하단에 각 항목의 영문 첫 알파벳 */}
                 <span
-                  className="pointer-events-none absolute bottom-0 right-[-10px] font-sans font-black select-none leading-none"
+                  className="pointer-events-none absolute bottom-[-10px] right-[-10px] font-sans font-black select-none leading-none"
                   style={{
-                    fontSize: '180px',
+                    fontSize: '160px',
                     color: item.iconColor,
                     opacity: 0.04,
                   }}
@@ -236,9 +263,10 @@ export default function Home() {
                   <p className="text-[10px] uppercase font-black tracking-widest mb-6" style={{ color: item.iconColor }}>
                     {item.subtitle}
                   </p>
-                  <p className="text-sm font-medium text-slate-600 leading-relaxed">
+                  <p className="text-sm font-medium text-slate-600 leading-relaxed flex-1">
                     {item.desc}
                   </p>
+                  <p className="mt-6 text-[11px] font-bold text-slate-400">{item.scripture}</p>
                 </div>
               </div>
             ))}
@@ -246,13 +274,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. 활동 갤러리 섹션 */}
+      {/* 4. 활동 갤러리 */}
       <GallerySection activities={activities} onImageClick={setSelectedImage} />
 
-      {/* 5. 자료실 섹션 */}
+      {/* 5. 자료실 */}
       <ResourceSection posts={posts} />
 
-      {/* 6. 푸터 (Footer) */}
+      {/* 6. 푸터 */}
       <footer className="bg-slate-50 pt-20 pb-10 border-t border-slate-200 w-full text-left">
         <div className="mx-auto max-w-[1200px] px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 pb-16 border-b border-slate-200">
@@ -279,7 +307,6 @@ export default function Home() {
                 <li><Link href="/contact" className="hover:text-emerald-600">오시는 길</Link></li>
               </ul>
             </div>
-
           </div>
           <div className="pt-10 space-y-4">
             <p className="text-[11px] font-bold text-slate-400 leading-relaxed">
@@ -298,10 +325,12 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* 7. 사진 확대 모달 */}
+      {/* 7. 이미지 확대 모달 */}
       {selectedImage && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fadeIn" onClick={() => setSelectedImage(null)}>
-          <button className="absolute top-10 right-10 text-white hover:text-emerald-400"><svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" /></svg></button>
+          <button className="absolute top-10 right-10 text-white hover:text-emerald-400">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
           <img src={selectedImage} className="max-w-full max-h-[90vh] rounded-xl shadow-2xl animate-scaleUp" alt="" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
