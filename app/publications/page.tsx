@@ -46,7 +46,14 @@ export default async function PublicationsPage() {
             {/* ─── 히어로: 묵직한 Zinc-950, 에메랄드는 포인트만 ─── */}
             <div
                 className="relative overflow-hidden"
-                style={{ background: 'linear-gradient(170deg, #111111 0%, #09090b 60%, #0a0f0a 100%)' }}
+                style={{
+                    /*
+                      심연에서 우러나오는 딥 에메랄드 틴트:
+                      - 상단 타원 방사형 그라디언트로 은은한 녹색조 추가
+                      - rgba(6,78,59,0.20) → 텍스트 가독성 해치지 않는 수준
+                    */
+                    background: 'radial-gradient(ellipse 80% 55% at 50% -5%, rgba(6,78,59,0.22) 0%, rgba(9,9,11,0) 65%), linear-gradient(170deg, #0f1412 0%, #09090b 55%, #09090b 100%)'
+                }}
             >
                 {/* CSS 부유 입자 배경 애니메이션 (클라이언트 컴포넌트) */}
                 <HeroParticles />

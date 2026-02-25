@@ -115,7 +115,7 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                               - pb-28: 책 바닥과 선반 사이 충분한 공간 확보
                               - 선반은 absolute bottom-6에 위치해 카드에 가려지지 않음
                             */
-                            <div key={rowIdx} className="relative pb-28">
+                            <div key={rowIdx} className="relative pb-20">
                                 {/* 도서 그리드 행 */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
                                     {row.map((book, i) => (

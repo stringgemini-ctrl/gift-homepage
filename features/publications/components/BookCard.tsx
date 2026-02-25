@@ -35,10 +35,10 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                     style={{
                         /*
                           5도 기울이기: 선반 위에 기대어 있는 자연스러운 자세
-                          - rotate(3deg): 너무 과하지 않게 3도
+                          - rotate(2deg): 너무 과하지 않게 2도
                           - transform-origin: bottom left → 하단 왼쪽을 축으로 기울어짐
                         */
-                        transform: 'rotate(3deg)',
+                        transform: 'rotate(2deg)',
                         transformOrigin: 'bottom left',
                         willChange: 'transform',
                     }}
@@ -48,7 +48,7 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                     }
                     onMouseLeave={e =>
                     ((e.currentTarget as HTMLElement).style.transform =
-                        'rotate(3deg)')
+                        'rotate(2deg)')
                     }
                 >
                     {/*
@@ -141,8 +141,13 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                                 }}
                             >
                                 {book.description && (
-                                    <p className="text-white/90 text-[10px] leading-relaxed line-clamp-3 mb-2">
+                                    <p className="text-white/90 text-[10px] leading-relaxed line-clamp-3 mb-1.5">
                                         {book.description}
+                                    </p>
+                                )}
+                                {book.translator && (
+                                    <p className="text-[9px] font-semibold mb-1.5" style={{ color: 'rgba(110,231,183,0.8)' }}>
+                                        역자: {book.translator}
                                     </p>
                                 )}
                                 <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#34d399' }}>
@@ -161,9 +166,11 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                             <h3 className="text-[12px] font-black text-zinc-900 leading-snug line-clamp-2 group-hover:text-emerald-800 transition-colors duration-300">
                                 {book.title}
                             </h3>
-                            <p className="text-[10px] text-zinc-500 font-medium truncate">
+                            <p className="text-[10px] text-zinc-500 font-medium break-words leading-snug">
                                 {book.author}
-                                {book.translator && <span className="text-zinc-400"> / 역 {book.translator}</span>}
+                                {book.translator && (
+                                    <span className="block text-zinc-400 text-[9px] mt-0.5">역 {book.translator}</span>
+                                )}
                             </p>
                             {book.published_year && (
                                 <p className="text-[9px] text-zinc-300 mt-0.5">{book.published_year}</p>
