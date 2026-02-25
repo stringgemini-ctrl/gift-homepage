@@ -24,15 +24,17 @@ type Book = {
 }
 
 /*
-  탭 구조: 전체 / 도서 / 영문 저널
-  - 'all': 전체
-  - 'books': 영문저널이 아닌 모든 카테고리 (신학/신앙 등)
-  - 'english_journals': category === '영문저널'만
+  4탭 구조 (한국어 + 영어 이중언어):
+  - all : 전체 보기
+  - faith : 신앙시리즈 (Faith Series)
+  - theology : 신학시리즈 (Theology Series)
+  - journal : 영문 저널 (English Journals)
 */
 const TABS = [
-    { key: 'all', label: 'All', labelKo: '전체' },
-    { key: 'books', label: 'Books', labelKo: '도서' },
-    { key: 'english_journals', label: 'English Journals', labelKo: '영문 저널' },
+    { key: 'all', ko: '전체보기', en: 'All' },
+    { key: 'faith', ko: '신앙시리즈', en: 'Faith Series' },
+    { key: 'theology', ko: '신학시리즈', en: 'Theology Series' },
+    { key: 'journal', ko: '영문저널', en: 'English Journals' },
 ] as const
 type TabKey = typeof TABS[number]['key']
 
@@ -42,25 +44,25 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
     return result
 }
 
-/*
-  저널 판별 함수 (NULL-safe):
-  - category가 null/undefined/빈 문자열인 경우 → 도서(비저널)로 간주
-  - 기존 레거시 데이터(category=NULL)가 Books 탭에서 사라지지 않도록 보호
-*/
-const isJournalItem = (b: Book) =>
-    !!b.category && (b.category === 'journal' || b.category === '영문저널')
+// 저널 판별 (구버전 '영문저널' 데이터 포함, NULL-safe)
+const matchTab = (b: Book, tab: TabKey): boolean => {
+    if (tab === 'all') return true
+    const cat = b.category?.toLowerCase() ?? ''
+    if (tab === 'faith') return cat === 'faith' || cat === '신앙시리즈'
+    if (tab === 'theology') return cat === 'theology' || cat === '신학시리즈'
+    if (tab === 'journal') return cat === 'journal' || cat === '영문저널'
+    return true
+}
 
 const COLS = 3
 
 export default function CategoryFilter({ books }: { books: Book[] }) {
     const [activeTab, setActiveTab] = useState<TabKey>('all')
 
-    const filtered = useMemo(() => {
-        if (activeTab === 'all') return books
-        if (activeTab === 'books') return books.filter(b => !isJournalItem(b))
-        if (activeTab === 'english_journals') return books.filter(isJournalItem)
-        return books
-    }, [books, activeTab])
+    const filtered = useMemo(() =>
+        activeTab === 'all' ? books : books.filter(b => matchTab(b, activeTab)),
+        [books, activeTab]
+    )
 
     const rows = useMemo(() => chunkArray(filtered, COLS), [filtered])
 
@@ -84,18 +86,16 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                         const active = activeTab === tab.key
                         const count = tab.key === 'all'
                             ? books.length
-                            : tab.key === 'books'
-                                ? books.filter(b => !isJournalItem(b)).length
-                                : books.filter(isJournalItem).length
-                        const isJournals = tab.key === 'english_journals'
+                            : books.filter(b => matchTab(b, tab.key)).length
+                        const isJournal = tab.key === 'journal'
                         return (
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
-                                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[12px] font-bold transition-all duration-300"
+                                className="flex flex-col items-center px-4 py-1.5 rounded-full transition-all duration-300"
                                 style={{
                                     background: active
-                                        ? isJournals ? 'linear-gradient(135deg, #065f46, #047857)' : '#18453b'
+                                        ? isJournal ? 'linear-gradient(135deg, #065f46, #047857)' : '#18453b'
                                         : 'transparent',
                                     color: active ? '#e2f5ee' : '#6b7280',
                                     boxShadow: active
@@ -103,12 +103,14 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                                         : 'none',
                                 }}
                             >
-                                {isJournals && <span className="text-[10px]">📄</span>}
-                                <span>{tab.label}</span>
+                                {/* 한국어 + 영어 이중언어 레이블 */}
+                                <span className="text-[12px] font-black leading-tight whitespace-nowrap">{tab.ko}</span>
+                                <span className="text-[9px] font-medium opacity-70 whitespace-nowrap leading-tight">{tab.en}</span>
+                                {/* 카운트 뱃지 */}
                                 <span
-                                    className="text-[9px] font-black rounded-full px-1.5 py-0.5"
+                                    className="mt-0.5 text-[8px] font-black rounded-full px-1.5 py-0.5"
                                     style={{
-                                        background: active ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.07)',
+                                        background: active ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.07)',
                                         color: active ? '#a7f3d0' : '#9ca3af',
                                     }}
                                 >
@@ -130,25 +132,13 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                 ) : (
                     <div className="space-y-0">
                         {rows.map((row, rowIdx) => (
-                            /*
-                              선반(Shelf) 행:
-                              - pb-28: 책 바닥과 선반 사이 충분한 공간 확보
-                              - 선반은 absolute bottom-6에 위치해 카드에 가려지지 않음
-                            */
                             <div key={rowIdx} className="relative pb-20">
                                 {/* 도서 그리드 행 */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
                                     {row.map((book, i) => (
-                                        /*
-                                          카드 래퍼: max-w-[220px] mx-auto로 너비 강제 제한 (~40% 축소)
-                                          mb-8로 카드 바닥과 선반 사이 틈 확보
-                                        */
                                         <div key={book.id} className="max-w-[285px] mx-auto w-full">
-                                            {/*
-                                              저널이면 JournalCard (모달 PDF 뷰어)
-                                              도서이면 BookCard (링크 네비게이션)
-                                            */}
-                                            {isJournalItem(book) ? (
+                                            {/* 저널이면 JournalCard, 도서이면 BookCard */}
+                                            {matchTab(book, 'journal') ? (
                                                 <JournalCard journal={book} />
                                             ) : (
                                                 <BookCard

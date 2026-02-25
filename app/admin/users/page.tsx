@@ -21,14 +21,21 @@ export default function AdminUsersPage() {
   const router = useRouter()
 
   useEffect(() => {
-    if (isAuthLoading) return
+    if (isAuthLoading) return   // 인증 로딩 중 → 대기
 
-    // AuthProvider에서 가져온 role 확인 (미들웨어에서도 걸러지지만 클라이언트 보호용 2차 확인)
-    if (!user || role?.toUpperCase() !== 'ADMIN') {
+    // user가 없으면 명확히 리다이렉트
+    if (!user) { router.replace('/unauthorized'); return }
+
+    // role이 아직 null이면 로딩 완료 대기 (race condition 방지)
+    if (role === null || role === undefined) return
+
+    // role이 확정됐고 ADMIN이 아닐 때만 리다이렉트
+    if (role.toUpperCase() !== 'ADMIN') {
       router.replace('/unauthorized')
       return
     }
 
+    // 데이터 fetch 에러는 화면에만 표시 (리다이렉트/signOut 없음)
     async function fetchProfiles() {
       const { data, error } = await supabase
         .from('profiles')

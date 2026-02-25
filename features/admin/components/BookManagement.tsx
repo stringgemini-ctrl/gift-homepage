@@ -37,7 +37,7 @@ export default function BookManagement() {
     const [isPdfUploading, setIsPdfUploading] = useState(false)
     const [pdfUploadStatus, setPdfUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle')
     // Book / Journal 모드 토글
-    const [itemType, setItemType] = useState<'book' | 'journal'>('book')
+    // category에서 저널 여부를 파생 (itemType 별도 상태 불필요)
 
     const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
         setToast({ msg, type })
@@ -247,38 +247,43 @@ export default function BookManagement() {
                     )}
                 </div>
 
-                {/* Book / Journal 모드 토글 */}
-                <div
-                    className="flex items-center gap-1 p-1 rounded-2xl mb-6"
-                    style={{ background: 'rgba(0,0,0,0.04)', width: 'fit-content' }}
-                >
-                    {(['book', 'journal'] as const).map(type => {
-                        const active = itemType === type
-                        const isJournal = type === 'journal'
-                        return (
-                            <button
-                                key={type}
-                                type="button"
-                                onClick={() => {
-                                    setItemType(type)
-                                    // 모드 전환 시 category 자동 설정
-                                    if (type === 'journal') setField('category', 'journal')
-                                    else if (form.category === 'journal') setField('category', '')
-                                }}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-black transition-all duration-200"
-                                style={{
-                                    background: active
-                                        ? isJournal ? 'linear-gradient(135deg, #065f46, #047857)' : '#f68d2e'
-                                        : 'transparent',
-                                    color: active ? 'white' : '#9ca3af',
-                                    boxShadow: active ? '0 2px 10px rgba(0,0,0,0.14)' : 'none',
-                                }}
-                            >
-                                <span>{isJournal ? '📄' : '📘'}</span>
-                                <span>{isJournal ? 'English Journal' : 'Book'}</span>
-                            </button>
-                        )
-                    })}
+                {/* 카테고리 선택 라디오 (신앙시리즈 / 신학시리즈 / 영문저널) */}
+                <div className="mb-6">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">카테고리 선택</p>
+                    <div
+                        className="flex items-center gap-1 p-1 rounded-2xl"
+                        style={{ background: 'rgba(0,0,0,0.04)', width: 'fit-content' }}
+                    >
+                        {([
+                            { key: 'faith', emoji: '📗', ko: '신앙시리즈', en: 'Faith' },
+                            { key: 'theology', emoji: '📘', ko: '신학시리즈', en: 'Theology' },
+                            { key: 'journal', emoji: '📄', ko: '영문저널', en: 'Journal' },
+                        ] as const).map(cat => {
+                            const active = form.category === cat.key
+                            const isJ = cat.key === 'journal'
+                            return (
+                                <button
+                                    key={cat.key}
+                                    type="button"
+                                    onClick={() => {
+                                        // category 직접 설정, itemType은 category에서 파생
+                                        setField('category', cat.key)
+                                    }}
+                                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-black transition-all duration-200"
+                                    style={{
+                                        background: active
+                                            ? isJ ? 'linear-gradient(135deg, #065f46, #047857)' : '#f68d2e'
+                                            : 'transparent',
+                                        color: active ? 'white' : '#9ca3af',
+                                        boxShadow: active ? '0 2px 10px rgba(0,0,0,0.14)' : 'none',
+                                    }}
+                                >
+                                    <span>{cat.emoji}</span>
+                                    <span className="whitespace-nowrap">{cat.ko}</span>
+                                </button>
+                            )
+                        })}
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -399,7 +404,7 @@ export default function BookManagement() {
                     <div className="flex flex-col gap-4">
 
                         {/* ── Journal 모드: PDF 업로드 섹션 ── */}
-                        {itemType === 'journal' && (
+                        {form.category === 'journal' && (
                             <div
                                 className="p-4 rounded-xl space-y-3"
                                 style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.18)', borderLeft: '4px solid #10b981' }}
@@ -496,8 +501,8 @@ export default function BookManagement() {
                         </div>
 
                         <button type="submit" disabled={isSubmitting || isUploading || isPdfUploading}
-                            className={`w-full py-3.5 rounded-xl text-white font-bold text-[14px] transition-colors disabled:opacity-50 ${editingId ? 'bg-emerald-500 hover:bg-emerald-600' : itemType === 'journal' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#f68d2e] hover:bg-orange-600'}`}>
-                            {isUploading || isPdfUploading ? '업로드 중...' : isSubmitting ? '처리 중...' : editingId ? '수정 완료' : itemType === 'journal' ? '저널 등록' : '도서 등록'}
+                            className={`w-full py-3.5 rounded-xl text-white font-bold text-[14px] transition-colors disabled:opacity-50 ${editingId ? 'bg-emerald-500 hover:bg-emerald-600' : form.category === 'journal' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#f68d2e] hover:bg-orange-600'}`}>
+                            {isUploading || isPdfUploading ? '업로드 중...' : isSubmitting ? '처리 중...' : editingId ? '수정 완료' : form.category === 'journal' ? '저널 등록' : '도서 등록'}
                         </button>
                     </div>
 
