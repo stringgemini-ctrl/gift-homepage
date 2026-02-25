@@ -42,8 +42,13 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
     return result
 }
 
-// 저널 판별: 새로운 'journal' 값과 기존 '영문저널' 값 모두 지원 (하위 호환)
-const isJournalItem = (b: Book) => b.category === 'journal' || b.category === '영문저널'
+/*
+  저널 판별 함수 (NULL-safe):
+  - category가 null/undefined/빈 문자열인 경우 → 도서(비저널)로 간주
+  - 기존 레거시 데이터(category=NULL)가 Books 탭에서 사라지지 않도록 보호
+*/
+const isJournalItem = (b: Book) =>
+    !!b.category && (b.category === 'journal' || b.category === '영문저널')
 
 const COLS = 3
 

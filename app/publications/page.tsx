@@ -29,10 +29,13 @@ async function getBooks(): Promise<Book[]> {
     )
     const { data, error } = await admin
         .from('books')
-        .select('id, title, author, translator, publisher, published_year, series, category, description, cover_url, buy_link, download_url, price, journal_name, volume_issue, is_featured')
-        // 최신간(출판 연도 높은 것)이 먼저 → 연도가 같으면 등록 순 역순
+        // select('*')로 모든 컬럼 가져오기:
+        // journal_name/volume_issue 컬럼이 DB에 없어도 오류 없이 작동함
+        // (특정 컬럼명 지정 시 미존재 컬럼 → 쿼리 실패 → 빈 화면 버그)
+        .select('*')
         .order('published_year', { ascending: false })
         .order('created_at', { ascending: false })
+
 
     if (error) { console.error('[Publications]', error.message); return [] }
     return data ?? []

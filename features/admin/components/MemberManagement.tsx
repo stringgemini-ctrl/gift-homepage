@@ -27,12 +27,25 @@ export default function MemberManagement() {
     }, [])
 
     useEffect(() => {
-        if (isAuthLoading) return
-        if (!user || role?.toUpperCase() !== 'ADMIN') {
+        if (isAuthLoading) return            // 아직 인증 로딩 중 → 아무것도 하지 않음
+
+        /*
+          role이 null/undefined인 채로 이 블록에 도달하면 잘못된 리다이렉트 발생.
+          → isAuthLoading이 false이고 user가 없거나 role이 'ADMIN'이 아닐 때만 리다이렉트.
+          데이터 fetch 에러(500)는 아래 fetchError state로만 처리 (signOut 트리거 없음).
+        */
+        if (!user) {
             router.replace('/unauthorized')
             return
         }
-        fetchData()
+        if (role && role.toUpperCase() !== 'ADMIN') {
+            router.replace('/unauthorized')
+            return
+        }
+        // role이 확정된 후에만 데이터 로드
+        if (role?.toUpperCase() === 'ADMIN') {
+            fetchData()
+        }
     }, [user, role, isAuthLoading, router, fetchData])
 
     const handleRoleChange = async (userId: string, newRole: string) => {
