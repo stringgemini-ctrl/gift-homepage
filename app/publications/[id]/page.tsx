@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import JournalPdfButton from '@/features/publications/components/JournalPdfButton'
 
 // ── 타입 ────────────────────────────────────────────────────────
 type Book = {
@@ -140,11 +141,10 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                                 </a>
                             )}
                             {book.download_url && (
-                                <a href={book.download_url} target="_blank" rel="noopener noreferrer"
-                                    className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-[14px] font-black transition-all"
-                                    style={{ background: 'linear-gradient(135deg, #065f46, #059669)', color: '#a7f3d0' }}>
-                                    <span>📄</span> PDF 저널 보기
-                                </a>
+                                <JournalPdfButton
+                                    pdfUrl={book.download_url}
+                                    title={book.title}
+                                />
                             )}
                         </div>
                     </div>
