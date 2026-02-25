@@ -114,7 +114,7 @@ export default async function PublicationsPage() {
                         </span>
                     </h1>
 
-                    <p className="text-[16px] max-w-md mx-auto leading-relaxed" style={{ color: 'rgba(200,235,220,0.45)' }}>
+                    <p className="text-[18px] max-w-md mx-auto leading-relaxed font-medium" style={{ color: 'rgba(210,240,228,0.72)' }}>
                         복음의 신학을 탐구해온<br />연구소의 출판물을 소개합니다.
                     </p>
 
@@ -172,8 +172,8 @@ export default async function PublicationsPage() {
 function Stat({ number, label }: { number: number; label: string }) {
     return (
         <div className="text-center">
-            <p className="text-[28px] font-black leading-none" style={{ color: '#34d399' }}>{number}</p>
-            <p className="text-[11px] font-semibold mt-1 uppercase tracking-widest" style={{ color: 'rgba(110,231,183,0.45)' }}>{label}</p>
+            <p className="text-[32px] font-black leading-none" style={{ color: '#34d399' }}>{number}</p>
+            <p className="text-[12px] font-bold mt-1 uppercase tracking-widest" style={{ color: 'rgba(110,231,183,0.65)' }}>{label}</p>
         </div>
     )
 }
