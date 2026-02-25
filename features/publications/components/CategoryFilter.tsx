@@ -61,7 +61,7 @@ const matchTab = (b: Book, tab: TabKey): boolean => {
     return false
 }
 
-const COLS = 3
+const COLS = 5  // 5열 그리드 (lg 이상)
 
 export default function CategoryFilter({ books }: { books: Book[] }) {
     const [activeTab, setActiveTab] = useState<TabKey>('all')
@@ -145,10 +145,10 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                     <div className="space-y-0">
                         {rows.map((row, rowIdx) => (
                             <div key={rowIdx} className="relative pb-20">
-                                {/* 도서 그리드 행 */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
+                                {/* 도서 그리드 행: sm=3열, lg=4열, xl=5열 → 한 화면에 더 많은 도서 */}
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-14">
                                     {row.map((book, i) => (
-                                        <div key={book.id} className="max-w-[285px] mx-auto w-full">
+                                        <div key={book.id} className="max-w-[210px] mx-auto w-full">
                                             {/* 저널이면 JournalCard, 도서이면 BookCard */}
                                             {matchTab(book, 'journal') ? (
                                                 <JournalCard journal={book} />

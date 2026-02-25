@@ -54,35 +54,36 @@ export default async function PublicationsPage() {
                 <HeroParticles />
 
                 {/*
-                  성운 Layer 1: 상단 전체를 덮는 넓은 에메랄드 광원
-                  - 0.12 → 0.30 으로 2.5배 강화 (묵직한 테마 인상)
+                  성운 Layer 1: 상단 전체를 덮는 넣은 에메랄드 광원
+                  - 0.30 → 0.55 로 최대화 (신비롭고 묵직한 테마)
                 */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(ellipse 120% 80% at 50% 0%, rgba(16,185,129,0.30) 0%, transparent 70%)',
+                    background: 'radial-gradient(ellipse 130% 90% at 50% -5%, rgba(16,185,129,0.55) 0%, rgba(5,150,105,0.25) 45%, transparent 70%)',
                 }} />
 
                 {/*
                   성운 Layer 2: 우하단 반대 빛무리 강화
-                  - 0.15 → 0.28 로 강화
+                  - 0.28 → 0.40
                 */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(circle at 80% 85%, rgba(6,78,59,0.28) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle at 80% 85%, rgba(6,78,59,0.40) 0%, transparent 65%)',
                 }} />
 
                 {/*
-                  성운 Layer 3: 중앙 집중 광원 (신규 추가)
-                  - 텍스트 뒤에서 배어나오는 에메랄드 포커스 글로우
+                  성운 Layer 3: 중앙 집중 광원 강화
+                  - 0.18 → 0.38
                 */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(ellipse 60% 40% at 50% 25%, rgba(16,185,129,0.18) 0%, transparent 65%)',
+                    background: 'radial-gradient(ellipse 70% 50% at 50% 22%, rgba(16,185,129,0.38) 0%, transparent 60%)',
                 }} />
 
-                {/* 미세 격자 — 공간감 보조 (opacity 강화) */}
+                {/* 미세 격자 — 공간감 보조 */}
                 <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{
                     backgroundImage:
                         'linear-gradient(rgba(200,220,210,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(200,220,210,0.8) 1px, transparent 1px)',
                     backgroundSize: '60px 60px',
                 }} />
+
 
 
                 {/*
@@ -109,24 +110,26 @@ export default async function PublicationsPage() {
 
                     {/* 타이틀 */}
                     <h1
-                        className="font-black tracking-[-0.04em] leading-[1.0] mb-7"
-                        style={{ fontSize: 'clamp(42px, 6.5vw, 72px)', color: '#f4f4f5' }}
+                        className="font-black tracking-[-0.03em] leading-[1.15] mb-7"
+                        style={{ fontSize: 'clamp(34px, 5vw, 60px)', color: '#f4f4f5' }}
                     >
-                        연구소&nbsp;
+                        진리를 향한 좁은 길,&nbsp;
                         <span style={{
                             background: 'linear-gradient(120deg, #a7f3d0, #34d399)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                         }}>
-                            출간 도서
+                            사중복음의 궤적
                         </span>
                     </h1>
 
                     <p
-                        className="text-[17px] max-w-sm mx-auto leading-relaxed"
-                        style={{ color: 'rgba(244,244,245,0.65)' }}
+                        className="text-[15px] max-w-xl mx-auto leading-[1.85]"
+                        style={{ color: 'rgba(244,244,245,0.62)' }}
                     >
-                        복음의 신학을 탐구해온<br />연구소의 출판물을 소개합니다.
+                        기독교대한성결교회의 오랜 신학적 고민과 헌신이 담긴 기록들을 소개합니다.<br />
+                        시대의 물음 앞에 한없이 겸손하려 했던,<br />그러나 치열하게 파고든 사중복음 연구의 결실들을<br />
+                        이곳에 조심스럽게 꺼내어 놓습니다.
                     </p>
 
                     {/* 구분선 + 통계 */}
@@ -134,9 +137,10 @@ export default async function PublicationsPage() {
                         className="mt-10 pt-8 flex items-center justify-center gap-10"
                         style={{ borderTop: '1px solid rgba(255,255,255,0.09)' }}
                     >
-                        <Stat number={books.length} label="총 도서" />
+                        {/* 총 도서 수: 유효 카테고리(faith/theology/journal) 합산만 */}
+                        <Stat number={books.filter(b => b.category && ['faith', 'theology', 'journal', '신앙시리즈', '신학시리즈', '영문저널'].includes(b.category)).length} label="총 도서" />
                         <Divider />
-                        <Stat number={books.filter(b => b.category === '영문저널').length} label="영문 저널" />
+                        <Stat number={books.filter(b => b.category === 'journal' || b.category === '영문저널').length} label="영문 저널" />
                         <Divider />
                         <Stat number={books.filter(b => b.is_featured).length} label="추천" />
                     </div>
