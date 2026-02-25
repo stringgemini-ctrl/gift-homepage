@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import BookCard from './BookCard'
+import JournalCard from './JournalCard'
 
 type Book = {
     id: string
@@ -41,6 +42,9 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
     return result
 }
 
+// 저널 판별: 새로운 'journal' 값과 기존 '영문저널' 값 모두 지원 (하위 호환)
+const isJournalItem = (b: Book) => b.category === 'journal' || b.category === '영문저널'
+
 const COLS = 3
 
 export default function CategoryFilter({ books }: { books: Book[] }) {
@@ -48,8 +52,8 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
 
     const filtered = useMemo(() => {
         if (activeTab === 'all') return books
-        if (activeTab === 'books') return books.filter(b => b.category !== '영문저널')
-        if (activeTab === 'english_journals') return books.filter(b => b.category === '영문저널')
+        if (activeTab === 'books') return books.filter(b => !isJournalItem(b))
+        if (activeTab === 'english_journals') return books.filter(isJournalItem)
         return books
     }, [books, activeTab])
 
@@ -76,8 +80,8 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                         const count = tab.key === 'all'
                             ? books.length
                             : tab.key === 'books'
-                                ? books.filter(b => b.category !== '영문저널').length
-                                : books.filter(b => b.category === '영문저널').length
+                                ? books.filter(b => !isJournalItem(b)).length
+                                : books.filter(isJournalItem).length
                         const isJournals = tab.key === 'english_journals'
                         return (
                             <button
@@ -135,10 +139,18 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                                           mb-8로 카드 바닥과 선반 사이 틈 확보
                                         */
                                         <div key={book.id} className="max-w-[285px] mx-auto w-full">
-                                            <BookCard
-                                                book={book}
-                                                priority={rowIdx === 0 && i < 3}
-                                            />
+                                            {/*
+                                              저널이면 JournalCard (모달 PDF 뷰어)
+                                              도서이면 BookCard (링크 네비게이션)
+                                            */}
+                                            {isJournalItem(book) ? (
+                                                <JournalCard journal={book} />
+                                            ) : (
+                                                <BookCard
+                                                    book={book}
+                                                    priority={rowIdx === 0 && i < 3}
+                                                />
+                                            )}
                                         </div>
                                     ))}
                                 </div>

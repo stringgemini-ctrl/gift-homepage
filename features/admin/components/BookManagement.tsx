@@ -30,9 +30,14 @@ export default function BookManagement() {
     const [form, setForm] = useState<FormState>(EMPTY_FORM)
     const [coverFile, setCoverFile] = useState<File | null>(null)
     const [coverPreview, setCoverPreview] = useState<string | null>(null)
-    // 업로드 전용 로딩 상태 (제운 버튼과 분리)
+    // 커버 이미지 업로드 상태
     const [isUploading, setIsUploading] = useState(false)
     const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle')
+    // PDF 업로드 상태 (저널 전용)
+    const [isPdfUploading, setIsPdfUploading] = useState(false)
+    const [pdfUploadStatus, setPdfUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle')
+    // Book / Journal 모드 토글
+    const [itemType, setItemType] = useState<'book' | 'journal'>('book')
 
     const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
         setToast({ msg, type })
@@ -119,6 +124,7 @@ export default function BookManagement() {
         setCoverFile(null)
         setCoverPreview(null)
         setUploadStatus('idle')
+        setPdfUploadStatus('idle')
     }
 
     // 폼 제운 시 이미 업로드된 cover_url 사용 (handleFileChange에서 자동 동기화)
@@ -127,6 +133,33 @@ export default function BookManagement() {
         if (form.cover_url) return form.cover_url
         if (editingId) return books.find(b => b.id === editingId)?.cover_url ?? null
         return null
+    }
+
+    // journals 버킷 PDF 업로드: 파일명 난수화 후 download_url에 자동 동기화
+    const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file || !file.type.includes('pdf')) {
+            showToast('PDF 파일만 업로드 가능합니다.', 'error')
+            return
+        }
+        setPdfUploadStatus('uploading')
+        setIsPdfUploading(true)
+        try {
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.pdf`
+            const { error: upErr } = await supabase.storage
+                .from('journals')
+                .upload(fileName, file, { upsert: false })
+            if (upErr) throw upErr
+            const { data: urlData } = supabase.storage.from('journals').getPublicUrl(fileName)
+            setField('download_url', urlData.publicUrl)
+            setPdfUploadStatus('success')
+            showToast('✅ PDF 업로드 성공!')
+        } catch (err) {
+            setPdfUploadStatus('error')
+            showToast('PDF 업로드 실패: ' + (err instanceof Error ? err.message : '오류'), 'error')
+        } finally {
+            setIsPdfUploading(false)
+        }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -212,6 +245,40 @@ export default function BookManagement() {
                             취소
                         </button>
                     )}
+                </div>
+
+                {/* Book / Journal 모드 토글 */}
+                <div
+                    className="flex items-center gap-1 p-1 rounded-2xl mb-6"
+                    style={{ background: 'rgba(0,0,0,0.04)', width: 'fit-content' }}
+                >
+                    {(['book', 'journal'] as const).map(type => {
+                        const active = itemType === type
+                        const isJournal = type === 'journal'
+                        return (
+                            <button
+                                key={type}
+                                type="button"
+                                onClick={() => {
+                                    setItemType(type)
+                                    // 모드 전환 시 category 자동 설정
+                                    if (type === 'journal') setField('category', 'journal')
+                                    else if (form.category === 'journal') setField('category', '')
+                                }}
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-black transition-all duration-200"
+                                style={{
+                                    background: active
+                                        ? isJournal ? 'linear-gradient(135deg, #065f46, #047857)' : '#f68d2e'
+                                        : 'transparent',
+                                    color: active ? 'white' : '#9ca3af',
+                                    boxShadow: active ? '0 2px 10px rgba(0,0,0,0.14)' : 'none',
+                                }}
+                            >
+                                <span>{isJournal ? '📄' : '📘'}</span>
+                                <span>{isJournal ? 'English Journal' : 'Book'}</span>
+                            </button>
+                        )
+                    })}
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -330,6 +397,51 @@ export default function BookManagement() {
 
                     {/* 오른쪽: 표지 이미지 + URL 동기화 */}
                     <div className="flex flex-col gap-4">
+
+                        {/* ── Journal 모드: PDF 업로드 섹션 ── */}
+                        {itemType === 'journal' && (
+                            <div
+                                className="p-4 rounded-xl space-y-3"
+                                style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.18)', borderLeft: '4px solid #10b981' }}
+                            >
+                                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">📄 PDF 파일 업로드</p>
+                                <label
+                                    className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all cursor-pointer py-8 relative ${isPdfUploading ? 'border-amber-300 bg-amber-50/30' : pdfUploadStatus === 'success' ? 'border-emerald-300 bg-emerald-50/20' : 'border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50/10'}`}
+                                >
+                                    {isPdfUploading ? (
+                                        <div className="flex flex-col items-center gap-2">
+                                            <div className="w-7 h-7 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                                            <p className="text-[11px] font-bold text-amber-600">업로드 중...</p>
+                                        </div>
+                                    ) : pdfUploadStatus === 'success' ? (
+                                        <div className="flex flex-col items-center gap-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
+                                            <p className="text-[11px] font-bold text-emerald-600">PDF 업로드 완료</p>
+                                            <p className="text-[9px] text-emerald-500 truncate max-w-[180px]">{form.download_url}</p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col items-center gap-2 text-slate-400">
+                                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                                            <p className="text-[12px] font-semibold">PDF 파일 클릭하여 선택</p>
+                                            <p className="text-[10px] text-slate-300">선택 즉시 journals 버킷에 업로드</p>
+                                        </div>
+                                    )}
+                                    <input type="file" accept="application/pdf" onChange={handlePdfUpload} className="hidden" disabled={isPdfUploading} />
+                                </label>
+
+                                {/* PDF URL 직접 입력 */}
+                                <div>
+                                    <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-wider">PDF URL (직접 입력 가능)</label>
+                                    <input
+                                        value={form.download_url}
+                                        onChange={e => setField('download_url', e.target.value)}
+                                        placeholder="https://...pdf (업로드 시 자동 입력)"
+                                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all text-slate-500"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
                         <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">표지 이미지</label>
 
                         {/* 드래그 영역 */}
@@ -367,7 +479,7 @@ export default function BookManagement() {
                             <p className="text-[11px] font-bold text-red-500">❌ 업로드 실패 — URL을 직접 입력하세요</p>
                         )}
 
-                        {/* 이미지 URL 직접 입력 (업로드 대체 or 외부 URL) */}
+                        {/* 이미지 URL 직접 입력 */}
                         <div>
                             <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">
                                 이미지 URL (직접 입력 가능)
@@ -383,12 +495,12 @@ export default function BookManagement() {
                             />
                         </div>
 
-                        <button type="submit" disabled={isSubmitting || isUploading}
-                            className={`w-full py-3.5 rounded-xl text-white font-bold text-[14px] transition-colors disabled:opacity-50 ${editingId ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-[#f68d2e] hover:bg-orange-600'
-                                }`}>
-                            {isUploading ? '이미지 업로드 중...' : isSubmitting ? '처리 중...' : editingId ? '수정 완료' : '도서 등록'}
+                        <button type="submit" disabled={isSubmitting || isUploading || isPdfUploading}
+                            className={`w-full py-3.5 rounded-xl text-white font-bold text-[14px] transition-colors disabled:opacity-50 ${editingId ? 'bg-emerald-500 hover:bg-emerald-600' : itemType === 'journal' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#f68d2e] hover:bg-orange-600'}`}>
+                            {isUploading || isPdfUploading ? '업로드 중...' : isSubmitting ? '처리 중...' : editingId ? '수정 완료' : itemType === 'journal' ? '저널 등록' : '도서 등록'}
                         </button>
                     </div>
+
                 </form>
             </div>
 
