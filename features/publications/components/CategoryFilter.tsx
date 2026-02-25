@@ -123,7 +123,7 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                                           카드 래퍼: max-w-[220px] mx-auto로 너비 강제 제한 (~40% 축소)
                                           mb-8로 카드 바닥과 선반 사이 틈 확보
                                         */
-                                        <div key={book.id} className="max-w-[220px] mx-auto w-full mb-8">
+                                        <div key={book.id} className="max-w-[260px] mx-auto w-full">
                                             <BookCard
                                                 book={book}
                                                 priority={rowIdx === 0 && i < 3}

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import CategoryFilter from '@/features/publications/components/CategoryFilter'
+import HeroParticles from '@/features/publications/components/HeroParticles'
 
 type Book = {
     id: string
@@ -47,6 +48,8 @@ export default async function PublicationsPage() {
                 className="relative overflow-hidden"
                 style={{ background: 'linear-gradient(170deg, #111111 0%, #09090b 60%, #0a0f0a 100%)' }}
             >
+                {/* CSS 부유 입자 배경 애니메이션 (클라이언트 컴포넌트) */}
+                <HeroParticles />
                 {/*
           엠비언트 글로우: 아주 미세하게만 → 초록 덮임 방지
           opacity를 이전 0.13 → 0.07로 대폭 축소
