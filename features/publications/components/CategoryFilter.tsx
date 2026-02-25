@@ -35,7 +35,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
     return result
 }
 
-const COLS = 4 // 큰 화면 기준 한 줄 책 수 (lg:grid-cols-4)
+const COLS = 3 // lg 기준 3열
 
 export default function CategoryFilter({ books }: { books: Book[] }) {
     const [activeTab, setActiveTab] = useState<TabKey>('all')
@@ -117,7 +117,7 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                             */
                             <div key={rowIdx} className="relative pb-14">
                                 {/* 도서 그리드 행 */}
-                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-8">
                                     {row.map((book, i) => (
                                         <BookCard
                                             key={book.id}

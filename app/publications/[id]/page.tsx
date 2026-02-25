@@ -12,6 +12,7 @@ type Book = {
     series: string | null
     category: string | null
     description: string | null
+    long_description: string | null  // 상세페이지용 긴 소개글 (추후 DB 컨럼 추가 예정)
     cover_url: string | null
     buy_link: string | null
     download_url: string | null
@@ -168,15 +169,19 @@ export default async function BookDetailPage({
                             ))}
                         </div>
 
-                        {/* 소개글 */}
-                        {book.description && (
+                        {/* 소개글:
+                            - long_description이 있으면 우선 렌더링 (긴 상세 설명)
+                            - 없으면 기본 description 표시
+                            - whitespace-pre-wrap으로 줄바꽔와 여백 보존
+                        */}
+                        {(book.long_description || book.description) && (
                             <div>
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="h-5 w-1 rounded-full bg-emerald-500" />
                                     <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Book Description</p>
                                 </div>
                                 <p className="text-[16px] text-slate-600 leading-[2.0] whitespace-pre-wrap">
-                                    {book.description}
+                                    {book.long_description ?? book.description}
                                 </p>
                             </div>
                         )}
