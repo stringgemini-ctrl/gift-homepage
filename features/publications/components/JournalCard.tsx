@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import PdfModal from './PdfModal'
+import Link from 'next/link'
 
 type JournalBook = {
     id: string
@@ -21,17 +21,16 @@ type JournalBook = {
   - 클릭 시 Link 대신 인앱 PdfModal을 열어 UX 개선
 */
 export default function JournalCard({ journal }: { journal: JournalBook }) {
-    const [modalOpen, setModalOpen] = useState(false)
     const [imgError, setImgError] = useState(false)
 
     const hasPdf = !!journal.download_url
 
     return (
         <>
-            <button
-                onClick={() => hasPdf && setModalOpen(true)}
+            {/* 카드 클릭 시 /publications/[id] 상세 페이지로 이동 — PDF 뷰어는 상세 페이지 내 버튼으로 처리 */}
+            <Link
+                href={`/publications/${journal.id}`}
                 className="block w-full text-left outline-none group"
-                style={{ cursor: hasPdf ? 'pointer' : 'default' }}
                 aria-label={journal.title}
             >
                 <div className="relative" style={{ perspective: '800px' }}>
@@ -138,16 +137,7 @@ export default function JournalCard({ journal }: { journal: JournalBook }) {
                         </div>
                     </div>
                 </div>
-            </button>
-
-            {/* 인앱 PDF 모달 */}
-            {modalOpen && journal.download_url && (
-                <PdfModal
-                    pdfUrl={journal.download_url}
-                    title={journal.title}
-                    onClose={() => setModalOpen(false)}
-                />
-            )}
+            </Link>
         </>
     )
 }
