@@ -9,10 +9,15 @@ import {
 // 폼 기본값
 const EMPTY_FORM = {
     title: '', author: '', translator: '', publisher: '',
-    published_year: '', series: '', description: '', buy_link: '',
-    price: '', category: '', download_url: '',
+    published_year: '', series: '', category: '',
+    description: '',         // 짧은 소개
+    long_description: '',    // 쳅 소개 (긴 글)
+    table_of_contents: '',   // 목차
+    author_bio: '',          // 저자/역자 소개
+    buy_link: '',
+    price: '', download_url: '',
     cover_url: '',
-    journal_name: '', volume_issue: '',   // 영문 저널 전용 필드
+    journal_name: '', volume_issue: '',
     is_featured: false,
 }
 
@@ -102,10 +107,13 @@ export default function BookManagement() {
             publisher: book.publisher ?? '',
             published_year: book.published_year?.toString() ?? '',
             series: book.series ?? '',
+            category: book.category ?? '',
             description: book.description ?? '',
+            long_description: (book as any).long_description ?? '',
+            table_of_contents: (book as any).table_of_contents ?? '',
+            author_bio: (book as any).author_bio ?? '',
             buy_link: book.buy_link ?? '',
             price: book.price?.toString() ?? '',
-            category: book.category ?? '',
             download_url: book.download_url ?? '',
             cover_url: book.cover_url ?? '',
             journal_name: book.journal_name ?? '',
@@ -179,14 +187,17 @@ export default function BookManagement() {
                 publisher: form.publisher || null,
                 published_year: form.published_year ? parseInt(form.published_year) : null,
                 series: form.series || null,
+                category: form.category || null,
                 description: form.description || null,
+                long_description: form.long_description || null,
+                table_of_contents: form.table_of_contents || null,
+                author_bio: form.author_bio || null,
                 cover_url: coverUrl,
                 buy_link: form.buy_link || null,
                 price: form.price ? parseInt(form.price) : null,
-                category: form.category || null,
                 download_url: form.download_url || null,
-                journal_name: form.category === '영문저널' ? (form.journal_name || null) : null,
-                volume_issue: form.category === '영문저널' ? (form.volume_issue || null) : null,
+                journal_name: form.category === 'journal' ? (form.journal_name || null) : null,
+                volume_issue: form.category === 'journal' ? (form.volume_issue || null) : null,
                 is_featured: form.is_featured,
             }
 
@@ -387,17 +398,42 @@ export default function BookManagement() {
                         )}
 
                         <div>
-                            <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">소개글</label>
+                            <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">소개글 (카드용 짧은 소개)</label>
                             <textarea
                                 value={form.description} onChange={e => setField('description', e.target.value)}
-                                placeholder="간단한 도서 소개" rows={4}
+                                placeholder="목록 카드에 표시되는 한줄 소개" rows={3}
                                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] resize-none transition-all"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[11px] font-bold text-emerald-600 mb-1.5 uppercase tracking-wider">📖 책 소개 (상세 페이지 본문)</label>
+                            <textarea
+                                value={form.long_description} onChange={e => setField('long_description', e.target.value)}
+                                placeholder="상세 페이지에 표시되는 긴 소개글. 줄바꿈 그대로 렌더링됩니다." rows={7}
+                                className="w-full px-4 py-2.5 rounded-xl border border-emerald-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 resize-y transition-all"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[11px] font-bold text-emerald-600 mb-1.5 uppercase tracking-wider">📋 목차 (Table of Contents)</label>
+                            <textarea
+                                value={form.table_of_contents} onChange={e => setField('table_of_contents', e.target.value)}
+                                placeholder={"1장. 제목\n2장. 제목\n..."} rows={6}
+                                className="w-full px-4 py-2.5 rounded-xl border border-emerald-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 resize-y transition-all font-mono"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[11px] font-bold text-emerald-600 mb-1.5 uppercase tracking-wider">✍️ 저자/역자 소개</label>
+                            <textarea
+                                value={form.author_bio} onChange={e => setField('author_bio', e.target.value)}
+                                placeholder="저자 및 역자의 약력과 소개를 입력하세요." rows={5}
+                                className="w-full px-4 py-2.5 rounded-xl border border-emerald-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 resize-y transition-all"
                             />
                         </div>
                         <label className="flex items-center gap-3 cursor-pointer select-none">
                             <input type="checkbox" checked={form.is_featured} onChange={e => setField('is_featured', e.target.checked)} className="w-4 h-4 rounded accent-[#f68d2e]" />
                             <span className="text-[13px] font-semibold text-slate-600">추천 도서로 표시</span>
                         </label>
+
                     </div>
 
                     {/* 오른쪽: 표지 이미지 + URL 동기화 */}

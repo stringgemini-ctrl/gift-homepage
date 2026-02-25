@@ -19,6 +19,9 @@ export type Book = {
     series: string | null
     category: string | null
     description: string | null
+    long_description: string | null  // 책 소개 (긴 글)
+    table_of_contents: string | null // 목차
+    author_bio: string | null        // 저자/역자 소개
     cover_url: string | null
     buy_link: string | null
     download_url: string | null

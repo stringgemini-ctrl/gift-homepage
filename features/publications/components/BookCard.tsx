@@ -166,16 +166,15 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                             <h3 className="text-[12px] font-black text-zinc-900 leading-snug line-clamp-2 group-hover:text-emerald-800 transition-colors duration-300">
                                 {book.title}
                             </h3>
-                            {/* 저자 */}
-                            <p className="text-[10px] text-zinc-500 font-medium break-words leading-snug">
-                                {book.author}
+                            {/* 저자 (주, 에메랄드 강조) | 번역자 (객, 흐리게) */}
+                            <p className="text-[10px] break-words leading-snug">
+                                <span className="font-bold" style={{ color: '#047857' }}>{book.author}</span>
+                                {book.translator && (
+                                    <span className="text-zinc-300 font-normal ml-1 text-[9px]">
+                                        | {book.translator} 역
+                                    </span>
+                                )}
                             </p>
-                            {/* 번역자: 있을 때만 조건부 렌더링, 에메랄드 색으로 구분 */}
-                            {book.translator && (
-                                <p className="text-[9px] font-semibold" style={{ color: '#059669' }}>
-                                    {book.translator} 옮김
-                                </p>
-                            )}
                             {book.published_year && (
                                 <p className="text-[9px] text-zinc-300 mt-0.5">{book.published_year}</p>
                             )}
