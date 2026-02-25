@@ -120,23 +120,20 @@ export default async function BookDetailPage({
                             </a>
                         )}
 
-                        {/* PDF 다운로드 버튼 (download_url이 있는 영문 저널에만 노출) */}
+                        {/* PDF 다운로드 버튼 — 서버 컴포넌트이므로 이벤트 핸들러 사용 불가
+                            hover 글로우는 Tailwind arbitrary shadow 값으로만 처리 */}
                         {book.download_url && (
                             <a
                                 href={book.download_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-4 w-full flex items-center justify-center gap-2.5 py-4 rounded-xl text-[14px] font-black transition-all"
+                                className="mt-4 w-full flex items-center justify-center gap-2.5 py-4 rounded-xl text-[14px] font-black
+                                    transition-shadow duration-300
+                                    shadow-[0_0_24px_rgba(16,185,129,0.30),0_4px_16px_rgba(0,0,0,0.18)]
+                                    hover:shadow-[0_0_48px_rgba(16,185,129,0.55),0_4px_20px_rgba(0,0,0,0.25)]"
                                 style={{
                                     background: 'linear-gradient(135deg, #065f46, #059669)',
                                     color: '#a7f3d0',
-                                    boxShadow: '0 0 24px rgba(16,185,129,0.35), 0 4px 16px rgba(0,0,0,0.2)',
-                                }}
-                                onMouseEnter={e => {
-                                    (e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(16,185,129,0.55), 0 4px 20px rgba(0,0,0,0.25)'
-                                }}
-                                onMouseLeave={e => {
-                                    (e.currentTarget as HTMLElement).style.boxShadow = '0 0 24px rgba(16,185,129,0.35), 0 4px 16px rgba(0,0,0,0.2)'
                                 }}
                             >
                                 <span>📄</span>
