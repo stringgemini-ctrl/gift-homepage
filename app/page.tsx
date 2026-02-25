@@ -3,37 +3,64 @@
 import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import GallerySection from '@/features/main/components/GallerySection'
+import ResourceSection from '@/features/main/components/ResourceSection'
 
 const Icons = {
-  Regeneration: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-10 h-10 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]">
+  Regeneration: ({ color }: { color: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" className="w-9 h-9">
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
     </svg>
   ),
-  Sanctification: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-10 h-10 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(71,85,105,0.8)]">
+  Sanctification: ({ color }: { color: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" className="w-9 h-9">
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M3 12h1m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
     </svg>
   ),
-  DivineHealing: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-10 h-10 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(202,138,4,0.8)]">
+  DivineHealing: ({ color }: { color: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" className="w-9 h-9">
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-      <circle cx="12" cy="12" r="9" strokeOpacity="0.3" />
+      <circle cx="12" cy="12" r="9" strokeOpacity="0.25" />
     </svg>
   ),
-  SecondComing: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-10 h-10 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(37,99,235,0.8)]">
+  SecondComing: ({ color }: { color: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" className="w-9 h-9">
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v6m0 0l-2-2m2 2l2-2" />
     </svg>
   ),
 };
 
+// 스펙 문서(5.8) 기준: 사중복음 4색 테마 (Crimson, Pure Gold, Sage Green, Slate Blue)
 const fourfoldGospel = [
-  { id: 1, icon: Icons.Regeneration, title: '중생', bg: 'bg-red-50', text: 'text-red-700', desc: '죄인이 예수를 믿어 영적으로 새로운 생명을 얻는 변화 (예 = 요 3:3)' },
-  { id: 2, icon: Icons.Sanctification, title: '성결', bg: 'bg-slate-100', text: 'text-slate-700', desc: '그리스도의 보혈로 마음이 정결케 되고 성령의 세례를 받는 은혜 (예 = 살전 5:23)' },
-  { id: 3, icon: Icons.DivineHealing, title: '신유', bg: 'bg-yellow-50', text: 'text-yellow-700', desc: '하나님의 능력이 믿음을 통해 병든 몸을 고치시는 육체적 구원 (예 = 약 5:15)' },
-  { id: 4, icon: Icons.SecondComing, title: '재림', bg: 'bg-blue-50', text: 'text-blue-700', desc: '부활하신 예수께서 다시 오셔서 세상을 심판하시는 소망의 완성 (예 = 행 1:11)' },
+  {
+    id: 1, Icon: Icons.Regeneration,
+    title: '중생', subtitle: 'Regeneration',
+    iconColor: '#9f1239', // Crimson (rose-800)
+    bgHover: 'hover:bg-rose-50',
+    desc: '천국 시민의 자격을 갖추는 기독교의 입문입니다. 십자가에 달려 속죄의 피를 흘리신 예수 그리스도를 믿을 때, 성령의 역사로 새 생명을 얻어 심령과 인격 전체에 근본적인 변혁이 일어나는 영적 신비입니다.',
+  },
+  {
+    id: 2, Icon: Icons.Sanctification,
+    title: '성결', subtitle: 'Sanctification',
+    iconColor: '#b45309', // Pure Gold (amber-700)
+    bgHover: 'hover:bg-amber-50',
+    desc: '구원받은 신자가 마땅히 사모해야 할 성령 세례의 은혜입니다. 오순절 다락방에 임했던 성령의 역사처럼, 죄의 본성을 정결케 하고 하나님을 향한 온전한 사랑과 거룩한 삶의 능력을 덧입는 과정입니다.',
+  },
+  {
+    id: 3, Icon: Icons.DivineHealing,
+    title: '신유', subtitle: 'Divine Healing',
+    iconColor: '#0f766e', // Sage Green (teal-700)
+    bgHover: 'hover:bg-teal-50',
+    desc: '하나님의 보호하심 아래 육신의 강건함을 누리며, 병들었을 때 기도함으로 나음을 얻는 은사입니다. 이는 단순한 기적을 넘어, 깨어진 육신을 안전케 하시는 주님의 전인적인 구원과 사랑의 표적입니다.',
+  },
+  {
+    id: 4, Icon: Icons.SecondComing,
+    title: '재림', subtitle: 'Second Coming',
+    iconColor: '#1e40af', // Slate Blue (blue-800)
+    bgHover: 'hover:bg-blue-50',
+    desc: '신약성경 예언의 중심이자 우리 신앙의 궁극적인 소망입니다. \'내가 속히 오리라\' 하신 약속을 믿으며, 주님의 공중 재림과 지상 재림을 대망하여 오늘을 깨어 있는 신앙으로 살아가게 하는 원동력입니다.',
+  },
 ];
 
 export default function Home() {
@@ -66,18 +93,30 @@ export default function Home() {
   }, []);
 
   const fetchLatestPosts = async () => {
-    const { data } = await supabase.from('archive').select('*').order('created_at', { ascending: false }).limit(8);
-    if (data) setPosts(data);
+    try {
+      const { data, error } = await supabase
+        .from('archive').select('*').order('created_at', { ascending: false }).limit(8)
+      if (error) { console.error('[fetchLatestPosts] Supabase error:', error.message); return }
+      if (data) setPosts(data)
+    } catch (e) {
+      console.error('[fetchLatestPosts] 예기치 못한 에러:', e)
+    }
   };
 
   const fetchActivities = async () => {
-    const { data } = await supabase
-      .from('Activity')
-      .select('id, title, image_url, created_at')
-      .order('created_at', { ascending: false })
-      .limit(8);
-    if (data) setActivities(data);
+    try {
+      const { data, error } = await supabase
+        .from('Activity')
+        .select('id, title, image_url, created_at')
+        .order('created_at', { ascending: false })
+        .limit(8)
+      if (error) { console.error('[fetchActivities] Supabase error:', error.message); return }
+      if (data) setActivities(data)
+    } catch (e) {
+      console.error('[fetchActivities] 예기치 못한 에러:', e)
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden pt-20">
@@ -110,7 +149,7 @@ export default function Home() {
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 (GIFT 주황색 포인트 복구됨) */}
+      {/* 1. 히어로 섹션 (스펙 기준 순정 에메랄드) */}
       <section className="relative z-30 flex h-[85vh] items-center justify-center bg-gradient-to-br from-emerald-100/90 via-emerald-50/40 to-emerald-100/80 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle,rgba(251,191,36,0.1)_0%,transparent_65%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
@@ -122,13 +161,10 @@ export default function Home() {
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-600 bg-emerald-100/60 rounded-full animate-fadeInUp">THE GOOD NEWS</span>
           <h1 className="text-6xl font-black tracking-tighter text-slate-900 md:text-8xl leading-[1.1] animate-fadeInUp">성결의 빛, <br /><span className="text-glory drop-shadow-sm">온 누리에</span></h1>
-
-          {/* 주황색 포인트 텍스트 부분 */}
           <p className="mt-8 text-sm md:text-lg font-bold text-slate-500 tracking-wide animate-fadeInUp uppercase leading-relaxed">
             <span className="text-[#f68d2e] text-xl md:text-2xl">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl">I</span>nstitute for the <br className="hidden md:block" />
             <span className="text-[#f68d2e] text-xl md:text-2xl">F</span>ourfold-gospel <span className="text-[#f68d2e] text-xl md:text-2xl">T</span>heology
           </p>
-
           <div className="mt-12 animate-fadeInUp"><Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-xl transition-all">연구소 자료실 바로가기</Link></div>
         </div>
         <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
@@ -139,7 +175,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. 북 섹션 (슬레이트 배경 + 보강된 텍스트 및 정렬) */}
+      {/* 2. 북 섹션 */}
       <section className="relative z-20 bg-slate-800 py-32 px-8 overflow-hidden shadow-inner">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,rgba(16,185,129,0.1),transparent_50%)] pointer-events-none"></div>
         <div className="mx-auto max-w-[1300px] relative z-10">
@@ -168,76 +204,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. 사중복음 섹션 */}
-      <section className="bg-[#faf7f2] py-32 px-8 text-center w-full">
-        <h2 className="text-4xl font-black text-slate-900 mb-20 tracking-tighter">사중복음의 은혜</h2>
-        <div className="mx-auto max-w-[1200px] grid gap-8 md:grid-cols-2 lg:grid-cols-4 text-left">
-          {fourfoldGospel.map((item) => (
-            <div key={item.title} className="bg-white p-10 rounded-[2.5rem] shadow-sm hover:-translate-y-2 transition-all">
-              <div className={`mb-10 flex h-20 w-20 items-center justify-center rounded-3xl ${item.bg} ${item.text}`}><item.icon /></div>
-              <h3 className="text-2xl font-black text-slate-900">{item.title}</h3>
-              <p className="mt-8 text-slate-500 font-medium leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
+      {/* 3. 사중복음 섹션 (순정 스펙: 기둥형 카드 + 워터마크 기법 + 기본 4색 테마) */}
+      <section className="py-32 bg-slate-50 px-8 w-full text-left">
+        <div className="mx-auto max-w-[1200px]">
+          <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter">사중복음의 은혜</h2>
+          <p className="text-slate-500 font-bold mb-16">기독교대한성결교회의 핵심적인 네 가지 신학적 기둥을 소개합니다.</p>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {fourfoldGospel.map((item) => (
+              <div
+                key={item.id}
+                className={`relative overflow-hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-default ${item.bgHover}`}
+              >
+                {/* 워터마크 효과 */}
+                <span
+                  className="pointer-events-none absolute bottom-0 right-[-10px] font-sans font-black select-none leading-none"
+                  style={{
+                    fontSize: '180px',
+                    color: item.iconColor,
+                    opacity: 0.04,
+                  }}
+                >
+                  {item.subtitle.charAt(0)}
+                </span>
+
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="mb-6 flex justify-start">
+                    <item.Icon color={item.iconColor} />
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-800 mb-1">{item.title}</h3>
+                  <p className="text-[10px] uppercase font-black tracking-widest mb-6" style={{ color: item.iconColor }}>
+                    {item.subtitle}
+                  </p>
+                  <p className="text-sm font-medium text-slate-600 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* 4. 활동 갤러리 섹션 */}
-      <section className="py-32 bg-white px-8 border-t border-slate-100 w-full text-left">
-        <div className="mx-auto max-w-[1200px]">
-          <h2 className="text-4xl font-black text-slate-900 mb-16 tracking-tighter">최근 활동 갤러리</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {activities.length > 0 ? (
-              activities.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => item.image_url && setSelectedImage(item.image_url)}
-                  className="group rounded-2xl overflow-hidden bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
-                >
-                  <div className="aspect-[4/3] overflow-hidden bg-slate-200">
-                    {item.image_url ? (
-                      <img
-                        src={item.image_url}
-                        alt={item.title || '활동 이미지'}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-400">
-                        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-5">
-                    <p className="text-base font-bold text-slate-800 line-clamp-2">{item.title || '제목 없음'}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full py-20 text-center text-slate-400 font-medium">등록된 활동이 없습니다.</div>
-            )}
-          </div>
-        </div>
-      </section>
+      <GallerySection activities={activities} onImageClick={setSelectedImage} />
 
       {/* 5. 자료실 섹션 */}
-      <section className="bg-slate-50 py-32 px-10 w-full text-left">
-        <div className="mx-auto max-w-[1200px]">
-          <div className="bg-white rounded-[3rem] p-10 md:p-16 shadow-xl border border-white/60">
-            <h2 className="text-4xl font-black text-slate-900 text-center mb-16 tracking-tighter">연구소 자료실</h2>
-            <div className="flex flex-col gap-2">
-              {posts.map((post) => (
-                <Link href={`/archive/${post.id}`} key={post.id} className="group bg-slate-50/50 rounded-2xl p-4 flex items-center justify-between hover:bg-white hover:shadow-md transition-all">
-                  <span className="w-24 px-3 py-1 bg-emerald-100 text-emerald-700 font-black text-[11px] rounded-full text-center uppercase">{post.category}</span>
-                  <h3 className="flex-1 font-bold text-slate-700 text-lg ml-6 truncate group-hover:text-emerald-700">{post.title}</h3>
-                  <span className="text-sm text-slate-400 font-medium">{new Date(post.created_at).toLocaleDateString()}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <ResourceSection posts={posts} />
 
       {/* 6. 푸터 (Footer) */}
       <footer className="bg-slate-50 pt-20 pb-10 border-t border-slate-200 w-full text-left">
