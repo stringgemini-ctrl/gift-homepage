@@ -10,9 +10,11 @@ type Book = {
     publisher: string | null
     published_year: number | null
     series: string | null
+    category: string | null
     description: string | null
     cover_url: string | null
     buy_link: string | null
+    download_url: string | null
     price: number | null
     is_featured: boolean
 }
@@ -115,6 +117,30 @@ export default async function BookDetailPage({
                                 className="mt-8 w-full flex items-center justify-center gap-2 py-4 bg-slate-900 text-white text-[14px] font-black rounded-xl hover:bg-slate-700 transition-colors shadow-md"
                             >
                                 구매하기 →
+                            </a>
+                        )}
+
+                        {/* PDF 다운로드 버튼 (download_url이 있는 영문 저널에만 노출) */}
+                        {book.download_url && (
+                            <a
+                                href={book.download_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-4 w-full flex items-center justify-center gap-2.5 py-4 rounded-xl text-[14px] font-black transition-all"
+                                style={{
+                                    background: 'linear-gradient(135deg, #065f46, #059669)',
+                                    color: '#a7f3d0',
+                                    boxShadow: '0 0 24px rgba(16,185,129,0.35), 0 4px 16px rgba(0,0,0,0.2)',
+                                }}
+                                onMouseEnter={e => {
+                                    (e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(16,185,129,0.55), 0 4px 20px rgba(0,0,0,0.25)'
+                                }}
+                                onMouseLeave={e => {
+                                    (e.currentTarget as HTMLElement).style.boxShadow = '0 0 24px rgba(16,185,129,0.35), 0 4px 16px rgba(0,0,0,0.2)'
+                                }}
+                            >
+                                <span>📄</span>
+                                저널 PDF 다운로드
                             </a>
                         )}
                     </div>

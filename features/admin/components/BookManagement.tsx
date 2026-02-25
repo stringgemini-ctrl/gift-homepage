@@ -10,7 +10,7 @@ import {
 const EMPTY_FORM = {
     title: '', author: '', translator: '', publisher: '',
     published_year: '', series: '', description: '', buy_link: '',
-    price: '',
+    price: '', category: '', download_url: '',
     is_featured: false,
 }
 
@@ -66,6 +66,8 @@ export default function BookManagement() {
             description: book.description ?? '',
             buy_link: book.buy_link ?? '',
             price: book.price?.toString() ?? '',
+            category: book.category ?? '',
+            download_url: book.download_url ?? '',
             is_featured: book.is_featured,
         })
         setCoverPreview(book.cover_url)
@@ -116,6 +118,8 @@ export default function BookManagement() {
                 cover_url: coverUrl,
                 buy_link: form.buy_link || null,
                 price: form.price ? parseInt(form.price) : null,
+                category: form.category || null,
+                download_url: form.download_url || null,
                 is_featured: form.is_featured,
             }
 
@@ -217,6 +221,27 @@ export default function BookManagement() {
                                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] transition-all"
                             />
                         </div>
+                        <div>
+                            <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">카테고리</label>
+                            <select
+                                value={form.category} onChange={e => setField('category', e.target.value)}
+                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] transition-all bg-white"
+                            >
+                                <option value="">-- 카테고리 선택 --</option>
+                                <option value="신학시리즈">신학시리즈</option>
+                                <option value="신앙시리즈">신앙시리즈</option>
+                                <option value="영문저널">영문저널</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">PDF 다운로드 URL (영문저널)</label>
+                            <input
+                                value={form.download_url} onChange={e => setField('download_url', e.target.value)}
+                                placeholder="https://...pdf"
+                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] transition-all"
+                            />
+                        </div>
+
                         <div>
                             <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">소개글</label>
                             <textarea

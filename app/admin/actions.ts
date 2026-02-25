@@ -17,9 +17,11 @@ export type Book = {
     publisher: string | null
     published_year: number | null
     series: string | null
+    category: string | null
     description: string | null
     cover_url: string | null
     buy_link: string | null
+    download_url: string | null
     price: number | null
     is_featured: boolean
     created_at: string
