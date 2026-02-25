@@ -11,6 +11,7 @@ const EMPTY_FORM = {
     title: '', author: '', translator: '', publisher: '',
     published_year: '', series: '', description: '', buy_link: '',
     price: '', category: '', download_url: '',
+    cover_url: '',   // 업로드 완료 후 자동 동기화
     is_featured: false,
 }
 
@@ -28,6 +29,9 @@ export default function BookManagement() {
     const [form, setForm] = useState<FormState>(EMPTY_FORM)
     const [coverFile, setCoverFile] = useState<File | null>(null)
     const [coverPreview, setCoverPreview] = useState<string | null>(null)
+    // 업로드 전용 로딩 상태 (제운 버튼과 분리)
+    const [isUploading, setIsUploading] = useState(false)
+    const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle')
 
     const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
         setToast({ msg, type })
@@ -47,10 +51,39 @@ export default function BookManagement() {
     const setField = (key: keyof FormState, value: string | boolean) =>
         setForm(prev => ({ ...prev, [key]: value }))
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 파일 선택 시 즉시 업로드 시작 → URL을 폼 cover_url에 자동 동기화
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null
+        if (!file) return
         setCoverFile(file)
-        setCoverPreview(file ? URL.createObjectURL(file) : null)
+        setCoverPreview(URL.createObjectURL(file))  // 로컈 미리보기
+        setUploadStatus('uploading')
+        setIsUploading(true)
+        try {
+            /*
+              파일명 난수화: Date.now() + Math.random().toString(36)
+              두 사람이 동시에 같은 이름을 올릴 수 없도록 Collision 완백 차단
+            */
+            const ext = file.name.split('.').pop()
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`
+            const { error: upErr } = await supabase.storage
+                .from('book-covers')
+                .upload(fileName, file, { upsert: false })
+            if (upErr) throw upErr
+            const { data: urlData } = supabase.storage
+                .from('book-covers')
+                .getPublicUrl(fileName)
+            // 폼 cover_url 상태에 바로 동기화 → 제운시 이 URL을 바로 사용
+            setField('cover_url', urlData.publicUrl)
+            setCoverPreview(urlData.publicUrl)
+            setUploadStatus('success')
+            showToast('✅ 이미지 업로드 성공!')
+        } catch (err) {
+            setUploadStatus('error')
+            showToast('이미지 업로드 실패: ' + (err instanceof Error ? err.message : '알 수 없는 오류'), 'error')
+        } finally {
+            setIsUploading(false)
+        }
     }
 
     // 수정 버튼 클릭 → 폼에 기존값 채워넣기
@@ -68,10 +101,12 @@ export default function BookManagement() {
             price: book.price?.toString() ?? '',
             category: book.category ?? '',
             download_url: book.download_url ?? '',
+            cover_url: book.cover_url ?? '',
             is_featured: book.is_featured,
         })
         setCoverPreview(book.cover_url)
         setCoverFile(null)
+        setUploadStatus('idle')
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
@@ -80,16 +115,15 @@ export default function BookManagement() {
         setForm(EMPTY_FORM)
         setCoverFile(null)
         setCoverPreview(null)
+        setUploadStatus('idle')
     }
 
-    // 커버 이미지 업로드 → URL 반환
-    const uploadCover = async (): Promise<string | null> => {
-        if (!coverFile) return null
-        const ext = coverFile.name.split('.').pop()
-        const fileName = `${crypto.randomUUID()}.${ext}`
-        const { error } = await supabase.storage.from('book-covers').upload(fileName, coverFile)
-        if (error) throw new Error('커버 이미지 업로드 실패: ' + error.message)
-        return supabase.storage.from('book-covers').getPublicUrl(fileName).data.publicUrl
+    // 폼 제운 시 이미 업로드된 cover_url 사용 (handleFileChange에서 자동 동기화)
+    // 만약 이전 업로드 실패 또는 신규 파일 없으면 기존 URL 유지
+    const resolveCoverUrl = (): string | null => {
+        if (form.cover_url) return form.cover_url
+        if (editingId) return books.find(b => b.id === editingId)?.cover_url ?? null
+        return null
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -98,14 +132,9 @@ export default function BookManagement() {
         setIsSubmitting(true)
 
         try {
-            // 커버 이미지 업로드 시도 (선택 사항)
-            let coverUrl: string | null = null
-            if (coverFile) {
-                coverUrl = await uploadCover()
-            } else if (editingId) {
-                // 수정 모드이면서 새 파일 없으면 기존 URL 유지
-                coverUrl = books.find(b => b.id === editingId)?.cover_url ?? null
-            }
+            // 파일 선택 시 이미 업로드되었으므로
+            // handleFileChange에서 form.cover_url에 자동⁠전파된 URL을 그대로 취함
+            const coverUrl = resolveCoverUrl()
 
             const payload = {
                 title: form.title,
@@ -256,10 +285,16 @@ export default function BookManagement() {
                         </label>
                     </div>
 
-                    {/* 오른쪽: 커버 이미지 */}
+                    {/* 오른쪽: 표지 이미지 + URL 동기화 */}
                     <div className="flex flex-col gap-4">
                         <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">표지 이미지</label>
-                        <label className="flex-1 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 hover:border-[#f68d2e]/60 hover:bg-orange-50/20 transition-all cursor-pointer min-h-[260px] overflow-hidden">
+
+                        {/* 드래그 영역 */}
+                        <label className={`flex-1 flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all cursor-pointer min-h-[260px] overflow-hidden relative ${isUploading ? 'border-amber-300 bg-amber-50/20' :
+                                uploadStatus === 'success' ? 'border-emerald-300 bg-emerald-50/10' :
+                                    uploadStatus === 'error' ? 'border-red-300 bg-red-50/10' :
+                                        'border-slate-200 hover:border-[#f68d2e]/60 hover:bg-orange-50/20'
+                            }`}>
                             {coverPreview ? (
                                 <img src={coverPreview} alt="미리보기" className="w-full h-full object-contain max-h-72 rounded-xl" />
                             ) : (
@@ -268,14 +303,47 @@ export default function BookManagement() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                     </svg>
                                     <p className="text-sm font-semibold text-slate-400">클릭하여 표지 선택</p>
+                                    <p className="text-[11px] text-slate-300">선택 즉시 Supabase 업로드</p>
                                 </div>
                             )}
-                            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                            {/* 업로드 중 오버레이 */}
+                            {isUploading && (
+                                <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center gap-2">
+                                    <div className="w-8 h-8 border-3 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                                    <p className="text-[12px] font-bold text-amber-600">업로드 중...</p>
+                                </div>
+                            )}
+                            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" disabled={isUploading} />
                         </label>
-                        <button type="submit" disabled={isSubmitting}
+
+                        {/* 업로드 상태 메시지 */}
+                        {uploadStatus === 'success' && (
+                            <p className="text-[11px] font-bold text-emerald-600">✅ 업로드 완료 — URL이 자동 적용되었습니다</p>
+                        )}
+                        {uploadStatus === 'error' && (
+                            <p className="text-[11px] font-bold text-red-500">❌ 업로드 실패 — URL을 직접 입력하세요</p>
+                        )}
+
+                        {/* 이미지 URL 직접 입력 (업로드 대체 or 외부 URL) */}
+                        <div>
+                            <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">
+                                이미지 URL (직접 입력 가능)
+                            </label>
+                            <input
+                                value={form.cover_url}
+                                onChange={e => {
+                                    setField('cover_url', e.target.value)
+                                    if (e.target.value) setCoverPreview(e.target.value)
+                                }}
+                                placeholder="https://...jpg (파일 선택 시 자동 입력)"
+                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] transition-all text-slate-500"
+                            />
+                        </div>
+
+                        <button type="submit" disabled={isSubmitting || isUploading}
                             className={`w-full py-3.5 rounded-xl text-white font-bold text-[14px] transition-colors disabled:opacity-50 ${editingId ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-[#f68d2e] hover:bg-orange-600'
                                 }`}>
-                            {isSubmitting ? '처리 중...' : editingId ? '수정 완료' : '도서 등록'}
+                            {isUploading ? '이미지 업로드 중...' : isSubmitting ? '처리 중...' : editingId ? '수정 완료' : '도서 등록'}
                         </button>
                     </div>
                 </form>
