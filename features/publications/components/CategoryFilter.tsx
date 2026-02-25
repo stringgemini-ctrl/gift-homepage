@@ -111,57 +111,65 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                     <div className="space-y-0">
                         {rows.map((row, rowIdx) => (
                             /*
-                              선반(Shelf) 행: 책들 아래에 glassmorphism 선반 라인을 배치
-                              - row-container: relative, pb로 선반 공간 확보
-                              - shelf-line: absolute bottom에 가로 전체 선반 UI
+                              선반(Shelf) 행:
+                              - pb-28: 책 바닥과 선반 사이 충분한 공간 확보
+                              - 선반은 absolute bottom-6에 위치해 카드에 가려지지 않음
                             */
-                            <div key={rowIdx} className="relative pb-14">
+                            <div key={rowIdx} className="relative pb-28">
                                 {/* 도서 그리드 행 */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
                                     {row.map((book, i) => (
-                                        <BookCard
-                                            key={book.id}
-                                            book={book}
-                                            priority={rowIdx === 0 && i < 4}
-                                        />
+                                        /*
+                                          카드 래퍼: max-w-[220px] mx-auto로 너비 강제 제한 (~40% 축소)
+                                          mb-8로 카드 바닥과 선반 사이 틈 확보
+                                        */
+                                        <div key={book.id} className="max-w-[220px] mx-auto w-full mb-8">
+                                            <BookCard
+                                                book={book}
+                                                priority={rowIdx === 0 && i < 3}
+                                            />
+                                        </div>
                                     ))}
                                 </div>
 
-                                {/* ── 글래스모피즘 선반 라인 ── */}
+                                {/* ── 글래스모피즘 선반 ── */}
                                 <div
-                                    className="absolute left-0 right-0 bottom-4"
-                                    style={{ height: '10px' }}
+                                    className="absolute left-0 right-0 bottom-8"
+                                    style={{ height: '16px', zIndex: 10 }}
                                 >
-                                    {/* 선반 본체: 반투명 유리 느낌 */}
+                                    {/* 선반 본체: 반투명 유리 */}
                                     <div
-                                        className="w-full h-full rounded-full"
+                                        className="w-full h-full rounded-sm"
                                         style={{
-                                            background: 'linear-gradient(to bottom, rgba(210,220,215,0.55), rgba(180,195,188,0.30))',
-                                            backdropFilter: 'blur(4px)',
-                                            boxShadow: '0 2px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6)',
-                                            border: '1px solid rgba(255,255,255,0.45)',
+                                            background: 'linear-gradient(to bottom, rgba(220,230,225,0.70), rgba(190,205,198,0.40))',
+                                            backdropFilter: 'blur(6px)',
+                                            boxShadow: '0 3px 16px rgba(0,0,0,0.12), inset 0 1.5px 0 rgba(255,255,255,0.70)',
+                                            border: '1px solid rgba(255,255,255,0.50)',
                                         }}
                                     />
                                     {/* 선반 하단 그림자 */}
                                     <div
-                                        className="absolute left-6 right-6 -bottom-3"
+                                        className="absolute left-4 right-4 -bottom-4"
                                         style={{
-                                            height: '8px',
-                                            background: 'radial-gradient(ellipse, rgba(0,0,0,0.14) 0%, transparent 70%)',
-                                            filter: 'blur(3px)',
+                                            height: '12px',
+                                            background: 'radial-gradient(ellipse, rgba(0,0,0,0.18) 0%, transparent 70%)',
+                                            filter: 'blur(4px)',
                                         }}
                                     />
-                                    {/* 선반 에메랄드 반사광 (포인트) */}
+                                    {/* 에메랄드 반사광: 두껍고 선명하게 */}
                                     <div
-                                        className="absolute left-[20%] right-[20%] top-0 h-[1px]"
+                                        className="absolute left-[10%] right-[10%] top-0"
                                         style={{
-                                            background: 'linear-gradient(to right, transparent, rgba(16,185,129,0.25) 40%, rgba(16,185,129,0.25) 60%, transparent)',
+                                            height: '3px',
+                                            background: 'linear-gradient(to right, transparent 0%, rgba(16,185,129,0.50) 25%, rgba(16,185,129,0.55) 50%, rgba(16,185,129,0.50) 75%, transparent 100%)',
+                                            borderRadius: '2px',
                                         }}
                                     />
                                 </div>
                             </div>
                         ))}
                     </div>
+
                 )}
             </div>
         </>
