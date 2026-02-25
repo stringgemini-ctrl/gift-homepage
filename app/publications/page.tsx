@@ -42,59 +42,58 @@ export default async function PublicationsPage() {
     const books = await getBooks()
 
     return (
-        <div className="min-h-screen" style={{ background: '#09090b' }}>
-            {/* ─── 히어로: 묵직한 Zinc-950, 에메랄드는 포인트만 ─── */}
-            <div
-                className="relative overflow-hidden"
-                style={{
-                    /*
-                      심연에서 우러나오는 딥 에메랄드 틴트:
-                      - 상단 타원 방사형 그라디언트로 은은한 녹색조 추가
-                      - rgba(6,78,59,0.20) → 텍스트 가독성 해치지 않는 수준
-                    */
-                    background: 'radial-gradient(ellipse 80% 55% at 50% -5%, rgba(6,78,59,0.22) 0%, rgba(9,9,11,0) 65%), linear-gradient(170deg, #0f1412 0%, #09090b 55%, #09090b 100%)'
-                }}
-            >
-                {/* CSS 부유 입자 배경 애니메이션 (클라이언트 컴포넌트) */}
+        <div className="min-h-screen" style={{ background: '#040c09' }}>
+            {/* ─── 히어로: Mystical Abyss — 학문적 심연 ─── */}
+            <div className="relative overflow-hidden" style={{ background: '#040c09' }}>
+                {/* CSS 부유 입자 */}
                 <HeroParticles />
+
                 {/*
-          엠비언트 글로우: 아주 미세하게만 → 초록 덮임 방지
-          opacity를 이전 0.13 → 0.07로 대폭 축소
-        */}
-                <div className="absolute pointer-events-none" style={{
-                    top: '-15%', left: '-5%', width: '50%', height: '60%',
-                    background: 'radial-gradient(ellipse, rgba(16,185,129,0.07) 0%, transparent 65%)',
-                    filter: 'blur(60px)',
-                }} />
-                <div className="absolute pointer-events-none" style={{
-                    bottom: '-10%', right: '0%', width: '40%', height: '50%',
-                    background: 'radial-gradient(ellipse, rgba(4,120,87,0.05) 0%, transparent 65%)',
-                    filter: 'blur(70px)',
+                  성운 Layer 1: 화면 최상단 → 넓게 퍼지는 에메랄드 빛무리
+                  - ellipse 100% 70%: 화면 너비 전체를 덮는 넓은 타원
+                */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                    background: 'radial-gradient(ellipse 100% 70% at 50% 0%, rgba(16,185,129,0.12) 0%, transparent 100%)',
                 }} />
 
-                {/* 미세 격자 — 더 어둡게, 에메랄드 대신 중성 회색 */}
-                <div className="absolute inset-0 pointer-events-none opacity-[0.018]" style={{
+                {/*
+                  성운 Layer 2: 우측 하단 → 심연의 반대편 빛무리
+                  반대 방향에서 받쳐주어 3차원 공간감 형성
+                */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                    background: 'radial-gradient(circle at 80% 80%, rgba(6,78,59,0.15) 0%, transparent 60%)',
+                }} />
+
+                {/* 미세 격자 — 공간감 보조 */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.022]" style={{
                     backgroundImage:
-                        'linear-gradient(rgba(200,200,200,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(200,200,200,0.8) 1px, transparent 1px)',
+                        'linear-gradient(rgba(200,220,210,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(200,220,210,0.8) 1px, transparent 1px)',
                     backgroundSize: '60px 60px',
                 }} />
 
-                <div className="relative max-w-6xl mx-auto px-6 pt-44 pb-28 text-center">
-                    {/* 배지: 아주 절제된 에메랄드 테두리 */}
+                {/*
+                  텍스트 래퍼: relative z-10으로 성운 레이어 위에 확실히 올라옴
+                  drop-shadow로 배경 빛 속에서도 글씨가 선명하게 돋보임
+                */}
+                <div
+                    className="relative z-10 max-w-6xl mx-auto px-6 pt-44 pb-28 text-center"
+                    style={{ filter: 'drop-shadow(0 2px 16px rgba(0,0,0,0.5))' }}
+                >
+                    {/* 배지 */}
                     <div
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
                         style={{
-                            background: 'rgba(255,255,255,0.04)',
-                            border: '1px solid rgba(255,255,255,0.10)',
+                            background: 'rgba(255,255,255,0.05)',
+                            border: '1px solid rgba(255,255,255,0.12)',
                         }}
                     >
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#34d399' }} />
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#34d399' }} />
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.50)' }}>
                             Publications · 글로벌사중복음연구소
                         </span>
                     </div>
 
-                    {/* 타이틀: 밝은 흰색 기반, 에메랄드는 한 단어만 */}
+                    {/* 타이틀 */}
                     <h1
                         className="font-black tracking-[-0.04em] leading-[1.0] mb-7"
                         style={{ fontSize: 'clamp(42px, 6.5vw, 72px)', color: '#f4f4f5' }}
@@ -111,7 +110,7 @@ export default async function PublicationsPage() {
 
                     <p
                         className="text-[17px] max-w-sm mx-auto leading-relaxed"
-                        style={{ color: 'rgba(244,244,245,0.60)' }}
+                        style={{ color: 'rgba(244,244,245,0.65)' }}
                     >
                         복음의 신학을 탐구해온<br />연구소의 출판물을 소개합니다.
                     </p>
@@ -119,7 +118,7 @@ export default async function PublicationsPage() {
                     {/* 구분선 + 통계 */}
                     <div
                         className="mt-10 pt-8 flex items-center justify-center gap-10"
-                        style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
+                        style={{ borderTop: '1px solid rgba(255,255,255,0.09)' }}
                     >
                         <Stat number={books.length} label="총 도서" />
                         <Divider />
@@ -129,6 +128,7 @@ export default async function PublicationsPage() {
                     </div>
                 </div>
             </div>
+
 
             {/* ─── 책장 섹션 (카테고리 필터 + 선반 그리드) ─── */}
             <div style={{ background: '#f5f2ec' }}>
