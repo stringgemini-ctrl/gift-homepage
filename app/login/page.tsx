@@ -14,7 +14,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) alert('로그인 실패: ' + error.message)
     else {
-      alert('로그인되었습니다.')
+      // 성공 알림 없이 바로 리다이렉트 (흐름 끊김 방지)
       router.push('/archive')
     }
   }

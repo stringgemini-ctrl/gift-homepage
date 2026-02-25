@@ -54,27 +54,36 @@ export default async function PublicationsPage() {
                 <HeroParticles />
 
                 {/*
-                  성운 Layer 1: 화면 최상단 → 넓게 퍼지는 에메랄드 빛무리
-                  - ellipse 100% 70%: 화면 너비 전체를 덮는 넓은 타원
+                  성운 Layer 1: 상단 전체를 덮는 넓은 에메랄드 광원
+                  - 0.12 → 0.30 으로 2.5배 강화 (묵직한 테마 인상)
                 */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(ellipse 100% 70% at 50% 0%, rgba(16,185,129,0.12) 0%, transparent 100%)',
+                    background: 'radial-gradient(ellipse 120% 80% at 50% 0%, rgba(16,185,129,0.30) 0%, transparent 70%)',
                 }} />
 
                 {/*
-                  성운 Layer 2: 우측 하단 → 심연의 반대편 빛무리
-                  반대 방향에서 받쳐주어 3차원 공간감 형성
+                  성운 Layer 2: 우하단 반대 빛무리 강화
+                  - 0.15 → 0.28 로 강화
                 */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(circle at 80% 80%, rgba(6,78,59,0.15) 0%, transparent 60%)',
+                    background: 'radial-gradient(circle at 80% 85%, rgba(6,78,59,0.28) 0%, transparent 70%)',
                 }} />
 
-                {/* 미세 격자 — 공간감 보조 */}
-                <div className="absolute inset-0 pointer-events-none opacity-[0.022]" style={{
+                {/*
+                  성운 Layer 3: 중앙 집중 광원 (신규 추가)
+                  - 텍스트 뒤에서 배어나오는 에메랄드 포커스 글로우
+                */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                    background: 'radial-gradient(ellipse 60% 40% at 50% 25%, rgba(16,185,129,0.18) 0%, transparent 65%)',
+                }} />
+
+                {/* 미세 격자 — 공간감 보조 (opacity 강화) */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{
                     backgroundImage:
                         'linear-gradient(rgba(200,220,210,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(200,220,210,0.8) 1px, transparent 1px)',
                     backgroundSize: '60px 60px',
                 }} />
+
 
                 {/*
                   텍스트 래퍼: relative z-10으로 성운 레이어 위에 확실히 올라옴

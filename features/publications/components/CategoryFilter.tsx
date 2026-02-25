@@ -44,14 +44,21 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
     return result
 }
 
-// 저널 판별 (구버전 '영문저널' 데이터 포함, NULL-safe)
+/*
+  유효 카테고리 화이트리스트 (엄격):
+  - faith / theology / journal (+ 레거시 한국어 값) 만 정상 데이터로 인정
+  - recommend, NULL, book, '' 등 쓰레기 값은 렌더링/카운트에서 완전 배제
+*/
+const VALID_CATEGORIES = new Set(['faith', 'theology', 'journal', '신앙시리즈', '신학시리즈', '영문저널'])
+
+const isValid = (b: Book) => !!b.category && VALID_CATEGORIES.has(b.category)
+
 const matchTab = (b: Book, tab: TabKey): boolean => {
-    if (tab === 'all') return true
-    const cat = b.category?.toLowerCase() ?? ''
+    const cat = b.category ?? ''
     if (tab === 'faith') return cat === 'faith' || cat === '신앙시리즈'
     if (tab === 'theology') return cat === 'theology' || cat === '신학시리즈'
     if (tab === 'journal') return cat === 'journal' || cat === '영문저널'
-    return true
+    return false
 }
 
 const COLS = 3
@@ -59,12 +66,16 @@ const COLS = 3
 export default function CategoryFilter({ books }: { books: Book[] }) {
     const [activeTab, setActiveTab] = useState<TabKey>('all')
 
+    // 전체보기를 포함한 모든 연산의 베이스: 유효 데이터만 사용
+    const validBooks = useMemo(() => books.filter(isValid), [books])
+
     const filtered = useMemo(() =>
-        activeTab === 'all' ? books : books.filter(b => matchTab(b, activeTab)),
-        [books, activeTab]
+        activeTab === 'all' ? validBooks : validBooks.filter(b => matchTab(b, activeTab)),
+        [validBooks, activeTab]
     )
 
     const rows = useMemo(() => chunkArray(filtered, COLS), [filtered])
+
 
     return (
         <>
@@ -84,9 +95,10 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                 >
                     {TABS.map(tab => {
                         const active = activeTab === tab.key
+                        // 'All' 카운트도 유효 데이터(whitelist 필터됨)만 합산
                         const count = tab.key === 'all'
-                            ? books.length
-                            : books.filter(b => matchTab(b, tab.key)).length
+                            ? validBooks.length
+                            : validBooks.filter(b => matchTab(b, tab.key)).length
                         const isJournal = tab.key === 'journal'
                         return (
                             <button
