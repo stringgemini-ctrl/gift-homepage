@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState } from 'react'
 
 type Book = {
     id: string
@@ -20,114 +21,118 @@ type Book = {
     is_featured: boolean
 }
 
-function formatPrice(price: number) {
-    return '₩' + price.toLocaleString('ko-KR')
-}
-
 export default function BookCard({ book, priority = false }: { book: Book; priority?: boolean }) {
+    // 이미지 로드 실패 추적 → Fallback UI 표시
+    const [imgError, setImgError] = useState(false)
+
     return (
         <Link href={`/publications/${book.id}`} className="block outline-none group">
-            <div
-                className="relative"
-                /*
-                  perspective 컨테이너: 3D 효과를 위한 원근감 설정
-                  책 하단이 선반에 닿아야 하므로 하단 여백 없음
-                */
-                style={{ perspective: '800px', perspectiveOrigin: '60% 50%' }}
-            >
-                {/* ── 책 본체: 호버 시 살짝 들림 ── */}
+            <div className="relative" style={{ perspective: '800px' }}>
+
+                {/* 책 본체: 살짝 오른쪽으로 기울어진 진열 자세 + 호버 시 리프트 */}
                 <div
                     className="relative transition-transform duration-700"
-                    style={{ willChange: 'transform' }}
+                    style={{
+                        /*
+                          5도 기울이기: 선반 위에 기대어 있는 자연스러운 자세
+                          - rotate(3deg): 너무 과하지 않게 3도
+                          - transform-origin: bottom left → 하단 왼쪽을 축으로 기울어짐
+                        */
+                        transform: 'rotate(3deg)',
+                        transformOrigin: 'bottom left',
+                        willChange: 'transform',
+                    }}
                     onMouseEnter={e =>
-                        ((e.currentTarget as HTMLElement).style.transform = 'translateY(-8px)')
+                    ((e.currentTarget as HTMLElement).style.transform =
+                        'rotate(1deg) translateY(-10px)')
                     }
                     onMouseLeave={e =>
-                        ((e.currentTarget as HTMLElement).style.transform = 'translateY(0)')
+                    ((e.currentTarget as HTMLElement).style.transform =
+                        'rotate(3deg)')
                     }
                 >
                     {/*
-            하드커버 3D 두께 효과:
-            - border-r: 오른쪽 종이 단면 (얇은 테두리들 여러 겹)
-            - box-shadow로 실제 두껍고 무거운 책 입체감 구현
-            - aspect-[2/3] 강제 비율 통일
+            종이 페이지 두께감 box-shadow:
+            - 흰색/밝은회색 계열 (#f9f9f9 ~ #e0e0e0)
+            - 짝수 스텝마다 어두운 라인 (#c8c8c8) 으로 낱장 페이지 경계 표현
+            - marginRight로 페이지 단면이 보이는 공간 확보
           */}
                     <div
-                        className="relative overflow-hidden rounded-r-sm"
+                        className="relative overflow-hidden rounded-r-[2px]"
                         style={{
-                            /*
-                              다중 box-shadow로 두껍게 쌓인 종이 단면 표현:
-                              - 1~5px: 주황빛 가장자리 (책 커버 측면)
-                              - 6~22px: 종이 쌓임 표현 (밝음→어두움 그라디언트)
-                              - 마지막: 환경 그림자
-                            */
                             boxShadow: `
-                2px 0 0 #c8b89a,
-                4px 0 0 #d4c4aa,
-                6px 0 0 #e8dcc8,
-                8px 0 0 #f0e8d8,
-                10px 0 0 #ede4d4,
-                12px 0 0 #e4dac8,
-                14px 0 0 #ddd0be,
-                16px 0 0 #d4c8b4,
-                18px 0 0 #c8bca8,
-                20px 0 0 #b8ac9a,
-                8px 6px 20px rgba(0,0,0,0.22),
-                14px 12px 40px rgba(0,0,0,0.14),
-                20px 20px 60px rgba(0,0,0,0.08)
+                1px 0 0 #f9f9f9,
+                2px 0 0 #d0d0d0,
+                3px 0 0 #f5f5f5,
+                4px 0 0 #ececec,
+                5px 0 0 #c8c8c8,
+                6px 0 0 #f2f2f2,
+                7px 0 0 #e8e8e8,
+                8px 0 0 #c0c0c0,
+                9px 0 0 #eeeeee,
+                10px 0 0 #e5e5e5,
+                11px 0 0 #bebebe,
+                12px 0 0 #ebebeb,
+                13px 0 0 #e2e2e2,
+                14px 0 0 #b8b8b8,
+                15px 0 0 #e8e8e8,
+                8px 8px 24px rgba(0,0,0,0.20),
+                14px 16px 40px rgba(0,0,0,0.12),
+                20px 24px 60px rgba(0,0,0,0.07)
               `,
-                            // 오른쪽 책등 공간 확보
-                            marginRight: '20px',
+                            marginRight: '15px',
                         }}
                     >
-                        {/* 표지 이미지: aspect-[2/3] 강제, GPU 레이어 고정 */}
+                        {/* 표지: aspect-[2/3] 고정 비율, GPU 레이어 */}
                         <div
-                            className="aspect-[2/3] w-full overflow-hidden relative bg-zinc-800"
-                            style={{
-                                backfaceVisibility: 'hidden',
-                                WebkitBackfaceVisibility: 'hidden',
-                            }}
+                            className="aspect-[2/3] w-full relative bg-zinc-100 overflow-hidden"
+                            style={{ backfaceVisibility: 'hidden' }}
                         >
-                            {book.cover_url ? (
+                            {book.cover_url && !imgError ? (
                                 <Image
                                     src={book.cover_url}
                                     alt={book.title}
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                                    style={{ willChange: 'transform' }}
                                     priority={priority}
-                                    sizes="260px"
+                                    sizes="285px"
+                                    onError={() => setImgError(true)}
                                 />
                             ) : (
+                                /* Fallback: 이미지 없음 / 로드 실패 시 에메랄드 플레이스홀더 */
                                 <div
-                                    className="w-full h-full flex flex-col items-center justify-center gap-3 px-4"
-                                    style={{ background: 'linear-gradient(160deg, #1c2822, #121a16)' }}
+                                    className="w-full h-full flex flex-col items-center justify-center gap-2 px-3"
+                                    style={{ background: 'linear-gradient(160deg, #0d2b22, #0a1f18)' }}
                                 >
-                                    <span className="text-4xl opacity-10">📖</span>
-                                    <p className="text-[9px] font-bold text-emerald-800/50 uppercase tracking-widest text-center">
-                                        {book.series ?? book.title}
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(52,211,153,0.5)" strokeWidth="1.5">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" strokeLinecap="round" />
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" strokeLinecap="round" />
+                                    </svg>
+                                    <p className="text-[8px] font-bold text-center leading-relaxed"
+                                        style={{ color: 'rgba(52,211,153,0.55)' }}>
+                                        이미지<br />준비 중
                                     </p>
                                 </div>
                             )}
 
-                            {/* NEW RELEASE 뱃지 (Featured 도서에만) */}
+                            {/* LATEST 뱃지 (featured 도서) */}
                             {book.is_featured && (
                                 <div
-                                    className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1 px-2 py-0.5 rounded-sm"
+                                    className="absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded-[3px]"
                                     style={{
                                         background: 'rgba(5,150,105,0.92)',
-                                        backdropFilter: 'blur(4px)',
                                         border: '1px solid rgba(52,211,153,0.30)',
+                                        backdropFilter: 'blur(4px)',
                                     }}
                                 >
-                                    <span className="w-1 h-1 rounded-full bg-emerald-300 animate-pulse" />
-                                    <span className="text-[8px] font-black tracking-[0.2em] uppercase text-emerald-100">
-                                        NEW
+                                    <span className="w-[5px] h-[5px] rounded-full bg-emerald-300 animate-pulse" />
+                                    <span className="text-[7px] font-black tracking-[0.18em] uppercase" style={{ color: '#a7f3d0' }}>
+                                        LATEST
                                     </span>
                                 </div>
                             )}
 
-                            {/* 호버 오버레이: 높은 대비 정보 노출 */}
+                            {/* 호버 오버레이: 가격 정보 완전 제거 */}
                             <div
                                 className="absolute inset-0 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100"
                                 style={{
@@ -136,13 +141,8 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                                 }}
                             >
                                 {book.description && (
-                                    <p className="text-white/90 text-[10px] leading-relaxed line-clamp-2 mb-1.5">
+                                    <p className="text-white/90 text-[10px] leading-relaxed line-clamp-3 mb-2">
                                         {book.description}
-                                    </p>
-                                )}
-                                {book.price && (
-                                    <p className="text-[12px] font-bold mb-1" style={{ color: '#6ee7b7', fontVariantNumeric: 'tabular-nums' }}>
-                                        {formatPrice(book.price)}
                                     </p>
                                 )}
                                 <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#34d399' }}>
@@ -152,7 +152,7 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                         </div>
 
                         {/* 텍스트 영역 */}
-                        <div className="px-3 py-3 bg-white flex flex-col gap-1">
+                        <div className="px-3 py-3 bg-white flex flex-col gap-0.5">
                             {book.series && (
                                 <p className="text-[8px] font-black uppercase tracking-[0.12em] truncate" style={{ color: '#059669' }}>
                                     {book.series}
@@ -163,21 +163,10 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                             </h3>
                             <p className="text-[10px] text-zinc-500 font-medium truncate">
                                 {book.author}
-                                {book.translator && (
-                                    <span className="text-zinc-400"> / 역 {book.translator}</span>
-                                )}
+                                {book.translator && <span className="text-zinc-400"> / 역 {book.translator}</span>}
                             </p>
-                            {(book.published_year || book.price) && (
-                                <div className="flex items-center justify-between mt-1">
-                                    {book.published_year && (
-                                        <p className="text-[9px] text-zinc-300">{book.published_year}</p>
-                                    )}
-                                    {book.price && (
-                                        <p className="text-[11px] font-black ml-auto" style={{ color: '#047857', fontVariantNumeric: 'tabular-nums' }}>
-                                            {formatPrice(book.price)}
-                                        </p>
-                                    )}
-                                </div>
+                            {book.published_year && (
+                                <p className="text-[9px] text-zinc-300 mt-0.5">{book.published_year}</p>
                             )}
                         </div>
                     </div>
