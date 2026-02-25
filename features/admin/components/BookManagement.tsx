@@ -11,7 +11,8 @@ const EMPTY_FORM = {
     title: '', author: '', translator: '', publisher: '',
     published_year: '', series: '', description: '', buy_link: '',
     price: '', category: '', download_url: '',
-    cover_url: '',   // 업로드 완료 후 자동 동기화
+    cover_url: '',
+    journal_name: '', volume_issue: '',   // 영문 저널 전용 필드
     is_featured: false,
 }
 
@@ -102,6 +103,8 @@ export default function BookManagement() {
             category: book.category ?? '',
             download_url: book.download_url ?? '',
             cover_url: book.cover_url ?? '',
+            journal_name: book.journal_name ?? '',
+            volume_issue: book.volume_issue ?? '',
             is_featured: book.is_featured,
         })
         setCoverPreview(book.cover_url)
@@ -149,6 +152,8 @@ export default function BookManagement() {
                 price: form.price ? parseInt(form.price) : null,
                 category: form.category || null,
                 download_url: form.download_url || null,
+                journal_name: form.category === '영문저널' ? (form.journal_name || null) : null,
+                volume_issue: form.category === '영문저널' ? (form.volume_issue || null) : null,
                 is_featured: form.is_featured,
             }
 
@@ -257,19 +262,57 @@ export default function BookManagement() {
                                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] transition-all bg-white"
                             >
                                 <option value="">-- 카테고리 선택 --</option>
-                                <option value="신학시리즈">신학시리즈</option>
-                                <option value="신앙시리즈">신앙시리즈</option>
-                                <option value="영문저널">영문저널</option>
+                                <option value="신학시리즈">📘 신학시리즈</option>
+                                <option value="신앙시리즈">📗 신앙시리즈</option>
+                                <option value="영문저널">📄 영문저널 (English Journal)</option>
                             </select>
                         </div>
-                        <div>
-                            <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">PDF 다운로드 URL (영문저널)</label>
-                            <input
-                                value={form.download_url} onChange={e => setField('download_url', e.target.value)}
-                                placeholder="https://...pdf"
-                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#f68d2e]/30 focus:border-[#f68d2e] transition-all"
-                            />
-                        </div>
+
+                        {/*
+                          영문저널 전용 섹션: category가 '영문저널'일 때만 표시
+                          journal_name, volume_issue, PDF URL 입력
+                        */}
+                        {form.category === '영문저널' && (
+                            <div
+                                className="space-y-4 p-4 rounded-xl"
+                                style={{
+                                    background: 'rgba(16,185,129,0.04)',
+                                    border: '1px solid rgba(16,185,129,0.20)',
+                                    borderLeft: '4px solid #10b981',
+                                }}
+                            >
+                                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                                    📄 English Journal 전용 정보
+                                </p>
+                                <div>
+                                    <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">저널 이름</label>
+                                    <input
+                                        value={form.journal_name}
+                                        onChange={e => setField('journal_name', e.target.value)}
+                                        placeholder="예: GIFT Journal of Theology"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">권·호 (Volume / Issue)</label>
+                                    <input
+                                        value={form.volume_issue}
+                                        onChange={e => setField('volume_issue', e.target.value)}
+                                        placeholder="예: Vol.3, No.1 (2024)"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">PDF 다운로드 URL</label>
+                                    <input
+                                        value={form.download_url}
+                                        onChange={e => setField('download_url', e.target.value)}
+                                        placeholder="https://...pdf"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
+                                    />
+                                </div>
+                            </div>
+                        )}
 
                         <div>
                             <label className="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">소개글</label>
@@ -291,9 +334,9 @@ export default function BookManagement() {
 
                         {/* 드래그 영역 */}
                         <label className={`flex-1 flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all cursor-pointer min-h-[260px] overflow-hidden relative ${isUploading ? 'border-amber-300 bg-amber-50/20' :
-                                uploadStatus === 'success' ? 'border-emerald-300 bg-emerald-50/10' :
-                                    uploadStatus === 'error' ? 'border-red-300 bg-red-50/10' :
-                                        'border-slate-200 hover:border-[#f68d2e]/60 hover:bg-orange-50/20'
+                            uploadStatus === 'success' ? 'border-emerald-300 bg-emerald-50/10' :
+                                uploadStatus === 'error' ? 'border-red-300 bg-red-50/10' :
+                                    'border-slate-200 hover:border-[#f68d2e]/60 hover:bg-orange-50/20'
                             }`}>
                             {coverPreview ? (
                                 <img src={coverPreview} alt="미리보기" className="w-full h-full object-contain max-h-72 rounded-xl" />

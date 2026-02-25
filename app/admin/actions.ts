@@ -23,6 +23,8 @@ export type Book = {
     buy_link: string | null
     download_url: string | null
     price: number | null
+    journal_name: string | null    // 저널 이름 (ex: "GIFT Journal")
+    volume_issue: string | null    // 권호 (ex: "Vol.3, No.1")
     is_featured: boolean
     created_at: string
 }

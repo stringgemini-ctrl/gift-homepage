@@ -17,37 +17,42 @@ type Book = {
     buy_link: string | null
     download_url: string | null
     price: number | null
+    journal_name: string | null
+    volume_issue: string | null
     is_featured: boolean
 }
 
+/*
+  탭 구조: 전체 / 도서 / 영문 저널
+  - 'all': 전체
+  - 'books': 영문저널이 아닌 모든 카테고리 (신학/신앙 등)
+  - 'english_journals': category === '영문저널'만
+*/
 const TABS = [
-    { key: 'all', label: '전체 보기' },
-    { key: '신학시리즈', label: '신학 시리즈' },
-    { key: '신앙시리즈', label: '신앙 시리즈' },
-    { key: '영문저널', label: '영문 저널' },
+    { key: 'all', label: 'All', labelKo: '전체' },
+    { key: 'books', label: 'Books', labelKo: '도서' },
+    { key: 'english_journals', label: 'English Journals', labelKo: '영문 저널' },
 ] as const
 type TabKey = typeof TABS[number]['key']
 
-// 배열을 n개씩 나눔 → 선반 행(Row) 구현에 사용
 function chunkArray<T>(arr: T[], size: number): T[][] {
     const result: T[][] = []
     for (let i = 0; i < arr.length; i += size) result.push(arr.slice(i, i + size))
     return result
 }
 
-const COLS = 3 // lg 기준 3열
+const COLS = 3
 
 export default function CategoryFilter({ books }: { books: Book[] }) {
     const [activeTab, setActiveTab] = useState<TabKey>('all')
 
-    const filtered = useMemo(() =>
-        activeTab === 'all'
-            ? books
-            : books.filter(b => b.category === activeTab),
-        [books, activeTab]
-    )
+    const filtered = useMemo(() => {
+        if (activeTab === 'all') return books
+        if (activeTab === 'books') return books.filter(b => b.category !== '영문저널')
+        if (activeTab === 'english_journals') return books.filter(b => b.category === '영문저널')
+        return books
+    }, [books, activeTab])
 
-    // 선반 행으로 묶기: COLS 단위로 분할
     const rows = useMemo(() => chunkArray(filtered, COLS), [filtered])
 
     return (
@@ -70,23 +75,29 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                         const active = activeTab === tab.key
                         const count = tab.key === 'all'
                             ? books.length
-                            : books.filter(b => b.category === tab.key).length
+                            : tab.key === 'books'
+                                ? books.filter(b => b.category !== '영문저널').length
+                                : books.filter(b => b.category === '영문저널').length
+                        const isJournals = tab.key === 'english_journals'
                         return (
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
-                                className="px-4 py-1.5 rounded-full text-[12px] font-bold transition-all duration-300"
+                                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[12px] font-bold transition-all duration-300"
                                 style={{
-                                    background: active ? '#18453b' : 'transparent',
+                                    background: active
+                                        ? isJournals ? 'linear-gradient(135deg, #065f46, #047857)' : '#18453b'
+                                        : 'transparent',
                                     color: active ? '#e2f5ee' : '#6b7280',
                                     boxShadow: active
                                         ? '0 0 14px rgba(22,101,52,0.30), 0 2px 6px rgba(0,0,0,0.18)'
                                         : 'none',
                                 }}
                             >
-                                {tab.label}
+                                {isJournals && <span className="text-[10px]">📄</span>}
+                                <span>{tab.label}</span>
                                 <span
-                                    className="ml-1.5 text-[9px] font-black rounded-full px-1.5 py-0.5 align-middle"
+                                    className="text-[9px] font-black rounded-full px-1.5 py-0.5"
                                     style={{
                                         background: active ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.07)',
                                         color: active ? '#a7f3d0' : '#9ca3af',
