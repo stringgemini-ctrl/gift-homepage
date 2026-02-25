@@ -85,7 +85,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                     {/* ── 좌측: 3D 책 표지 ─── */}
                     <div className="shrink-0 w-full max-w-[260px] mx-auto lg:mx-0">
                         {/* 3D 책 박스 */}
-                        <div style={{ perspective: '900px' }}>
+                        <div style={{ perspective: '900px' }} className="relative">
                             <div
                                 className="relative overflow-hidden rounded-r-[2px]"
                                 style={{
@@ -118,6 +118,17 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                                     style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%)' }} />
                             </div>
                         </div>
+                        {/* 바닥 그림자: 책이 표면에 묵직하게 놓인 느낌 */}
+                        <div
+                            className="absolute bottom-[-12px] left-0 right-0 mx-auto"
+                            style={{
+                                height: '28px',
+                                width: '85%',
+                                background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.60) 0%, transparent 75%)',
+                                filter: 'blur(8px)',
+                                transform: 'rotate(2deg)',
+                            }}
+                        />
 
                         {/* 구매/다운로드 버튼 */}
                         <div className="mt-8 space-y-3">

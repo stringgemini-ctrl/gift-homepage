@@ -78,14 +78,14 @@ export default function BookTabs({ book }: { book: TabBook }) {
                     */
                     <pre
                         className="font-mono text-[14px] leading-[2.0] whitespace-pre-wrap"
-                        style={{ color: 'rgba(244,244,245,0.72)' }}
+                        style={{ color: 'rgba(244,244,245,0.92)' }}
                     >
                         {content.toc}
                     </pre>
                 ) : (
                     <p
                         className="text-[16px] leading-[2.1] whitespace-pre-wrap"
-                        style={{ color: 'rgba(244,244,245,0.72)' }}
+                        style={{ color: 'rgba(244,244,245,0.92)' }}
                     >
                         {content[safeActive]}
                     </p>
