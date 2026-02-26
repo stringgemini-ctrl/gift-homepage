@@ -128,7 +128,7 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-slate-900 overflow-x-hidden pt-20">
+    <div className="min-h-screen bg-slate-800 overflow-x-hidden pt-20">
       <style jsx global>{`
         @keyframes radiant-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 30px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
@@ -159,7 +159,7 @@ export default function Home() {
       `}</style>
 
       {/* 1. 히어로 섹션 — 환하고 우아한 에메랄드 톤업 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-gradient-to-b from-emerald-900/80 via-slate-800 to-slate-900 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-b border-white/5">
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-gradient-to-b from-emerald-900/80 via-slate-800 to-slate-800 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-b border-white/5">
         {/* 에메랄드 베이스 넓고 밝은 글로우 */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.35)_0%,transparent_70%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         {/* 주황/앰버 파티클 */}
@@ -196,11 +196,11 @@ export default function Home() {
       </section>
 
       {/* 2. 북 섹션 — 다크 차콜 배경 + 3D 플로팅 + 글래스모피즘 컨테이너 */}
-      <section className="relative z-20 bg-slate-900 pt-48 pb-32 px-8 overflow-hidden">
+      <section className="relative z-20 bg-slate-800 pt-48 pb-32 px-8 overflow-hidden">
         {/* 히어로 섹션과 연결되는 부드러운 상단 그라데이션 */}
         <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-slate-800 to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.08),transparent_50%)] pointer-events-none"></div>
-        <div className="mx-auto max-w-[1300px] relative z-10 bg-white/[0.02] backdrop-blur-md border border-white/10 rounded-3xl p-10 md:p-16 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all hover:bg-white/[0.03]">
+        <div className="mx-auto max-w-[1300px] relative z-10 bg-white/[0.04] backdrop-blur-md border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all hover:bg-white/[0.06]">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
               <div className="relative w-full max-w-[550px] flex justify-center items-center flex-col">
@@ -228,8 +228,8 @@ export default function Home() {
 
       {/* 3. 사중복음 섹션 - 톤업 및 글로우 (밝고 우아한 글래스모피즘) */}
       <section className="pt-56 pb-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
-        {/* 북 섹션(slate-900)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-900 via-slate-600/30 to-transparent pointer-events-none z-0"></div>
+        {/* 북 섹션(slate-800)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-800 via-slate-600/30 to-transparent pointer-events-none z-0"></div>
         {/* 에메랄드 혼합 밝은 글로우 */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none"></div>
 
