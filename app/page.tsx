@@ -200,7 +200,7 @@ export default function Home() {
         {/* 히어로 섹션에서 북 섹션으로 이어지는 밝은 그라데이션 브릿지 */}
         <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-stone-100 to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none"></div>
-        <div className="mx-auto max-w-[1300px] relative z-10 bg-white/60 backdrop-blur-xl border-2 border-white/40 rounded-3xl p-10 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all">
+        <div className="mx-auto max-w-[1300px] relative z-10 bg-emerald-950/70 backdrop-blur-xl border-2 border-white/40 rounded-3xl p-10 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
               <div className="relative w-full max-w-[380px] flex justify-center items-center flex-col">
