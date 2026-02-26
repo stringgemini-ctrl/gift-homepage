@@ -146,25 +146,62 @@ export default function BookManagement() {
     // journals 버킷 PDF 업로드: 파일명 난수화 후 download_url에 자동 동기화
     const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
-        if (!file || !file.type.includes('pdf')) {
-            showToast('PDF 파일만 업로드 가능합니다.', 'error')
+        // input 초기화 — 같은 파일 재선택 시에도 onChange가 재발화되도록
+        e.target.value = ''
+
+        // ── 1. 엄격한 유효성 검증 ──────────────────────────────
+        if (!file) return
+
+        // MIME 타입: application/pdf 만 허용 (includes('pdf') 보다 정확)
+        if (file.type !== 'application/pdf') {
+            showToast('❌ PDF 파일(.pdf)만 업로드 가능합니다.', 'error')
             return
         }
+
+        // 파일 크기 제한: 50MB
+        const MAX_SIZE_MB = 50
+        if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+            showToast(`❌ 파일 크기는 ${MAX_SIZE_MB}MB 이하여야 합니다. (현재: ${(file.size / 1024 / 1024).toFixed(1)}MB)`, 'error')
+            return
+        }
+
+        // ── 2. Supabase Storage 업로드 ─────────────────────────
         setPdfUploadStatus('uploading')
         setIsPdfUploading(true)
         try {
+            /*
+              파일명 난수화: 타임스탬프 + 랜덤 문자열
+              동시 업로드 시 Collision 완전 차단
+            */
             const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.pdf`
+
             const { error: upErr } = await supabase.storage
                 .from('journals')
-                .upload(fileName, file, { upsert: false })
-            if (upErr) throw upErr
+                .upload(fileName, file, {
+                    upsert: false,
+                    contentType: 'application/pdf',  // Content-Type 명시 → iframe PDF 렌더링 보장
+                })
+
+            if (upErr) {
+                console.error('[handlePdfUpload] Storage 업로드 실패:', upErr)
+                throw upErr
+            }
+
+            // ── 3. Public URL 취득 → download_url 컬럼에 즉시 동기화 ──
             const { data: urlData } = supabase.storage.from('journals').getPublicUrl(fileName)
+
+            if (!urlData.publicUrl) {
+                throw new Error('Public URL을 가져오지 못했습니다. 버킷 공개 설정을 확인하세요.')
+            }
+
+            console.log('[handlePdfUpload] 업로드 성공, URL:', urlData.publicUrl)
             setField('download_url', urlData.publicUrl)
             setPdfUploadStatus('success')
-            showToast('✅ PDF 업로드 성공!')
+            showToast('✅ PDF 업로드 성공! URL이 자동 입력되었습니다.')
         } catch (err) {
+            console.error('[handlePdfUpload] 최종 에러:', err)
             setPdfUploadStatus('error')
-            showToast('PDF 업로드 실패: ' + (err instanceof Error ? err.message : '오류'), 'error')
+            showToast('❌ PDF 업로드 실패: ' + (err instanceof Error ? err.message : '알 수 없는 오류'), 'error')
         } finally {
             setIsPdfUploading(false)
         }
