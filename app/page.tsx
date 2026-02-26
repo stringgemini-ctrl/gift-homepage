@@ -214,12 +214,11 @@ export default function Home() {
               <p className="text-emerald-50/90 text-lg leading-relaxed mb-12 font-medium">
                 윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 '메트로폴리탄교회연합(MCA)'의 역사를 다룬 선구적인 연구서입니다. '점퍼스'라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-emerald-800/50 pt-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 border-t border-emerald-800/50 pt-10">
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">William Kostlevy</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg">김상기,오주영,장혜선</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg whitespace-nowrap">김상기, 오주영, 장혜선</span></div>
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">도서출판 선인</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publication Year</span><span className="text-white font-black text-lg">2025년 2월</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">432p</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publication Year & Pages</span><span className="text-white font-black text-lg text-emerald-100/90">2025.02 / 432p</span></div>
               </div>
             </div>
           </div>
