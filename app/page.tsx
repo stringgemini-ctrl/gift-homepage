@@ -216,7 +216,7 @@ export default function Home() {
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-emerald-800/50 pt-10">
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">William Kostlevy</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg">김상기, 오주영, 장혜선</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg">김상기,오주영,장혜선</span></div>
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">도서출판 선인</span></div>
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publication Year</span><span className="text-white font-black text-lg">2025년 2월</span></div>
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">432p</span></div>
