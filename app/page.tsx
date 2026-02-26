@@ -196,7 +196,9 @@ export default function Home() {
       </section>
 
       {/* 2. 북 섹션 — 다크 차콜 배경 + 3D 플로팅 + 글래스모피즘 컨테이너 */}
-      <section className="relative z-20 bg-slate-900 py-32 px-8 overflow-hidden">
+      <section className="relative z-20 bg-slate-900 pt-48 pb-32 px-8 overflow-hidden">
+        {/* 히어로 섹션과 연결되는 부드러운 상단 그라데이션 */}
+        <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-slate-800 to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.08),transparent_50%)] pointer-events-none"></div>
         <div className="mx-auto max-w-[1300px] relative z-10 bg-white/[0.02] backdrop-blur-md border border-white/10 rounded-3xl p-10 md:p-16 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all hover:bg-white/[0.03]">
           <div className="flex flex-col lg:flex-row items-center gap-20">
@@ -225,9 +227,9 @@ export default function Home() {
       </section>
 
       {/* 3. 사중복음 섹션 - 톤업 및 글로우 (밝고 우아한 글래스모피즘) */}
-      <section className="py-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
-        {/* 북 섹션(slate-900)과의 부드러운 전환을 위한 상단 그라디언트 */}
-        <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-slate-900 to-transparent pointer-events-none z-0"></div>
+      <section className="pt-48 pb-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
+        {/* 북 섹션(slate-900)과의 부드러운 전환을 위한 상단 그라디언트 (더 길게) */}
+        <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-slate-900 via-slate-800/80 to-transparent pointer-events-none z-0"></div>
         {/* 에메랄드 혼합 밝은 글로우 */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none"></div>
 
@@ -262,18 +264,7 @@ export default function Home() {
                   }}
                 />
 
-                {/* 워터마크 */}
-                <span
-                  className="pointer-events-none absolute bottom-[-10px] right-[-10px] font-sans font-black select-none leading-none transition-transform duration-500 group-hover:scale-110"
-                  style={{
-                    fontSize: '160px',
-                    color: item.iconColor,
-                    opacity: item.iconColor === '#ffffff' ? 0.4 : 0.08, // 화이트는 좀 더 불투명하게
-                    filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 0 10px rgba(0,0,0,0.1))' : 'none'
-                  }}
-                >
-                  {item.subtitle.charAt(0)}
-                </span>
+                {/* 워터마크 삭제됨 */}
 
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="mb-6 flex justify-start">
@@ -321,45 +312,60 @@ export default function Home() {
       <ResourceSection posts={posts} />
 
       {/* 6. 푸터 */}
-      <footer className="bg-slate-900 pt-20 pb-10 border-t border-white/10 w-full text-left relative z-20">
+      <footer className="bg-slate-950 pt-24 pb-12 w-full text-left relative z-20 border-t-4 border-slate-800 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]">
         <div className="mx-auto max-w-[1200px] px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 pb-16 border-b border-white/10">
-            <div className="space-y-4">
-              <h4 className="text-sm font-black text-white uppercase tracking-tighter">연구소 정보</h4>
-              <ul className="space-y-3 text-xs font-bold text-slate-400">
-                <li><Link href="/about" className="hover:text-emerald-400 transition-colors">인사말 / 연혁</Link></li>
-                <li><Link href="/about" className="hover:text-emerald-400 transition-colors">정관 및 사명</Link></li>
-                <li><Link href="/about" className="hover:text-emerald-400 transition-colors">연구진 소개</Link></li>
-              </ul>
+          {/* 하단 메인 푸터 정보: 브랜드 및 9개 메뉴 그리드 */}
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-16 pb-16 border-b border-slate-800">
+            {/* 왼쪽: 브랜드 및 정보 */}
+            <div className="lg:w-1/3">
+              <h2 className="text-2xl font-black text-white mb-6 tracking-tighter drop-shadow-sm">GIFT<span className="text-emerald-500 text-3xl">.</span></h2>
+              <p className="text-sm font-medium text-slate-400 leading-relaxed mb-6">
+                글로벌 사중복음 신학연구소는 성결교회의 핵심적인 네 가지 신학적 기둥인 사중복음의 은혜를 전 세계와 나눕니다.
+              </p>
+              <p className="text-[11px] font-bold text-slate-500 leading-relaxed">
+                소장: 이용호<br />
+                주소: 경기도 부천시 소사구 호현로 489번길 52, 서울신학대학교 100주년기념관 306호<br />
+                전화: 032-340-9271
+              </p>
             </div>
-            <div className="space-y-4">
-              <h4 className="text-sm font-black text-white uppercase tracking-tighter">아카이브</h4>
-              <ul className="space-y-3 text-xs font-bold text-slate-400">
-                <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">학술 논문</Link></li>
-                <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">연구소 간행물</Link></li>
-                <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">도서 시리즈</Link></li>
-              </ul>
-            </div>
-            <div className="space-y-4">
-              <h4 className="text-sm font-black text-white uppercase tracking-tighter">고객 지원</h4>
-              <ul className="space-y-3 text-xs font-bold text-slate-400">
-                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">문의 및 요청</Link></li>
-                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">오시는 길</Link></li>
-              </ul>
+
+            {/* 오른쪽: 9개 메뉴 (3개의 컬럼 그리드로 재배치) */}
+            <div className="lg:w-2/3 w-full grid grid-cols-2 md:grid-cols-3 gap-8">
+              <div className="space-y-4">
+                <h4 className="text-[11px] font-black text-slate-300 uppercase tracking-widest border-l-2 border-emerald-500 pl-3">연구소 소개</h4>
+                <ul className="space-y-3 text-sm font-bold text-slate-400 pl-3">
+                  <li><Link href="/about" className="hover:text-emerald-400 transition-colors">인사말 / 연혁</Link></li>
+                  <li><Link href="/about" className="hover:text-emerald-400 transition-colors">정관 및 사명</Link></li>
+                  <li><Link href="/about" className="hover:text-emerald-400 transition-colors">연구진 소개</Link></li>
+                </ul>
+              </div>
+              <div className="space-y-4">
+                <h4 className="text-[11px] font-black text-slate-300 uppercase tracking-widest border-l-2 border-emerald-500 pl-3">자료 아카이브</h4>
+                <ul className="space-y-3 text-sm font-bold text-slate-400 pl-3">
+                  <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">아카이브 메인</Link></li>
+                  <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">학술 논문</Link></li>
+                  <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">연구소 간행물</Link></li>
+                  <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">도서 시리즈</Link></li>
+                </ul>
+              </div>
+              <div className="space-y-4">
+                <h4 className="text-[11px] font-black text-slate-300 uppercase tracking-widest border-l-2 border-emerald-500 pl-3">고객 지원</h4>
+                <ul className="space-y-3 text-sm font-bold text-slate-400 pl-3">
+                  <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">고객별 메뉴</Link></li>
+                  <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">문의 및 요청</Link></li>
+                  <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">오시는 길</Link></li>
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="pt-10 space-y-4">
-            <p className="text-[11px] font-bold text-slate-500 leading-relaxed">
-              소장: 이용호 | 주소: 경기도 부천시 소사구 호현로 489번길 52, 서울신학대학교 100주년기념관 306호<br />
-              전화: 032-340-9271 | 호스팅: Vercel Inc.
+
+          <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+              Copyright © 2026 GLOBAL INSTITUTE FOR THE FOURFOLD-GOSPEL THEOLOGY. All rights reserved.
             </p>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-white/5 pt-6">
-              <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest">Copyright © 2026 GLOBAL INSTITUTE FOR THE FOURFOLD-GOSPEL THEOLOGY.</p>
-              <div className="flex gap-4 text-[11px] font-black text-slate-500">
-                <Link href="/legal" className="hover:text-slate-300 transition-colors selection:bg-emerald-500/30">개인정보 처리방침</Link>
-                <Link href="/legal" className="hover:text-slate-300 transition-colors selection:bg-emerald-500/30">웹 사이트 이용 약관</Link>
-                <Link href="/legal" className="hover:text-slate-300 transition-colors selection:bg-emerald-500/30">법적 고지</Link>
-              </div>
+            <div className="flex gap-6 text-[11px] font-bold text-slate-500">
+              <Link href="/legal" className="hover:text-slate-300 transition-colors">서비스 이용약관</Link>
+              <Link href="/legal" className="hover:text-slate-300 transition-colors">개인정보 처리방침</Link>
             </div>
           </div>
         </div>

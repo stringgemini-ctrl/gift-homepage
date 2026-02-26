@@ -8,7 +8,7 @@
   - 딜레이 없이 페이지 진입 즉시 화면 안에서 보임
 */
 
-const PARTICLES = Array.from({ length: 22 }, (_, i) => ({
+const PARTICLES = Array.from({ length: 11 }, (_, i) => ({
     id: i,
     left: `${(i * 4.7 + 3) % 95}%`,
     // 시작 위치를 화면 하단 ~ 중간으로 분산하여 처음부터 보이게 함
@@ -16,7 +16,7 @@ const PARTICLES = Array.from({ length: 22 }, (_, i) => ({
     size: i % 3 === 0 ? 3 : i % 3 === 1 ? 2 : 1.5,
     delay: `0s`,   // 딜레이 제거 — 진입 즉시 표시
     duration: `${12 + (i * 2.1) % 10}s`,
-    opacity: i % 4 === 0 ? 0.45 : 0.25,
+    opacity: i % 4 === 0 ? 0.2 : 0.1, // 투명도를 절반 수준으로 대폭 축소 (0.45->0.2, 0.25->0.1)
 }))
 
 export default function HeroParticles() {

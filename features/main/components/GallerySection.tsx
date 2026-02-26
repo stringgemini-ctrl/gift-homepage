@@ -14,16 +14,18 @@ interface Props {
 
 export default function GallerySection({ activities, onImageClick }: Props) {
     return (
-        <section className="py-32 bg-white px-8 border-t border-slate-100 w-full text-left">
-            <div className="mx-auto max-w-[1200px]">
-                <h2 className="text-4xl font-black text-slate-900 mb-16 tracking-tighter">최근 활동 갤러리</h2>
+        <section className="py-32 bg-slate-50 px-8 w-full text-left relative overflow-hidden">
+            {/* 상단 섹션과의 연결을 위한 부드러운 그라디언트 */}
+            <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-slate-50 to-transparent pointer-events-none z-0"></div>
+            <div className="mx-auto max-w-[1200px] relative z-10">
+                <h2 className="text-4xl font-black text-slate-900 mb-16 tracking-tighter drop-shadow-sm">최근 활동 갤러리</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     {activities.length > 0 ? (
                         activities.map((item) => (
                             <div
                                 key={item.id}
                                 onClick={() => item.image_url && onImageClick(item.image_url)}
-                                className="group rounded-2xl overflow-hidden bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
+                                className="group rounded-3xl overflow-hidden bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(16,185,129,0.15)] hover:-translate-y-2 transition-all duration-500 cursor-pointer"
                             >
                                 <div className="aspect-[4/3] overflow-hidden bg-slate-200">
                                     {item.image_url ? (
@@ -40,8 +42,8 @@ export default function GallerySection({ activities, onImageClick }: Props) {
                                         </div>
                                     )}
                                 </div>
-                                <div className="p-5">
-                                    <p className="text-base font-bold text-slate-800 line-clamp-2">{item.title || '제목 없음'}</p>
+                                <div className="p-6">
+                                    <p className="text-base font-bold text-slate-800 line-clamp-2 transition-colors duration-300 group-hover:text-emerald-700">{item.title || '제목 없음'}</p>
                                 </div>
                             </div>
                         ))
