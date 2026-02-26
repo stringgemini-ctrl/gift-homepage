@@ -38,17 +38,17 @@ const fourfoldGospel = [
     id: 1, Icon: Icons.Regeneration,
     title: '중생', subtitle: 'Regeneration',
     iconColor: '#9f1239', // Crimson Red
-    borderColor: 'rgba(159,18,57,0.30)',
-    glowColor: 'rgba(159,18,57,0.15)',
+    borderColor: 'rgba(159,18,57,0.3)',
+    glowColor: 'rgba(159,18,57,0.25)', // 밝은 배경에 맞춘 강한 글로우
     desc: '천국 시민의 자격을 갖추는 기독교의 입문입니다. 십자가에 달려 속죄의 피를 흘리신 예수 그리스도를 믿을 때, 성령의 역사로 새 생명을 얻어 심령과 인격 전체에 근본적인 변혁이 일어나는 영적 신비입니다.',
     scripture: '요한복음 3:3',
   },
   {
     id: 2, Icon: Icons.Sanctification,
     title: '성결', subtitle: 'Sanctification',
-    iconColor: '#ffffff', // Pure White
-    borderColor: 'rgba(255,255,255,0.20)',
-    glowColor: 'rgba(255,255,255,0.1)',
+    iconColor: '#ffffff', // Pure White (밝은 배경에서 튀도록 그림자 적용 필수)
+    borderColor: 'rgba(148,163,184,0.3)', // slate-400 border
+    glowColor: 'rgba(255,255,255,0.8)', // pure white glow
     desc: '구원받은 신자가 마땅히 사모해야 할 성령 세례의 은혜입니다. 오순절 다락방에 임했던 성령의 역사처럼, 죄의 본성을 정결케 하고 하나님을 향한 온전한 사랑과 거룩한 삶의 능력을 덧입는 과정입니다.',
     scripture: '히브리서 12:14',
   },
@@ -56,8 +56,8 @@ const fourfoldGospel = [
     id: 3, Icon: Icons.DivineHealing,
     title: '신유', subtitle: 'Divine Healing',
     iconColor: '#0f766e', // Sage Green
-    borderColor: 'rgba(15,118,110,0.30)',
-    glowColor: 'rgba(15,118,110,0.15)',
+    borderColor: 'rgba(15,118,110,0.3)',
+    glowColor: 'rgba(15,118,110,0.25)',
     desc: '하나님의 보호하심 아래 육신의 강건함을 누리며, 병들었을 때 기도함으로 나음을 얻는 은사입니다. 이는 단순한 기적을 넘어, 깨어진 육신을 안전케 하시는 주님의 전인적인 구원과 사랑의 표적입니다.',
     scripture: '마가복음 16:17–18',
   },
@@ -65,8 +65,8 @@ const fourfoldGospel = [
     id: 4, Icon: Icons.SecondComing,
     title: '재림', subtitle: 'Second Coming',
     iconColor: '#1e40af', // Slate Blue
-    borderColor: 'rgba(30,64,175,0.30)',
-    glowColor: 'rgba(30,64,175,0.15)',
+    borderColor: 'rgba(30,64,175,0.3)',
+    glowColor: 'rgba(30,64,175,0.25)',
     desc: '신약성경 예언의 중심이자 우리 신앙의 궁극적인 소망입니다. \'내가 속히 오리라\' 하신 약속을 믿으며, 주님의 공중 재림과 지상 재림을 대망하여 오늘을 깨어 있는 신앙으로 살아가게 하는 원동력입니다.',
     scripture: '요한계시록 22:20',
   },
@@ -158,10 +158,10 @@ export default function Home() {
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 — 다크 차콜 글래스 느낌 + 주황 파티클 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-slate-900/40 backdrop-blur-md overflow-hidden text-center border-b border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-        {/* 주황 방사형 후광 */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle,rgba(251,191,36,0.1)_0%,transparent_65%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
+      {/* 1. 히어로 섹션 — 환하고 우아한 에메랄드 톤업 */}
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-gradient-to-b from-emerald-900/80 via-slate-800 to-slate-900 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-b border-white/5">
+        {/* 에메랄드 베이스 넓고 밝은 글로우 */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.35)_0%,transparent_70%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         {/* 주황/앰버 파티클 */}
         <HeroParticles />
 
@@ -169,20 +169,20 @@ export default function Home() {
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
             <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{leftFigures[leftIndex].title}<br /><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-white">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
 
         {/* 중앙 텍스트 */}
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-400 bg-emerald-900/50 border border-emerald-500/20 backdrop-blur-sm rounded-full animate-fadeInUp">THE GOOD NEWS</span>
-          <h1 className="text-6xl font-black tracking-tighter text-white md:text-8xl leading-[1.1] animate-fadeInUp">성결의 빛, <br /><span className="text-glory drop-shadow-[0_0_15px_rgba(251,191,36,0.3)]">온 누리에</span></h1>
-          <p className="mt-8 text-sm md:text-lg font-bold text-slate-400 tracking-wide animate-fadeInUp uppercase leading-relaxed">
-            <span className="text-[#f68d2e] text-xl md:text-2xl">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl">I</span>nstitute for the <br className="hidden md:block" />
-            <span className="text-[#f68d2e] text-xl md:text-2xl">F</span>ourfold-gospel <span className="text-[#f68d2e] text-xl md:text-2xl">T</span>heology
+          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-white bg-emerald-700/50 border border-emerald-400/30 backdrop-blur-md rounded-full animate-fadeInUp shadow-[0_0_15px_rgba(16,185,129,0.5)]">THE GOOD NEWS</span>
+          <h1 className="text-6xl font-black tracking-tighter text-white md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_4px_20px_rgba(0,0,0,0.3)]">성결의 빛, <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]">온 누리에</span></h1>
+          <p className="mt-8 text-sm md:text-lg font-bold text-slate-200 tracking-wide animate-fadeInUp uppercase leading-relaxed drop-shadow-md">
+            <span className="text-[#f68d2e] text-xl md:text-2xl drop-shadow-sm">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl drop-shadow-sm">I</span>nstitute for the <br className="hidden md:block" />
+            <span className="text-[#f68d2e] text-xl md:text-2xl drop-shadow-sm">F</span>ourfold-gospel <span className="text-[#f68d2e] text-xl md:text-2xl drop-shadow-sm">T</span>heology
           </p>
           <div className="mt-12 animate-fadeInUp">
-            <Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-xl transition-all">연구소 자료실 바로가기</Link>
+            <Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-[0_8px_30px_rgba(16,185,129,0.4)] transition-all border border-emerald-400/50">연구소 자료실 바로가기</Link>
           </div>
         </div>
 
@@ -224,49 +224,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. 사중복음 섹션 - 글래스모피즘 다크 테마 고도화 */}
-      <section className="py-32 bg-slate-900 px-8 w-full text-left relative overflow-hidden">
-        {/* 전체 배경 은은한 빛 번짐 */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[radial-gradient(ellipse,rgba(255,255,255,0.02),transparent_70%)] pointer-events-none mix-blend-screen"></div>
+      {/* 3. 사중복음 섹션 - 톤업 및 글로우 (밝고 우아한 글래스모피즘) */}
+      <section className="py-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
+        {/* 북 섹션(slate-900)과의 부드러운 전환을 위한 상단 그라디언트 */}
+        <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-slate-900 to-transparent pointer-events-none z-0"></div>
+        {/* 에메랄드 혼합 밝은 글로우 */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none"></div>
+
         <div className="mx-auto max-w-[1200px] relative z-10">
-          <h2 className="text-4xl font-black text-white mb-4 tracking-tighter drop-shadow-md">사중복음의 은혜</h2>
-          <p className="text-slate-400 font-bold mb-16">복음의 영광이 투영된 기독교대한성결교회의 핵심적인 네 가지 신학적 기둥을 소개합니다.</p>
+          <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter drop-shadow-sm">사중복음의 은혜</h2>
+          <p className="text-slate-600 font-bold mb-16 shadow-sm">복음의 영광이 투영된 기독교대한성결교회의 핵심적인 네 가지 신학적 기둥을 소개합니다.</p>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className="group relative overflow-hidden bg-white/[0.03] backdrop-blur-xl p-8 rounded-3xl border transition-all duration-500 hover:-translate-y-2 cursor-default"
-                style={{
-                  borderColor: item.borderColor,
-                  boxShadow: `0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)`
-                }}
+                className="group relative overflow-hidden bg-white/70 backdrop-blur-2xl p-8 rounded-3xl border border-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-2 cursor-default"
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)`
+                  (e.currentTarget as HTMLElement).style.boxShadow = item.iconColor === '#ffffff'
+                    ? `0 20px 60px rgba(0,0,0,0.1), 0 4px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1)`
+                    : `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1)`;
                   const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
                   if (bgGlow) bgGlow.style.opacity = '1';
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)`
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 30px rgba(0,0,0,0.04)`
                   const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
                   if (bgGlow) bgGlow.style.opacity = '0';
                 }}
               >
                 <div
-                  className="bg-glow absolute inset-0 opacity-0 transition-opacity duration-500 pointer-events-none"
+                  className="bg-glow absolute inset-0 opacity-0 transition-opacity duration-500 pointer-events-none rounded-3xl"
                   style={{
-                    background: `radial-gradient(circle at top right, ${item.glowColor}, transparent 70%)`
+                    background: item.iconColor === '#ffffff'
+                      ? `radial-gradient(circle at top right, rgba(255,255,255,0.8), transparent 70%)`
+                      : `radial-gradient(circle at top right, ${item.glowColor}, transparent 70%)`
                   }}
                 />
 
-                {/* 워터마크 — 우측 하단에 각 항목의 영문 첫 알파벳 */}
+                {/* 워터마크 */}
                 <span
                   className="pointer-events-none absolute bottom-[-10px] right-[-10px] font-sans font-black select-none leading-none transition-transform duration-500 group-hover:scale-110"
                   style={{
                     fontSize: '160px',
                     color: item.iconColor,
-                    opacity: 0.05,
-                    filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' : 'none'
+                    opacity: item.iconColor === '#ffffff' ? 0.4 : 0.08, // 화이트는 좀 더 불투명하게
+                    filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 0 10px rgba(0,0,0,0.1))' : 'none'
                   }}
                 >
                   {item.subtitle.charAt(0)}
@@ -274,26 +277,36 @@ export default function Home() {
 
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="mb-6 flex justify-start">
-                    <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/5" style={{ boxShadow: `0 0 20px ${item.glowColor}` }}>
-                      <item.Icon color={item.iconColor} />
+                    <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-500 group-hover:shadow-md" style={{
+                      boxShadow: item.iconColor === '#ffffff' ? '0 4px 15px rgba(0,0,0,0.1)' : `0 4px 15px ${item.glowColor}`
+                    }}>
+                      <div style={{ filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.3))' : 'none' }}>
+                        <item.Icon color={item.iconColor} />
+                      </div>
                     </div>
                   </div>
                   <h3
-                    className="text-2xl font-black mb-1 drop-shadow-md"
+                    className="text-2xl font-black mb-1 drop-shadow-sm transition-all duration-500"
                     style={{
                       color: item.iconColor,
-                      textShadow: item.iconColor === '#ffffff' ? '0 0 20px rgba(255,255,255,0.3)' : 'none'
+                      textShadow: item.iconColor === '#ffffff' ? '0 2px 5px rgba(0,0,0,0.3), 0 0 1px rgba(0,0,0,0.5)' : 'none'
                     }}
                   >
                     {item.title}
                   </h3>
-                  <p className="text-[10px] uppercase font-black tracking-widest mb-6 opacity-80" style={{ color: item.iconColor }}>
+                  <p
+                    className="text-[10px] uppercase font-black tracking-widest mb-6"
+                    style={{
+                      color: item.iconColor,
+                      textShadow: item.iconColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.4)' : 'none'
+                    }}
+                  >
                     {item.subtitle}
                   </p>
-                  <p className="text-sm font-medium text-slate-300 leading-relaxed flex-1">
+                  <p className="text-sm font-medium text-slate-600 leading-relaxed flex-1">
                     {item.desc}
                   </p>
-                  <p className="mt-6 text-[11px] font-bold text-slate-500 px-3 py-1.5 bg-black/20 rounded-lg inline-block self-start border border-white/5">{item.scripture}</p>
+                  <p className="mt-6 text-[11px] font-bold text-slate-500 px-3 py-1.5 bg-slate-100/80 rounded-lg inline-block self-start border border-slate-200">{item.scripture}</p>
                 </div>
               </div>
             ))}
