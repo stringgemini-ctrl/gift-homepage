@@ -41,7 +41,7 @@ export default function BookTabs({ book }: { book: TabBook }) {
             {/* 탭 헤더 */}
             <div
                 className="flex items-center gap-1 mb-10 border-b"
-                style={{ borderColor: 'rgba(255,255,255,0.08)' }}
+                style={{ borderColor: 'rgba(255,255,255,0.11)' }}
             >
                 {visibleTabs.map(tab => {
                     const isActive = safeActive === tab.key
@@ -51,7 +51,7 @@ export default function BookTabs({ book }: { book: TabBook }) {
                             onClick={() => setActive(tab.key)}
                             className="flex items-center gap-1.5 px-5 py-3.5 text-[13px] font-bold transition-all relative"
                             style={{
-                                color: isActive ? '#34d399' : 'rgba(255,255,255,0.38)',
+                                color: isActive ? '#34d399' : 'rgba(255,255,255,0.52)',
                                 borderBottom: isActive ? '2px solid #34d399' : '2px solid transparent',
                                 marginBottom: '-1px',
                             }}
@@ -67,8 +67,8 @@ export default function BookTabs({ book }: { book: TabBook }) {
             <div
                 className="rounded-2xl px-8 py-10"
                 style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.10)',
                 }}
             >
                 {safeActive === 'toc' ? (

@@ -54,11 +54,11 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                     : null
 
     return (
-        <div className="min-h-screen" style={{ background: '#040c09' }}>
+        <div className="min-h-screen" style={{ background: '#0d1f1a' }}>
 
             {/* ── 탑 네비 ─────────────────────────────────────── */}
             <nav className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-6"
-                style={{ background: 'rgba(4,12,9,0.85)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                style={{ background: 'rgba(13,31,26,0.88)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.09)' }}>
                 <Link href="/publications"
                     className="flex items-center gap-2 text-[13px] font-semibold transition-colors"
                     style={{ color: 'rgba(255,255,255,0.45)' }}
@@ -73,12 +73,12 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
 
             {/* ── 히어로 섹션 ─────────────────────────────────── */}
             <div className="relative overflow-hidden pt-16">
-                {/* 에메랄드 광원 배경 */}
+                {/* 에메랄드 광원 배경 — 좌측 메인 */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(ellipse 120% 80% at 30% 50%, rgba(16,185,129,0.22) 0%, transparent 65%)',
+                    background: 'radial-gradient(ellipse 120% 80% at 30% 50%, rgba(16,185,129,0.28) 0%, transparent 65%)',
                 }} />
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(ellipse 60% 100% at 10% 50%, rgba(6,78,59,0.30) 0%, transparent 70%)',
+                    background: 'radial-gradient(ellipse 60% 100% at 10% 50%, rgba(6,78,59,0.35) 0%, transparent 70%)',
                 }} />
 
                 <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 flex flex-col lg:flex-row gap-14 lg:gap-20 items-start">
@@ -196,7 +196,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                                 { label: '카테고리', value: catBadge?.label },
                             ].filter(m => m.value).map(m => (
                                 <div key={m.label} className="rounded-xl px-4 py-3"
-                                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                                    style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.11)' }}>
                                     <dt className="text-[9px] font-black uppercase tracking-widest mb-1"
                                         style={{ color: 'rgba(52,211,153,0.55)' }}>{m.label}</dt>
                                     <dd className="text-[14px] font-semibold" style={{ color: '#f4f4f5' }}>{m.value}</dd>
@@ -212,11 +212,11 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
 
             {/* ── 하단 CTA ─────────────────────────────────────── */}
             <div className="border-t py-14 text-center mt-10"
-                style={{ borderColor: 'rgba(255,255,255,0.07)', background: 'rgba(0,0,0,0.3)' }}>
-                <p className="text-[13px] mb-5" style={{ color: 'rgba(255,255,255,0.35)' }}>다른 출간 도서도 살펴보세요</p>
+                style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.025)' }}>
+                <p className="text-[13px] mb-5" style={{ color: 'rgba(255,255,255,0.42)' }}>다른 출간 도서도 살펴보세요</p>
                 <Link href="/publications"
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] font-bold transition-all"
-                    style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.60)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    style={{ background: 'rgba(255,255,255,0.09)', color: 'rgba(255,255,255,0.68)', border: '1px solid rgba(255,255,255,0.13)' }}>
                     전체 도서 보기 →
                 </Link>
             </div>
