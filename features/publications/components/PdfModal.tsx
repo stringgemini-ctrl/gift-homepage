@@ -140,15 +140,22 @@ export default function PdfModal({ pdfUrl, title, onClose }: PdfModalProps) {
                     </button>
                 </div>
 
-                {/* PDF iframe — URL이 안전한 절대경로일 때만 렌더링 */}
+                {/* PDF 뷰어 — object 태그로 type 강제 명시, contentType 없는 구파일도 렌더링 */}
                 <div className="flex-1 bg-slate-100">
                     {isSafeUrl ? (
-                        <iframe
-                            src={`${pdfUrl}#view=FitH`}
+                        <object
+                            data={`${pdfUrl}#view=FitH`}
+                            type="application/pdf"
                             className="w-full h-full border-none"
-                            title={title}
-                            allowFullScreen
-                        />
+                            aria-label={title}
+                        >
+                            {/* object 미지원 브라우저 폴백: embed 태그 */}
+                            <embed
+                                src={`${pdfUrl}#view=FitH`}
+                                type="application/pdf"
+                                className="w-full h-full border-none"
+                            />
+                        </object>
                     ) : (
                         /* URL 없거나 비정상일 때: 인셉션 방지 에러 UI */
                         <div className="w-full h-full flex flex-col items-center justify-center gap-4">
