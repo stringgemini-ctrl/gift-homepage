@@ -14,8 +14,11 @@ interface Props {
 export default function ResourceSection({ posts }: Props) {
     return (
         <section className="bg-slate-50 pb-32 pt-16 px-10 w-full text-left relative overflow-hidden">
+            {/* 에메랄드 혼합 밝은 글로우 (대폭 확장 동기화) */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.06),transparent_60%)] pointer-events-none scale-150"></div>
+
             <div className="mx-auto max-w-[1200px] relative z-10">
-                <div className="bg-white/80 backdrop-blur-2xl rounded-[3rem] p-10 md:p-16 shadow-[0_8px_40px_rgba(0,0,0,0.05)] border border-white transition-all duration-500 hover:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
+                <div className="bg-white/70 backdrop-blur-2xl rounded-[3rem] p-10 md:p-16 shadow-[0_8px_40px_rgba(0,0,0,0.04)] border border-white transition-all duration-500 hover:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
                     <h2 className="text-4xl font-black text-slate-900 text-center mb-16 tracking-tighter drop-shadow-sm">연구소 자료실</h2>
                     <div className="flex flex-col gap-3">
                         {posts.length > 0 ? (

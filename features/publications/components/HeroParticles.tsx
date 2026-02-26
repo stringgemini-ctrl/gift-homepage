@@ -50,12 +50,12 @@ export default function HeroParticles() {
                             width: `${p.size}px`,
                             height: `${p.size}px`,
                             background: p.id % 5 === 0
-                                ? 'rgba(251,146,60,0.9)'
+                                ? 'rgba(251,191,36,0.9)' // amber-400
                                 : p.id % 3 === 0
-                                    ? 'rgba(245,158,11,0.8)'
-                                    : 'rgba(253,186,116,0.7)',
+                                    ? 'rgba(245,158,11,0.8)' // amber-500
+                                    : 'rgba(234,179,8,0.7)', // yellow-500
                             boxShadow: p.id % 5 === 0
-                                ? '0 0 4px 1px rgba(251,146,60,0.5)'
+                                ? '0 0 4px 1px rgba(251,191,36,0.5)'
                                 : 'none',
                             animation: `${p.id % 2 === 0 ? 'floatUp' : 'floatDrift'} ${p.duration} ${p.delay} infinite ease-in-out`,
                             opacity: p.opacity,

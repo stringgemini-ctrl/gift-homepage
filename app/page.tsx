@@ -159,7 +159,7 @@ export default function Home() {
       `}</style>
 
       {/* 1. 히어로 섹션 — 홀리 라이트 베이스 (stone-50) + 맑은 에메랄드 대비 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-100/60 via-stone-50 to-stone-100 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-b border-emerald-100/30">
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-200/50 via-emerald-100/30 to-white/80 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-b border-emerald-100/30">
         {/* 에메랄드 베이스 넓고 맑은 글로우 */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.15)_0%,transparent_70%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         {/* 주황/앰버 파티클 */}
@@ -178,8 +178,8 @@ export default function Home() {
           <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-900 bg-emerald-100/80 border border-emerald-400/40 backdrop-blur-md rounded-full animate-fadeInUp shadow-[0_0_15px_rgba(16,185,129,0.2)]">THE GOOD NEWS</span>
           <h1 className="text-6xl font-black tracking-tighter text-stone-900 md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_2px_10px_rgba(0,0,0,0.05)]">성결의 빛, <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]">온 누리에</span></h1>
           <p className="mt-8 text-sm md:text-lg font-bold text-stone-600 tracking-wide animate-fadeInUp uppercase leading-relaxed drop-shadow-sm">
-            <span className="text-orange-500 text-xl md:text-2xl drop-shadow-sm">G</span>lobal <span className="text-orange-500 text-xl md:text-2xl drop-shadow-sm">I</span>nstitute for the <br className="hidden md:block" />
-            <span className="text-orange-500 text-xl md:text-2xl drop-shadow-sm">F</span>ourfold-gospel <span className="text-orange-500 text-xl md:text-2xl drop-shadow-sm">T</span>heology
+            <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">G</span>lobal <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">I</span>nstitute for the <br className="hidden md:block" />
+            <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">F</span>ourfold-gospel <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">T</span>heology
           </p>
           <div className="mt-12 animate-fadeInUp">
             <Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-[0_8px_30px_rgba(16,185,129,0.4)] transition-all border border-emerald-400/50">연구소 자료실 바로가기</Link>
@@ -200,26 +200,26 @@ export default function Home() {
         {/* 히어로 섹션에서 북 섹션으로 이어지는 밝은 그라데이션 브릿지 */}
         <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-stone-100 to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none"></div>
-        <div className="mx-auto max-w-[1300px] relative z-10 bg-white/60 backdrop-blur-2xl border border-white/50 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.05)] transition-all hover:bg-white/80 hover:shadow-[0_20px_50px_rgba(16,185,129,0.05)]">
+        <div className="mx-auto max-w-[1300px] relative z-10 bg-emerald-950/60 backdrop-blur-2xl border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all hover:bg-emerald-950/70 hover:shadow-[0_20px_50px_rgba(16,185,129,0.1)]">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
-              <div className="relative w-full max-w-[550px] flex justify-center items-center flex-col">
-                <img src="/holyjumpers3d.png" alt="Holy Jumpers 3D" className="w-full h-auto object-contain animate-book-float drop-shadow-[0_30px_50px_rgba(0,0,0,0.15)] relative z-10" />
-                <div className="absolute -bottom-10 w-[60%] h-6 bg-slate-400/30 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
+              <div className="relative w-full max-w-[380px] flex justify-center items-center flex-col">
+                <img src="/holyjumpers3d.png" alt="Holy Jumpers 3D" className="w-full h-auto object-contain animate-book-float drop-shadow-[0_30px_50px_rgba(0,0,0,0.25)] relative z-10" />
+                <div className="absolute -bottom-10 w-[60%] h-6 bg-black/30 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
               </div>
             </div>
             <div className="w-full lg:w-1/2 text-left">
-              <span className="text-emerald-700 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
-              <h2 className="text-5xl md:text-6xl font-black text-stone-900 mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-stone-500 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
-              <p className="text-stone-600 text-lg leading-relaxed mb-12 font-medium">
+              <span className="text-emerald-400 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
+              <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-emerald-100/70 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
+              <p className="text-emerald-50/90 text-lg leading-relaxed mb-12 font-medium">
                 윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 '메트로폴리탄교회연합(MCA)'의 역사를 다룬 선구적인 연구서입니다. '점퍼스'라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-stone-200/60 pt-10">
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Author</span><span className="text-stone-900 font-black text-lg">William Kostlevy</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Translators</span><span className="text-stone-900 font-black text-lg">김상기, 오주영, 장혜선</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Publisher</span><span className="text-stone-900 font-black text-lg">도서출판 선인</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Publication Year</span><span className="text-stone-900 font-black text-lg">2025년 2월</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Pages</span><span className="text-stone-900 font-black text-lg">432p</span></div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-emerald-800/50 pt-10">
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">William Kostlevy</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg">김상기, 오주영, 장혜선</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">도서출판 선인</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publication Year</span><span className="text-white font-black text-lg">2025년 2월</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">432p</span></div>
               </div>
             </div>
           </div>
@@ -230,8 +230,8 @@ export default function Home() {
       <section className="pt-56 pb-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
         {/* 북 섹션(stone-100)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
         <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-stone-100 via-stone-50 to-transparent pointer-events-none z-0"></div>
-        {/* 에메랄드 혼합 밝은 글로우 */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none"></div>
+        {/* 에메랄드 혼합 밝은 글로우 (대폭 확장) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.06),transparent_60%)] pointer-events-none scale-150"></div>
 
         <div className="mx-auto max-w-[1200px] relative z-10">
           <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter drop-shadow-sm">사중복음의 은혜</h2>
