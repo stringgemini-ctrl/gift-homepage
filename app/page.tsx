@@ -169,7 +169,7 @@ export default function Home() {
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
             <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-900 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-emerald-900">{leftFigures[leftIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-600 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ export default function Home() {
         <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`right-${rightIndex}`} className="animate-figure-majestic-right text-center">
             <img src={rightFigures[rightIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-900 tracking-tighter drop-shadow-sm">{rightFigures[rightIndex].title}<br /><span className="text-xl text-emerald-900">{rightFigures[rightIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-600 tracking-tighter drop-shadow-sm">{rightFigures[rightIndex].title}<br /><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
           </div>
         </div>
       </section>
