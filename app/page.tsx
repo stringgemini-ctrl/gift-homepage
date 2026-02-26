@@ -128,7 +128,7 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-slate-800 overflow-x-hidden pt-20">
+    <div className="min-h-screen bg-stone-50 overflow-x-hidden pt-20">
       <style jsx global>{`
         @keyframes radiant-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 30px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
@@ -158,10 +158,10 @@ export default function Home() {
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 — 가장 밝은 다크 공간 (slate-700) + 에메랄드 뚜렷 대비 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-800/50 via-slate-700 to-slate-800 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-b border-white/5">
-        {/* 에메랄드 베이스 넓고 밝은 글로우 */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.35)_0%,transparent_70%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
+      {/* 1. 히어로 섹션 — 홀리 라이트 베이스 (stone-50) + 맑은 에메랄드 대비 */}
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-100/60 via-stone-50 to-stone-100 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-b border-emerald-100/30">
+        {/* 에메랄드 베이스 넓고 맑은 글로우 */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.15)_0%,transparent_70%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         {/* 주황/앰버 파티클 */}
         <HeroParticles />
 
@@ -175,11 +175,11 @@ export default function Home() {
 
         {/* 중앙 텍스트 */}
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-white bg-emerald-700/50 border border-emerald-400/30 backdrop-blur-md rounded-full animate-fadeInUp shadow-[0_0_15px_rgba(16,185,129,0.5)]">THE GOOD NEWS</span>
-          <h1 className="text-6xl font-black tracking-tighter text-white md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_4px_20px_rgba(0,0,0,0.3)]">성결의 빛, <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]">온 누리에</span></h1>
-          <p className="mt-8 text-sm md:text-lg font-bold text-slate-200 tracking-wide animate-fadeInUp uppercase leading-relaxed drop-shadow-md">
-            <span className="text-[#f68d2e] text-xl md:text-2xl drop-shadow-sm">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl drop-shadow-sm">I</span>nstitute for the <br className="hidden md:block" />
-            <span className="text-[#f68d2e] text-xl md:text-2xl drop-shadow-sm">F</span>ourfold-gospel <span className="text-[#f68d2e] text-xl md:text-2xl drop-shadow-sm">T</span>heology
+          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-900 bg-emerald-100/80 border border-emerald-400/40 backdrop-blur-md rounded-full animate-fadeInUp shadow-[0_0_15px_rgba(16,185,129,0.2)]">THE GOOD NEWS</span>
+          <h1 className="text-6xl font-black tracking-tighter text-stone-900 md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_2px_10px_rgba(0,0,0,0.05)]">성결의 빛, <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]">온 누리에</span></h1>
+          <p className="mt-8 text-sm md:text-lg font-bold text-stone-600 tracking-wide animate-fadeInUp uppercase leading-relaxed drop-shadow-sm">
+            <span className="text-orange-500 text-xl md:text-2xl drop-shadow-sm">G</span>lobal <span className="text-orange-500 text-xl md:text-2xl drop-shadow-sm">I</span>nstitute for the <br className="hidden md:block" />
+            <span className="text-orange-500 text-xl md:text-2xl drop-shadow-sm">F</span>ourfold-gospel <span className="text-orange-500 text-xl md:text-2xl drop-shadow-sm">T</span>heology
           </p>
           <div className="mt-12 animate-fadeInUp">
             <Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-[0_8px_30px_rgba(16,185,129,0.4)] transition-all border border-emerald-400/50">연구소 자료실 바로가기</Link>
@@ -195,31 +195,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. 북 섹션 — 다크 차콜 배경(기존의 무거운 톤 복원) + 거대한 그라데이션 브릿지 */}
-      <section className="relative z-20 bg-slate-900 pt-56 pb-32 px-8 overflow-hidden">
-        {/* 히어로 섹션에서 북 섹션으로 빨려들어오는 매우 긴 그라데이션 */}
-        <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-slate-800 to-slate-900 pointer-events-none z-10"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.08),transparent_50%)] pointer-events-none"></div>
-        <div className="mx-auto max-w-[1300px] relative z-10 bg-white/[0.04] backdrop-blur-md border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all hover:bg-white/[0.06]">
+      {/* 2. 북 섹션 — 홀리 라이트 기반 아늑한 서재 (stone-100) + 부드러운 그라데이션 브릿지 */}
+      <section className="relative z-20 bg-stone-100 pt-56 pb-32 px-8 overflow-hidden">
+        {/* 히어로 섹션에서 북 섹션으로 이어지는 밝은 그라데이션 브릿지 */}
+        <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-stone-100 to-transparent pointer-events-none z-10"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none"></div>
+        <div className="mx-auto max-w-[1300px] relative z-10 bg-white/60 backdrop-blur-2xl border border-white/50 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.05)] transition-all hover:bg-white/80 hover:shadow-[0_20px_50px_rgba(16,185,129,0.05)]">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
               <div className="relative w-full max-w-[550px] flex justify-center items-center flex-col">
-                <img src="/holyjumpers3d.png" alt="Holy Jumpers 3D" className="w-full h-auto object-contain animate-book-float drop-shadow-[0_40px_70px_rgba(0,0,0,0.6)] relative z-10" />
-                <div className="absolute -bottom-10 w-[60%] h-6 bg-black/40 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
+                <img src="/holyjumpers3d.png" alt="Holy Jumpers 3D" className="w-full h-auto object-contain animate-book-float drop-shadow-[0_30px_50px_rgba(0,0,0,0.15)] relative z-10" />
+                <div className="absolute -bottom-10 w-[60%] h-6 bg-slate-400/30 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
               </div>
             </div>
             <div className="w-full lg:w-1/2 text-left">
-              <span className="text-emerald-400 font-black tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
-              <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-slate-400 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
-              <p className="text-slate-200 text-lg leading-relaxed mb-12 font-medium">
+              <span className="text-emerald-700 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
+              <h2 className="text-5xl md:text-6xl font-black text-stone-900 mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-stone-500 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
+              <p className="text-stone-600 text-lg leading-relaxed mb-12 font-medium">
                 윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 '메트로폴리탄교회연합(MCA)'의 역사를 다룬 선구적인 연구서입니다. '점퍼스'라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-white/10 pt-10">
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">William Kostlevy</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg">김상기, 오주영, 장혜선</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">도서출판 선인</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Publication Year</span><span className="text-white font-black text-lg">2025년 2월</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">432p</span></div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-stone-200/60 pt-10">
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Author</span><span className="text-stone-900 font-black text-lg">William Kostlevy</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Translators</span><span className="text-stone-900 font-black text-lg">김상기, 오주영, 장혜선</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Publisher</span><span className="text-stone-900 font-black text-lg">도서출판 선인</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Publication Year</span><span className="text-stone-900 font-black text-lg">2025년 2월</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Pages</span><span className="text-stone-900 font-black text-lg">432p</span></div>
               </div>
             </div>
           </div>
@@ -228,8 +228,8 @@ export default function Home() {
 
       {/* 3. 사중복음 섹션 - 톤업 및 글로우 (밝고 우아한 글래스모피즘) */}
       <section className="pt-56 pb-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
-        {/* 북 섹션(slate-900)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-900 via-slate-400/30 to-slate-50 pointer-events-none z-0"></div>
+        {/* 북 섹션(stone-100)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-stone-100 via-stone-50 to-transparent pointer-events-none z-0"></div>
         {/* 에메랄드 혼합 밝은 글로우 */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none"></div>
 
@@ -244,7 +244,7 @@ export default function Home() {
                 className="group relative overflow-hidden bg-white/70 backdrop-blur-2xl p-8 rounded-3xl border border-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-2 cursor-default"
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.boxShadow = item.iconColor === '#ffffff'
-                    ? `0 20px 60px rgba(0,0,0,0.1), 0 4px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1)`
+                    ? `0 20px 60px rgba(245,158,11,0.15), 0 0 25px rgba(245,158,11,0.5), inset 0 1px 0 rgba(255,255,255,1)`
                     : `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1)`;
                   const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
                   if (bgGlow) bgGlow.style.opacity = '1';
