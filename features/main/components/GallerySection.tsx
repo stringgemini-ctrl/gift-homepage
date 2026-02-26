@@ -28,7 +28,7 @@ export default function GallerySection({ activities, onImageClick }: Props) {
                             <div
                                 key={item.id}
                                 onClick={() => item.image_url && onImageClick(item.image_url)}
-                                className="group rounded-3xl overflow-hidden bg-white/70 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_rgba(16,185,129,0.15)] hover:-translate-y-2 transition-all duration-500 cursor-pointer"
+                                className="group rounded-3xl overflow-hidden bg-white/60 backdrop-blur-xl border-2 border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.15)] hover:shadow-[0_25px_60px_rgba(16,185,129,0.2)] hover:-translate-y-2 transition-all duration-500 cursor-pointer"
                             >
                                 <div className="aspect-[4/3] overflow-hidden bg-slate-200">
                                     {item.image_url ? (

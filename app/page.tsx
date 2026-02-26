@@ -37,7 +37,7 @@ const fourfoldGospel = [
   {
     id: 1, Icon: Icons.Regeneration,
     title: '중생', subtitle: 'Regeneration',
-    iconColor: '#9f1239', // Crimson Red
+    iconColor: '#be123c', // Crimson Red (Tone down)
     borderColor: 'rgba(159,18,57,0.3)',
     glowColor: 'rgba(159,18,57,0.25)', // 밝은 배경에 맞춘 강한 글로우
     desc: '천국 시민의 자격을 갖추는 기독교의 입문입니다. 십자가에 달려 속죄의 피를 흘리신 예수 그리스도를 믿을 때, 성령의 역사로 새 생명을 얻어 심령과 인격 전체에 근본적인 변혁이 일어나는 영적 신비입니다.',
@@ -55,7 +55,7 @@ const fourfoldGospel = [
   {
     id: 3, Icon: Icons.DivineHealing,
     title: '신유', subtitle: 'Divine Healing',
-    iconColor: '#0f766e', // Sage Green
+    iconColor: '#0d9488', // Sage Green (Tone down)
     borderColor: 'rgba(15,118,110,0.3)',
     glowColor: 'rgba(15,118,110,0.25)',
     desc: '하나님의 보호하심 아래 육신의 강건함을 누리며, 병들었을 때 기도함으로 나음을 얻는 은사입니다. 이는 단순한 기적을 넘어, 깨어진 육신을 안전케 하시는 주님의 전인적인 구원과 사랑의 표적입니다.',
@@ -64,7 +64,7 @@ const fourfoldGospel = [
   {
     id: 4, Icon: Icons.SecondComing,
     title: '재림', subtitle: 'Second Coming',
-    iconColor: '#1e40af', // Slate Blue
+    iconColor: '#1d4ed8', // Slate Blue (Tone down)
     borderColor: 'rgba(30,64,175,0.3)',
     glowColor: 'rgba(30,64,175,0.25)',
     desc: '신약성경 예언의 중심이자 우리 신앙의 궁극적인 소망입니다. \'내가 속히 오리라\' 하신 약속을 믿으며, 주님의 공중 재림과 지상 재림을 대망하여 오늘을 깨어 있는 신앙으로 살아가게 하는 원동력입니다.',
@@ -158,8 +158,8 @@ export default function Home() {
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 — 홀리 라이트 베이스 (stone-50) + 맑은 에메랄드 오로라 대비 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-stone-50 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-b border-emerald-100/30">
+      {/* 1. 히어로 섹션 — 홀리 라이트 베이스 (stone-50) + 출간소개 동기화 에메랄드 오로라 */}
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-800/40 via-stone-50 to-stone-100 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-b border-emerald-100/30">
         {/* 복합 에메랄드 오로라 렌더링 (방사형 다중 그라디언트 + 블러) */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.3)_0%,transparent_60%),radial-gradient(ellipse_at_bottom_right,rgba(16,185,129,0.2)_0%,transparent_60%)] blur-3xl pointer-events-none -z-10" style={{ animation: 'radiant-glow 15s infinite alternate' }} />
         {/* 주황/앰버 파티클 */}
@@ -169,7 +169,7 @@ export default function Home() {
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
             <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-stone-900 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-900 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-emerald-900">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ export default function Home() {
         <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`right-${rightIndex}`} className="animate-figure-majestic-right text-center">
             <img src={rightFigures[rightIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-stone-900 tracking-tighter drop-shadow-sm">{rightFigures[rightIndex].title}<br /><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-900 tracking-tighter drop-shadow-sm">{rightFigures[rightIndex].title}<br /><span className="text-xl text-emerald-900">{rightFigures[rightIndex].name}</span></p>
           </div>
         </div>
       </section>
@@ -200,7 +200,7 @@ export default function Home() {
         {/* 히어로 섹션에서 북 섹션으로 이어지는 밝은 그라데이션 브릿지 */}
         <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-stone-100 to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none"></div>
-        <div className="mx-auto max-w-[1300px] relative z-10 bg-emerald-950/70 backdrop-blur-md border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all">
+        <div className="mx-auto max-w-[1300px] relative z-10 bg-white/60 backdrop-blur-xl border-2 border-white/40 rounded-3xl p-10 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
               <div className="relative w-full max-w-[380px] flex justify-center items-center flex-col">
@@ -241,7 +241,7 @@ export default function Home() {
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className="group relative overflow-hidden bg-white/70 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+                className="group relative overflow-hidden bg-white/60 backdrop-blur-xl p-8 rounded-3xl border-2 border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 cursor-default"
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.boxShadow = item.iconColor === '#ffffff'
                     ? `0 20px 60px rgba(245,158,11,0.15), 0 0 25px rgba(245,158,11,0.5), inset 0 1px 0 rgba(255,255,255,1)`
@@ -288,8 +288,8 @@ export default function Home() {
                   <p
                     className="text-[10px] uppercase font-black tracking-widest mb-6"
                     style={{
-                      color: item.iconColor,
-                      textShadow: item.iconColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.4)' : 'none'
+                      color: item.iconColor === '#ffffff' ? '#ffffff' : item.iconColor,
+                      textShadow: item.iconColor === '#ffffff' ? '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 2px 5px rgba(0,0,0,0.6)' : 'none'
                     }}
                   >
                     {item.subtitle}
