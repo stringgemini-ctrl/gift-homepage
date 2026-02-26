@@ -69,7 +69,7 @@ export default function BookTabs({ book }: { book: TabBook }) {
                 style={{
                     background: '#ffffff',
                     border: '1px solid rgba(0,0,0,0.07)',
-                    boxShadow: '0 1px 8px rgba(0,0,0,0.05)',
+                    boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
                 }}
             >
                 {safeActive === 'toc' ? (

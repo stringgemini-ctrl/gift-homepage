@@ -54,11 +54,11 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                     : null
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen" style={{ background: '#eef0f2' }}>
 
             {/* ── 탑 네비 ─────────────────────────────────────── */}
             <nav className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-6"
-                style={{ background: 'rgba(248,250,252,0.90)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+                style={{ background: 'rgba(238,240,242,0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(0,0,0,0.09)' }}>
                 <Link href="/publications"
                     className="flex items-center gap-2 text-[13px] font-semibold transition-colors text-slate-400 hover:text-slate-700"
                 >
@@ -194,8 +194,8 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                                 { label: '정가', value: book.price ? `₩${book.price.toLocaleString('ko-KR')}` : null },
                                 { label: '카테고리', value: catBadge?.label },
                             ].filter(m => m.value).map(m => (
-                                <div key={m.label} className="rounded-xl px-4 py-3 bg-white"
-                                    style={{ border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+                                <div key={m.label} className="rounded-xl px-4 py-3 bg-white shadow-md"
+                                    style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
                                     <dt className="text-[9px] font-black uppercase tracking-widest mb-1 text-emerald-600">{m.label}</dt>
                                     <dd className="text-[14px] font-semibold text-slate-800">{m.value}</dd>
                                 </div>
@@ -209,8 +209,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
             <BookTabs book={book} />
 
             {/* ── 하단 CTA ─────────────────────────────────────── */}
-            <div className="border-t py-14 text-center mt-10 bg-white"
-                style={{ borderColor: 'rgba(0,0,0,0.07)' }}>
+            <div className="border-t py-14 text-center mt-10" style={{ background: '#eef0f2', borderColor: 'rgba(0,0,0,0.08)' }}>
                 <p className="text-[13px] mb-5 text-slate-400">다른 출간 도서도 살펴보세요</p>
                 <Link href="/publications"
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] font-bold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200"
