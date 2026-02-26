@@ -201,6 +201,15 @@ export default function Home() {
         <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-stone-100 to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none"></div>
         <div className="mx-auto max-w-[1300px] relative z-10 bg-emerald-950/70 backdrop-blur-xl border-2 border-white/40 rounded-3xl p-10 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all">
+          {/* 3D NEW Badge */}
+          <div className="absolute -top-6 -left-6 z-30">
+            <div className="bg-emerald-500 text-white font-black px-6 py-2.5 rounded-xl border-2 border-white/50 shadow-[0_10px_30px_rgba(16,185,129,0.4)] backdrop-blur-md transform -rotate-3 hover:rotate-0 transition-transform cursor-default flex items-center gap-2">
+              <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+              <span className="tracking-tighter text-lg italic">NEW!</span>
+            </div>
+            <div className="absolute inset-0 bg-emerald-900/30 blur-xl -z-10 rounded-xl"></div>
+          </div>
+
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
               <div className="relative w-full max-w-[380px] flex justify-center items-center flex-col">
