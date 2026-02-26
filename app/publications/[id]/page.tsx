@@ -54,31 +54,30 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                     : null
 
     return (
-        <div className="min-h-screen" style={{ background: '#0d1f1a' }}>
+        <div className="min-h-screen bg-slate-50">
 
             {/* ── 탑 네비 ─────────────────────────────────────── */}
             <nav className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-6"
-                style={{ background: 'rgba(13,31,26,0.88)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.09)' }}>
+                style={{ background: 'rgba(248,250,252,0.90)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
                 <Link href="/publications"
-                    className="flex items-center gap-2 text-[13px] font-semibold transition-colors"
-                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                    className="flex items-center gap-2 text-[13px] font-semibold transition-colors text-slate-400 hover:text-slate-700"
                 >
                     ← 출간 도서
                 </Link>
-                <span className="mx-3" style={{ color: 'rgba(255,255,255,0.15)' }}>/</span>
-                <span className="text-[13px] font-semibold line-clamp-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                <span className="mx-3 text-slate-200">/</span>
+                <span className="text-[13px] font-semibold line-clamp-1 text-slate-700">
                     {book.title}
                 </span>
             </nav>
 
             {/* ── 히어로 섹션 ─────────────────────────────────── */}
             <div className="relative overflow-hidden pt-16">
-                {/* 에메랄드 광원 배경 — 좌측 메인 */}
+                {/* 에메랄드 광원 배경 — 라이트 테마에서 상단 헤더 역할 */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(ellipse 120% 80% at 30% 50%, rgba(16,185,129,0.28) 0%, transparent 65%)',
+                    background: 'radial-gradient(ellipse 140% 80% at 30% 50%, rgba(16,185,129,0.12) 0%, transparent 70%)',
                 }} />
                 <div className="absolute inset-0 pointer-events-none" style={{
-                    background: 'radial-gradient(ellipse 60% 100% at 10% 50%, rgba(6,78,59,0.35) 0%, transparent 70%)',
+                    background: 'radial-gradient(ellipse 60% 100% at 10% 50%, rgba(6,78,59,0.08) 0%, transparent 70%)',
                 }} />
 
                 <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 flex flex-col lg:flex-row gap-14 lg:gap-20 items-start">
@@ -174,16 +173,16 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                         </div>
 
                         {/* 제목 */}
-                        <h1 className="font-black tracking-[-0.03em] leading-[1.1] mb-6"
-                            style={{ fontSize: 'clamp(28px, 4.5vw, 52px)', color: '#f4f4f5' }}>
+                        <h1 className="font-black tracking-[-0.03em] leading-[1.1] mb-6 text-slate-900"
+                            style={{ fontSize: 'clamp(28px, 4.5vw, 52px)' }}>
                             {book.title}
                         </h1>
 
                         {/* 저자 | 역자 */}
-                        <p className="mb-8 text-[17px]" style={{ color: 'rgba(244,244,245,0.70)' }}>
-                            <span className="font-bold" style={{ color: '#34d399' }}>{book.author}</span>
+                        <p className="mb-8 text-[17px]">
+                            <span className="font-bold" style={{ color: '#059669' }}>{book.author}</span>
                             {book.translator && (
-                                <span style={{ color: 'rgba(244,244,245,0.40)' }}> | {book.translator} 역</span>
+                                <span className="text-slate-600"> | {book.translator} 역</span>
                             )}
                         </p>
 
@@ -195,11 +194,10 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                                 { label: '정가', value: book.price ? `₩${book.price.toLocaleString('ko-KR')}` : null },
                                 { label: '카테고리', value: catBadge?.label },
                             ].filter(m => m.value).map(m => (
-                                <div key={m.label} className="rounded-xl px-4 py-3"
-                                    style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.11)' }}>
-                                    <dt className="text-[9px] font-black uppercase tracking-widest mb-1"
-                                        style={{ color: 'rgba(52,211,153,0.55)' }}>{m.label}</dt>
-                                    <dd className="text-[14px] font-semibold" style={{ color: '#f4f4f5' }}>{m.value}</dd>
+                                <div key={m.label} className="rounded-xl px-4 py-3 bg-white"
+                                    style={{ border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+                                    <dt className="text-[9px] font-black uppercase tracking-widest mb-1 text-emerald-600">{m.label}</dt>
+                                    <dd className="text-[14px] font-semibold text-slate-800">{m.value}</dd>
                                 </div>
                             ))}
                         </dl>
@@ -211,12 +209,12 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
             <BookTabs book={book} />
 
             {/* ── 하단 CTA ─────────────────────────────────────── */}
-            <div className="border-t py-14 text-center mt-10"
-                style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.025)' }}>
-                <p className="text-[13px] mb-5" style={{ color: 'rgba(255,255,255,0.42)' }}>다른 출간 도서도 살펴보세요</p>
+            <div className="border-t py-14 text-center mt-10 bg-white"
+                style={{ borderColor: 'rgba(0,0,0,0.07)' }}>
+                <p className="text-[13px] mb-5 text-slate-400">다른 출간 도서도 살펴보세요</p>
                 <Link href="/publications"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] font-bold transition-all"
-                    style={{ background: 'rgba(255,255,255,0.09)', color: 'rgba(255,255,255,0.68)', border: '1px solid rgba(255,255,255,0.13)' }}>
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] font-bold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    style={{ border: '1px solid rgba(0,0,0,0.09)' }}>
                     전체 도서 보기 →
                 </Link>
             </div>
