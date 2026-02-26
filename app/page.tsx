@@ -32,23 +32,23 @@ const Icons = {
   ),
 };
 
-// 사중복음 4색 테마 (스펙 5.8 기준: Crimson / Pure Gold / Sage Green / Slate Blue)
+// 사중복음 4색 테마 (스펙 5.8 기준 + 요청사항 반영: Crimson, Pure White, Sage Green, Slate Blue)
 const fourfoldGospel = [
   {
     id: 1, Icon: Icons.Regeneration,
     title: '중생', subtitle: 'Regeneration',
-    iconColor: '#9f1239', // Crimson
-    borderColor: 'rgba(159,18,57,0.20)',
-    glowColor: 'rgba(159,18,57,0.08)',
+    iconColor: '#9f1239', // Crimson Red
+    borderColor: 'rgba(159,18,57,0.30)',
+    glowColor: 'rgba(159,18,57,0.15)',
     desc: '천국 시민의 자격을 갖추는 기독교의 입문입니다. 십자가에 달려 속죄의 피를 흘리신 예수 그리스도를 믿을 때, 성령의 역사로 새 생명을 얻어 심령과 인격 전체에 근본적인 변혁이 일어나는 영적 신비입니다.',
     scripture: '요한복음 3:3',
   },
   {
     id: 2, Icon: Icons.Sanctification,
     title: '성결', subtitle: 'Sanctification',
-    iconColor: '#b45309', // Pure Gold
-    borderColor: 'rgba(180,83,9,0.20)',
-    glowColor: 'rgba(180,83,9,0.08)',
+    iconColor: '#ffffff', // Pure White
+    borderColor: 'rgba(255,255,255,0.20)',
+    glowColor: 'rgba(255,255,255,0.1)',
     desc: '구원받은 신자가 마땅히 사모해야 할 성령 세례의 은혜입니다. 오순절 다락방에 임했던 성령의 역사처럼, 죄의 본성을 정결케 하고 하나님을 향한 온전한 사랑과 거룩한 삶의 능력을 덧입는 과정입니다.',
     scripture: '히브리서 12:14',
   },
@@ -56,8 +56,8 @@ const fourfoldGospel = [
     id: 3, Icon: Icons.DivineHealing,
     title: '신유', subtitle: 'Divine Healing',
     iconColor: '#0f766e', // Sage Green
-    borderColor: 'rgba(15,118,110,0.20)',
-    glowColor: 'rgba(15,118,110,0.08)',
+    borderColor: 'rgba(15,118,110,0.30)',
+    glowColor: 'rgba(15,118,110,0.15)',
     desc: '하나님의 보호하심 아래 육신의 강건함을 누리며, 병들었을 때 기도함으로 나음을 얻는 은사입니다. 이는 단순한 기적을 넘어, 깨어진 육신을 안전케 하시는 주님의 전인적인 구원과 사랑의 표적입니다.',
     scripture: '마가복음 16:17–18',
   },
@@ -65,8 +65,8 @@ const fourfoldGospel = [
     id: 4, Icon: Icons.SecondComing,
     title: '재림', subtitle: 'Second Coming',
     iconColor: '#1e40af', // Slate Blue
-    borderColor: 'rgba(30,64,175,0.20)',
-    glowColor: 'rgba(30,64,175,0.08)',
+    borderColor: 'rgba(30,64,175,0.30)',
+    glowColor: 'rgba(30,64,175,0.15)',
     desc: '신약성경 예언의 중심이자 우리 신앙의 궁극적인 소망입니다. \'내가 속히 오리라\' 하신 약속을 믿으며, 주님의 공중 재림과 지상 재림을 대망하여 오늘을 깨어 있는 신앙으로 살아가게 하는 원동력입니다.',
     scripture: '요한계시록 22:20',
   },
@@ -128,7 +128,7 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden pt-20">
+    <div className="min-h-screen bg-slate-900 overflow-x-hidden pt-20">
       <style jsx global>{`
         @keyframes radiant-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 30px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
@@ -158,8 +158,8 @@ export default function Home() {
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 — 에메랄드 그라디언트 배경 + 주황 파티클 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-gradient-to-br from-emerald-100/90 via-emerald-50/40 to-emerald-100/80 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+      {/* 1. 히어로 섹션 — 다크 차콜 글래스 느낌 + 주황 파티클 */}
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-slate-900/40 backdrop-blur-md overflow-hidden text-center border-b border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
         {/* 주황 방사형 후광 */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle,rgba(251,191,36,0.1)_0%,transparent_65%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         {/* 주황/앰버 파티클 */}
@@ -175,9 +175,9 @@ export default function Home() {
 
         {/* 중앙 텍스트 */}
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-600 bg-emerald-100/60 rounded-full animate-fadeInUp">THE GOOD NEWS</span>
-          <h1 className="text-6xl font-black tracking-tighter text-slate-900 md:text-8xl leading-[1.1] animate-fadeInUp">성결의 빛, <br /><span className="text-glory drop-shadow-sm">온 누리에</span></h1>
-          <p className="mt-8 text-sm md:text-lg font-bold text-slate-500 tracking-wide animate-fadeInUp uppercase leading-relaxed">
+          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-400 bg-emerald-900/50 border border-emerald-500/20 backdrop-blur-sm rounded-full animate-fadeInUp">THE GOOD NEWS</span>
+          <h1 className="text-6xl font-black tracking-tighter text-white md:text-8xl leading-[1.1] animate-fadeInUp">성결의 빛, <br /><span className="text-glory drop-shadow-[0_0_15px_rgba(251,191,36,0.3)]">온 누리에</span></h1>
+          <p className="mt-8 text-sm md:text-lg font-bold text-slate-400 tracking-wide animate-fadeInUp uppercase leading-relaxed">
             <span className="text-[#f68d2e] text-xl md:text-2xl">G</span>lobal <span className="text-[#f68d2e] text-xl md:text-2xl">I</span>nstitute for the <br className="hidden md:block" />
             <span className="text-[#f68d2e] text-xl md:text-2xl">F</span>ourfold-gospel <span className="text-[#f68d2e] text-xl md:text-2xl">T</span>heology
           </p>
@@ -195,10 +195,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. 북 섹션 — 슬레이트 다크 배경 + 3D 플로팅 */}
-      <section className="relative z-20 bg-slate-800 py-32 px-8 overflow-hidden shadow-inner">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,rgba(16,185,129,0.1),transparent_50%)] pointer-events-none"></div>
-        <div className="mx-auto max-w-[1300px] relative z-10">
+      {/* 2. 북 섹션 — 다크 차콜 배경 + 3D 플로팅 + 글래스모피즘 컨테이너 */}
+      <section className="relative z-20 bg-slate-900 py-32 px-8 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.08),transparent_50%)] pointer-events-none"></div>
+        <div className="mx-auto max-w-[1300px] relative z-10 bg-white/[0.02] backdrop-blur-md border border-white/10 rounded-3xl p-10 md:p-16 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all hover:bg-white/[0.03]">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
               <div className="relative w-full max-w-[550px] flex justify-center items-center flex-col">
@@ -224,32 +224,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. 사중복음 섹션 (스펙 5.3·5.4·5.8 기준: 기둥형 카드 + 4색 테마 + 워터마크) */}
-      <section className="py-32 bg-slate-50 px-8 w-full text-left">
-        <div className="mx-auto max-w-[1200px]">
-          <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter">사중복음의 은혜</h2>
-          <p className="text-slate-500 font-bold mb-16">기독교대한성결교회의 핵심적인 네 가지 신학적 기둥을 소개합니다.</p>
+      {/* 3. 사중복음 섹션 - 글래스모피즘 다크 테마 고도화 */}
+      <section className="py-32 bg-slate-900 px-8 w-full text-left relative overflow-hidden">
+        {/* 전체 배경 은은한 빛 번짐 */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[radial-gradient(ellipse,rgba(255,255,255,0.02),transparent_70%)] pointer-events-none mix-blend-screen"></div>
+        <div className="mx-auto max-w-[1200px] relative z-10">
+          <h2 className="text-4xl font-black text-white mb-4 tracking-tighter drop-shadow-md">사중복음의 은혜</h2>
+          <p className="text-slate-400 font-bold mb-16">복음의 영광이 투영된 기독교대한성결교회의 핵심적인 네 가지 신학적 기둥을 소개합니다.</p>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className="relative overflow-hidden bg-white p-8 rounded-3xl shadow-sm border transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-default"
-                style={{ borderColor: item.borderColor }}
+                className="group relative overflow-hidden bg-white/[0.03] backdrop-blur-xl p-8 rounded-3xl border transition-all duration-500 hover:-translate-y-2 cursor-default"
+                style={{
+                  borderColor: item.borderColor,
+                  boxShadow: `0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)`
+                }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.06)`
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)`
+                  const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
+                  if (bgGlow) bgGlow.style.opacity = '1';
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = ''
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)`
+                  const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
+                  if (bgGlow) bgGlow.style.opacity = '0';
                 }}
               >
+                <div
+                  className="bg-glow absolute inset-0 opacity-0 transition-opacity duration-500 pointer-events-none"
+                  style={{
+                    background: `radial-gradient(circle at top right, ${item.glowColor}, transparent 70%)`
+                  }}
+                />
+
                 {/* 워터마크 — 우측 하단에 각 항목의 영문 첫 알파벳 */}
                 <span
-                  className="pointer-events-none absolute bottom-[-10px] right-[-10px] font-sans font-black select-none leading-none"
+                  className="pointer-events-none absolute bottom-[-10px] right-[-10px] font-sans font-black select-none leading-none transition-transform duration-500 group-hover:scale-110"
                   style={{
                     fontSize: '160px',
                     color: item.iconColor,
-                    opacity: 0.04,
+                    opacity: 0.05,
+                    filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' : 'none'
                   }}
                 >
                   {item.subtitle.charAt(0)}
@@ -257,16 +274,26 @@ export default function Home() {
 
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="mb-6 flex justify-start">
-                    <item.Icon color={item.iconColor} />
+                    <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/5" style={{ boxShadow: `0 0 20px ${item.glowColor}` }}>
+                      <item.Icon color={item.iconColor} />
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-black text-slate-800 mb-1">{item.title}</h3>
-                  <p className="text-[10px] uppercase font-black tracking-widest mb-6" style={{ color: item.iconColor }}>
+                  <h3
+                    className="text-2xl font-black mb-1 drop-shadow-md"
+                    style={{
+                      color: item.iconColor,
+                      textShadow: item.iconColor === '#ffffff' ? '0 0 20px rgba(255,255,255,0.3)' : 'none'
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="text-[10px] uppercase font-black tracking-widest mb-6 opacity-80" style={{ color: item.iconColor }}>
                     {item.subtitle}
                   </p>
-                  <p className="text-sm font-medium text-slate-600 leading-relaxed flex-1">
+                  <p className="text-sm font-medium text-slate-300 leading-relaxed flex-1">
                     {item.desc}
                   </p>
-                  <p className="mt-6 text-[11px] font-bold text-slate-400">{item.scripture}</p>
+                  <p className="mt-6 text-[11px] font-bold text-slate-500 px-3 py-1.5 bg-black/20 rounded-lg inline-block self-start border border-white/5">{item.scripture}</p>
                 </div>
               </div>
             ))}
@@ -281,44 +308,44 @@ export default function Home() {
       <ResourceSection posts={posts} />
 
       {/* 6. 푸터 */}
-      <footer className="bg-slate-50 pt-20 pb-10 border-t border-slate-200 w-full text-left">
+      <footer className="bg-slate-900 pt-20 pb-10 border-t border-white/10 w-full text-left relative z-20">
         <div className="mx-auto max-w-[1200px] px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 pb-16 border-b border-slate-200">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 pb-16 border-b border-white/10">
             <div className="space-y-4">
-              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tighter">연구소 정보</h4>
-              <ul className="space-y-3 text-xs font-bold text-slate-500">
-                <li><Link href="/about" className="hover:text-emerald-600">인사말 / 연혁</Link></li>
-                <li><Link href="/about" className="hover:text-emerald-600">정관 및 사명</Link></li>
-                <li><Link href="/about" className="hover:text-emerald-600">연구진 소개</Link></li>
+              <h4 className="text-sm font-black text-white uppercase tracking-tighter">연구소 정보</h4>
+              <ul className="space-y-3 text-xs font-bold text-slate-400">
+                <li><Link href="/about" className="hover:text-emerald-400 transition-colors">인사말 / 연혁</Link></li>
+                <li><Link href="/about" className="hover:text-emerald-400 transition-colors">정관 및 사명</Link></li>
+                <li><Link href="/about" className="hover:text-emerald-400 transition-colors">연구진 소개</Link></li>
               </ul>
             </div>
             <div className="space-y-4">
-              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tighter">아카이브</h4>
-              <ul className="space-y-3 text-xs font-bold text-slate-500">
-                <li><Link href="/archive" className="hover:text-emerald-600">학술 논문</Link></li>
-                <li><Link href="/archive" className="hover:text-emerald-600">연구소 간행물</Link></li>
-                <li><Link href="/archive" className="hover:text-emerald-600">도서 시리즈</Link></li>
+              <h4 className="text-sm font-black text-white uppercase tracking-tighter">아카이브</h4>
+              <ul className="space-y-3 text-xs font-bold text-slate-400">
+                <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">학술 논문</Link></li>
+                <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">연구소 간행물</Link></li>
+                <li><Link href="/archive" className="hover:text-emerald-400 transition-colors">도서 시리즈</Link></li>
               </ul>
             </div>
             <div className="space-y-4">
-              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tighter">고객 지원</h4>
-              <ul className="space-y-3 text-xs font-bold text-slate-500">
-                <li><Link href="/contact" className="hover:text-emerald-600">문의 및 요청</Link></li>
-                <li><Link href="/contact" className="hover:text-emerald-600">오시는 길</Link></li>
+              <h4 className="text-sm font-black text-white uppercase tracking-tighter">고객 지원</h4>
+              <ul className="space-y-3 text-xs font-bold text-slate-400">
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">문의 및 요청</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">오시는 길</Link></li>
               </ul>
             </div>
           </div>
           <div className="pt-10 space-y-4">
-            <p className="text-[11px] font-bold text-slate-400 leading-relaxed">
+            <p className="text-[11px] font-bold text-slate-500 leading-relaxed">
               소장: 이용호 | 주소: 경기도 부천시 소사구 호현로 489번길 52, 서울신학대학교 100주년기념관 306호<br />
               전화: 032-340-9271 | 호스팅: Vercel Inc.
             </p>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-slate-100 pt-6">
-              <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Copyright © 2026 GLOBAL INSTITUTE FOR THE FOURFOLD-GOSPEL THEOLOGY.</p>
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-white/5 pt-6">
+              <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest">Copyright © 2026 GLOBAL INSTITUTE FOR THE FOURFOLD-GOSPEL THEOLOGY.</p>
               <div className="flex gap-4 text-[11px] font-black text-slate-500">
-                <Link href="/legal" className="hover:underline">개인정보 처리방침</Link>
-                <Link href="/legal" className="hover:underline">웹 사이트 이용 약관</Link>
-                <Link href="/legal" className="hover:underline">법적 고지</Link>
+                <Link href="/legal" className="hover:text-slate-300 transition-colors selection:bg-emerald-500/30">개인정보 처리방침</Link>
+                <Link href="/legal" className="hover:text-slate-300 transition-colors selection:bg-emerald-500/30">웹 사이트 이용 약관</Link>
+                <Link href="/legal" className="hover:text-slate-300 transition-colors selection:bg-emerald-500/30">법적 고지</Link>
               </div>
             </div>
           </div>

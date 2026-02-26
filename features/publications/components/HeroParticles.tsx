@@ -42,7 +42,8 @@ export default function HeroParticles() {
                 {PARTICLES.map(p => (
                     <div
                         key={p.id}
-                        className="absolute rounded-full"
+                        className={`absolute rounded-full !opacity-40 blur-[4px] ${p.id % 3 === 0 ? '!w-5 !h-5' : p.id % 2 === 0 ? '!w-4 !h-4' : '!w-3 !h-3'
+                            }`}
                         style={{
                             left: p.left,
                             bottom: p.bottom,

@@ -28,3 +28,10 @@ trigger: always_on
 # 5. Database & Authentication (Supabase)
 - STRICTLY use the latest `@supabase/ssr` package for all DB and Auth calls. Do NOT use the deprecated `auth-helpers`.
 - Prioritize Next.js Server Components and Server-Side Rendering (SSR) for data fetching to improve SEO, migrating away from Client-Side `useEffect` fetching where applicable.
+
+# 6. Autonomous Workflow & macOS Notification (CRITICAL)
+- Auto-Apply: Do NOT ask for permission ("Should I do this?") before applying code. Once you are confident in the solution, write the code, modify the files, and trigger the execution/apply step autonomously.
+- **Automatic Deployment (CRITICAL)**: 모든 코드 수정 작업이 완료되고 빌드(`npm run build`)가 성공하면, 별도의 요청 없이 해당 변경 사항을 Git에 commit(메시지는 작업 요약)하고 remote 저장소에 push하여 Vercel 배포를 자동으로 트리거할 것.
+- macOS Notification (Call the User): When you have finished generating code or modifying files, and the system is waiting for the user to manually click "Accept", "Accept All", or "Run", you MUST execute the following macOS terminal command to alert the user:
+  ```bash
+  osascript -e 'display notification "Task completed. Please review and click Accept." with title "🤖 GIFT AI Waiting" sound name "Glass"'
