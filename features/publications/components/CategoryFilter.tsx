@@ -65,14 +65,28 @@ const COLS = 5  // 5열 그리드 (lg 이상)
 
 export default function CategoryFilter({ books }: { books: Book[] }) {
     const [activeTab, setActiveTab] = useState<TabKey>('all')
+    // 'All'이면 전체 연도 표시, 숫자면 해당 연도만 표시
+    const [selectedYear, setSelectedYear] = useState<number | 'All'>('All')
 
-    // 전체보기를 포함한 모든 연산의 베이스: 유효 데이터만 사용
+    // 유효 데이터 화이트리스트 필터
     const validBooks = useMemo(() => books.filter(isValid), [books])
 
-    const filtered = useMemo(() =>
-        activeTab === 'all' ? validBooks : validBooks.filter(b => matchTab(b, activeTab)),
-        [validBooks, activeTab]
+    /*
+      연도 배열: validBooks에서 published_year를 추출 → Set으로 중복 제거 → 내림차순 정렬
+      null인 항목은 제외 (as number는 이미 null 필터 후 안전)
+    */
+    const years = useMemo(() =>
+        Array
+            .from(new Set(validBooks.map(b => b.published_year).filter((y): y is number => y !== null)))
+            .sort((a, b) => b - a),
+        [validBooks]
     )
+
+    // 카테고리 필터 → 연도 필터 순으로 이중 체이닝
+    const filtered = useMemo(() => {
+        const byCategory = activeTab === 'all' ? validBooks : validBooks.filter(b => matchTab(b, activeTab))
+        return selectedYear === 'All' ? byCategory : byCategory.filter(b => b.published_year === selectedYear)
+    }, [validBooks, activeTab, selectedYear])
 
     const rows = useMemo(() => chunkArray(filtered, COLS), [filtered])
 
@@ -133,6 +147,60 @@ export default function CategoryFilter({ books }: { books: Book[] }) {
                     })}
                 </div>
             </div>
+
+            {/*
+              ── 연도 필터 (카테고리 탭 하단 서브바) ──
+              years 배열이 비어있으면 바 자체를 숨김
+            */}
+            {years.length > 0 && (
+                <div
+                    className="flex justify-center py-3"
+                    style={{
+                        background: 'rgba(247,244,239,0.90)',
+                        backdropFilter: 'blur(10px)',
+                        borderBottom: '1px solid rgba(0,0,0,0.05)',
+                    }}
+                >
+                    <div className="flex items-center gap-2 flex-wrap justify-center px-4">
+                        {/* 전체 버튼 */}
+                        <button
+                            onClick={() => setSelectedYear('All')}
+                            className="px-4 py-1.5 rounded-full text-[11px] font-black transition-all duration-200"
+                            style={{
+                                background: selectedYear === 'All'
+                                    ? 'linear-gradient(135deg, #065f46, #059669)'
+                                    : 'rgba(0,0,0,0.06)',
+                                color: selectedYear === 'All' ? '#a7f3d0' : '#6b7280',
+                                boxShadow: selectedYear === 'All'
+                                    ? '0 2px 10px rgba(6,95,70,0.35)'
+                                    : 'none',
+                            }}
+                        >
+                            전체
+                        </button>
+
+                        {/* 연도별 버튼 — DB에 존재하는 연도만 자동 렌더링 */}
+                        {years.map(year => (
+                            <button
+                                key={year}
+                                onClick={() => setSelectedYear(year)}
+                                className="px-4 py-1.5 rounded-full text-[11px] font-black transition-all duration-200"
+                                style={{
+                                    background: selectedYear === year
+                                        ? 'linear-gradient(135deg, #065f46, #059669)'
+                                        : 'rgba(0,0,0,0.06)',
+                                    color: selectedYear === year ? '#a7f3d0' : '#6b7280',
+                                    boxShadow: selectedYear === year
+                                        ? '0 2px 10px rgba(6,95,70,0.35)'
+                                        : 'none',
+                                }}
+                            >
+                                {year}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* ── 도서 선반 ── */}
             <div className="max-w-7xl mx-auto px-6 py-16">
