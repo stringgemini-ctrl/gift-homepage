@@ -158,8 +158,8 @@ export default function Home() {
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 — 환하고 우아한 에메랄드 톤업 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-gradient-to-b from-emerald-900/80 via-slate-800 to-slate-800 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-b border-white/5">
+      {/* 1. 히어로 섹션 — 가장 밝은 다크 공간 (slate-700) + 에메랄드 뚜렷 대비 */}
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-800/50 via-slate-700 to-slate-800 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-b border-white/5">
         {/* 에메랄드 베이스 넓고 밝은 글로우 */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.35)_0%,transparent_70%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         {/* 주황/앰버 파티클 */}
@@ -195,10 +195,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. 북 섹션 — 다크 차콜 배경 + 3D 플로팅 + 글래스모피즘 컨테이너 */}
-      <section className="relative z-20 bg-slate-800 pt-48 pb-32 px-8 overflow-hidden">
-        {/* 히어로 섹션과 연결되는 부드러운 상단 그라데이션 */}
-        <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-slate-800 to-transparent pointer-events-none z-10"></div>
+      {/* 2. 북 섹션 — 다크 차콜 배경(기존의 무거운 톤 복원) + 거대한 그라데이션 브릿지 */}
+      <section className="relative z-20 bg-slate-900 pt-56 pb-32 px-8 overflow-hidden">
+        {/* 히어로 섹션에서 북 섹션으로 빨려들어오는 매우 긴 그라데이션 */}
+        <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-slate-800 to-slate-900 pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.08),transparent_50%)] pointer-events-none"></div>
         <div className="mx-auto max-w-[1300px] relative z-10 bg-white/[0.04] backdrop-blur-md border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all hover:bg-white/[0.06]">
           <div className="flex flex-col lg:flex-row items-center gap-20">
@@ -211,7 +211,7 @@ export default function Home() {
             <div className="w-full lg:w-1/2 text-left">
               <span className="text-emerald-400 font-black tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
               <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-slate-400 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
-              <p className="text-slate-300 text-lg leading-relaxed mb-12 font-medium">
+              <p className="text-slate-200 text-lg leading-relaxed mb-12 font-medium">
                 윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 '메트로폴리탄교회연합(MCA)'의 역사를 다룬 선구적인 연구서입니다. '점퍼스'라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-white/10 pt-10">
@@ -228,8 +228,8 @@ export default function Home() {
 
       {/* 3. 사중복음 섹션 - 톤업 및 글로우 (밝고 우아한 글래스모피즘) */}
       <section className="pt-56 pb-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
-        {/* 북 섹션(slate-800)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-800 via-slate-600/30 to-transparent pointer-events-none z-0"></div>
+        {/* 북 섹션(slate-900)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-900 via-slate-400/30 to-slate-50 pointer-events-none z-0"></div>
         {/* 에메랄드 혼합 밝은 글로우 */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none"></div>
 
