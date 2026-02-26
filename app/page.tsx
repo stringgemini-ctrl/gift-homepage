@@ -227,9 +227,9 @@ export default function Home() {
       </section>
 
       {/* 3. 사중복음 섹션 - 톤업 및 글로우 (밝고 우아한 글래스모피즘) */}
-      <section className="pt-48 pb-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
-        {/* 북 섹션(slate-900)과의 부드러운 전환을 위한 상단 그라디언트 (더 길게) */}
-        <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-slate-900 via-slate-800/80 to-transparent pointer-events-none z-0"></div>
+      <section className="pt-56 pb-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
+        {/* 북 섹션(slate-900)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-900 via-slate-600/30 to-transparent pointer-events-none z-0"></div>
         {/* 에메랄드 혼합 밝은 글로우 */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none"></div>
 

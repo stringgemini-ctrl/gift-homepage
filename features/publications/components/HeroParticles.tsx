@@ -1,25 +1,26 @@
 'use client'
 
-/*
-  HeroParticles: 히어로 섹션 배경 부유 입자 애니메이션
-  - 순수 CSS (keyframes) 기반, 라이브러리 없음
-  - 주황/앰버 계열 점 22개가 각각 다른 속도/위치로 천천히 위로 떠오름
-  - opacity 낮게 유지 → 어지럽지 않은 배경 효과
-  - 딜레이 없이 페이지 진입 즉시 화면 안에서 보임
-*/
-
-const PARTICLES = Array.from({ length: 11 }, (_, i) => ({
-    id: i,
-    left: `${(i * 4.7 + 3) % 95}%`,
-    // 시작 위치를 화면 하단 ~ 중간으로 분산하여 처음부터 보이게 함
-    bottom: `${(i * 8.3) % 70}%`,
-    size: i % 3 === 0 ? 3 : i % 3 === 1 ? 2 : 1.5,
-    delay: `0s`,   // 딜레이 제거 — 진입 즉시 표시
-    duration: `${12 + (i * 2.1) % 10}s`,
-    opacity: i % 4 === 0 ? 0.2 : 0.1, // 투명도를 절반 수준으로 대폭 축소 (0.45->0.2, 0.25->0.1)
-}))
+import { useEffect, useState } from 'react'
 
 export default function HeroParticles() {
+    const [particles, setParticles] = useState<any[]>([])
+
+    useEffect(() => {
+        // Hydration Mismatch 방지를 위해 클라이언트 마운트 시점에 완전 무작위 입자 생성
+        const newParticles = Array.from({ length: 11 }, (_, i) => ({
+            id: i,
+            left: `${Math.random() * 95}%`,
+            bottom: `${Math.random() * 70}%`,
+            size: Math.random() > 0.6 ? 3 : Math.random() > 0.3 ? 2 : 1.5,
+            delay: `-${Math.random() * 20}s`, // 음수 딜레이로 처음부터 화면 곳곳에 애니메이션 진행 상태로 존재하게 함
+            duration: `${10 + Math.random() * 8}s`,
+            opacity: Math.random() > 0.5 ? 0.2 : 0.1, // 투명도 절반 축소
+        }))
+        setParticles(newParticles)
+    }, [])
+
+    if (particles.length === 0) return null // 마운트 전에는 렌더링 생략 (깜빡임 최소화)
+
     return (
         <>
             <style>{`
@@ -39,22 +40,20 @@ export default function HeroParticles() {
       `}</style>
 
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {PARTICLES.map(p => (
+                {particles.map(p => (
                     <div
                         key={p.id}
-                        className={`absolute rounded-full !opacity-40 blur-[4px] ${p.id % 3 === 0 ? '!w-5 !h-5' : p.id % 2 === 0 ? '!w-4 !h-4' : '!w-3 !h-3'
-                            }`}
+                        className={`absolute rounded-full blur-[1px]`} // 블러를 1px로 줄여 선명하고 은은하게 개선
                         style={{
                             left: p.left,
                             bottom: p.bottom,
                             width: `${p.size}px`,
                             height: `${p.size}px`,
-                            // 주황/앰버 계열 + 골드 글로우
                             background: p.id % 5 === 0
-                                ? 'rgba(251,146,60,0.9)'   // 주황 (orange-400)
+                                ? 'rgba(251,146,60,0.9)'
                                 : p.id % 3 === 0
-                                    ? 'rgba(245,158,11,0.8)'   // 앰버 (amber-400)
-                                    : 'rgba(253,186,116,0.7)',  // 연주황 (orange-300)
+                                    ? 'rgba(245,158,11,0.8)'
+                                    : 'rgba(253,186,116,0.7)',
                             boxShadow: p.id % 5 === 0
                                 ? '0 0 4px 1px rgba(251,146,60,0.5)'
                                 : 'none',
