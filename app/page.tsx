@@ -37,7 +37,7 @@ const fourfoldGospel = [
   {
     id: 1, Icon: Icons.Regeneration,
     title: '중생', subtitle: 'Regeneration',
-    iconColor: '#be123c', // Crimson Red (Tone down)
+    iconColor: '#9f1239', // Crimson Red
     borderColor: 'rgba(159,18,57,0.3)',
     glowColor: 'rgba(159,18,57,0.25)', // 밝은 배경에 맞춘 강한 글로우
     desc: '천국 시민의 자격을 갖추는 기독교의 입문입니다. 십자가에 달려 속죄의 피를 흘리신 예수 그리스도를 믿을 때, 성령의 역사로 새 생명을 얻어 심령과 인격 전체에 근본적인 변혁이 일어나는 영적 신비입니다.',
@@ -55,7 +55,7 @@ const fourfoldGospel = [
   {
     id: 3, Icon: Icons.DivineHealing,
     title: '신유', subtitle: 'Divine Healing',
-    iconColor: '#0d9488', // Sage Green (Tone down)
+    iconColor: '#0f766e', // Sage Green
     borderColor: 'rgba(15,118,110,0.3)',
     glowColor: 'rgba(15,118,110,0.25)',
     desc: '하나님의 보호하심 아래 육신의 강건함을 누리며, 병들었을 때 기도함으로 나음을 얻는 은사입니다. 이는 단순한 기적을 넘어, 깨어진 육신을 안전케 하시는 주님의 전인적인 구원과 사랑의 표적입니다.',
@@ -64,7 +64,7 @@ const fourfoldGospel = [
   {
     id: 4, Icon: Icons.SecondComing,
     title: '재림', subtitle: 'Second Coming',
-    iconColor: '#1d4ed8', // Slate Blue (Tone down)
+    iconColor: '#1e40af', // Slate Blue
     borderColor: 'rgba(30,64,175,0.3)',
     glowColor: 'rgba(30,64,175,0.25)',
     desc: '신약성경 예언의 중심이자 우리 신앙의 궁극적인 소망입니다. \'내가 속히 오리라\' 하신 약속을 믿으며, 주님의 공중 재림과 지상 재림을 대망하여 오늘을 깨어 있는 신앙으로 살아가게 하는 원동력입니다.',
@@ -148,20 +148,20 @@ export default function Home() {
         .animate-figure-majestic-left { animation: figure-majestic-enter-left 7s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
         .animate-figure-majestic-right { animation: figure-majestic-enter-right 7s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
         @keyframes book-float-rotate { 
-          0% { transform: rotateY(-12deg) rotateX(5deg) translate3d(0, 0, 0) scale(1.1); } 
-          50% { transform: rotateY(12deg) rotateX(-5deg) translate3d(0, -30px, 0) scale(1.1); } 
-          100% { transform: rotateY(-12deg) rotateX(5deg) translate3d(0, 0, 0) scale(1.1); } 
+          0% { transform: rotateY(-12deg) rotateX(5deg) translate3d(0, 0, 0); } 
+          50% { transform: rotateY(12deg) rotateX(-5deg) translate3d(0, -25px, 0); } 
+          100% { transform: rotateY(-12deg) rotateX(5deg) translate3d(0, 0, 0); } 
         }
-        .animate-book-float { animation: book-float-rotate 6.5s ease-in-out infinite; transform-style: preserve-3d; will-change: transform; }
+        .animate-book-float { animation: book-float-rotate 3.5s ease-in-out infinite; transform-style: preserve-3d; will-change: transform; }
         @keyframes shadow-pulse { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(0.7); opacity: 0.1; } }
         .animate-shadow-pulse { animation: shadow-pulse 3.5s ease-in-out infinite; }
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
       `}</style>
 
-      {/* 1. 히어로 섹션 — 홀리 라이트 베이스 (stone-50) + 출간소개 동기화 에메랄드 오로라 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-800/40 via-stone-50 to-stone-100 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-b border-emerald-100/30">
-        {/* 복합 에메랄드 오로라 렌더링 (방사형 다중 그라디언트 + 블러) */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.3)_0%,transparent_60%),radial-gradient(ellipse_at_bottom_right,rgba(16,185,129,0.2)_0%,transparent_60%)] blur-3xl pointer-events-none -z-10" style={{ animation: 'radiant-glow 15s infinite alternate' }} />
+      {/* 1. 히어로 섹션 — 홀리 라이트 베이스 (stone-50) + 맑은 에메랄드 대비 */}
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-200/50 via-emerald-100/30 to-white/80 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-b border-emerald-100/30">
+        {/* 에메랄드 베이스 넓고 맑은 글로우 */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.15)_0%,transparent_70%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         {/* 주황/앰버 파티클 */}
         <HeroParticles />
 
@@ -169,7 +169,7 @@ export default function Home() {
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
             <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-600 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-black">{leftFigures[leftIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-white">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ export default function Home() {
         <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`right-${rightIndex}`} className="animate-figure-majestic-right text-center">
             <img src={rightFigures[rightIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-600 tracking-tighter drop-shadow-sm">{rightFigures[rightIndex].title}<br /><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{rightFigures[rightIndex].title}<br /><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
           </div>
         </div>
       </section>
@@ -200,16 +200,7 @@ export default function Home() {
         {/* 히어로 섹션에서 북 섹션으로 이어지는 밝은 그라데이션 브릿지 */}
         <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-stone-100 to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none"></div>
-        <div className="mx-auto max-w-[1300px] relative z-10 bg-emerald-950/70 backdrop-blur-xl border-2 border-white/40 rounded-3xl p-10 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all">
-          {/* 3D NEW Badge */}
-          <div className="absolute -top-6 -left-6 z-30">
-            <div className="bg-emerald-500 text-white font-black px-6 py-2.5 rounded-xl border-2 border-white/50 shadow-[0_10px_30px_rgba(16,185,129,0.4)] backdrop-blur-md transform -rotate-3 hover:rotate-0 transition-transform cursor-default flex items-center gap-2">
-              <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-              <span className="tracking-tighter text-lg italic">NEW!</span>
-            </div>
-            <div className="absolute inset-0 bg-emerald-900/30 blur-xl -z-10 rounded-xl"></div>
-          </div>
-
+        <div className="mx-auto max-w-[1300px] relative z-10 bg-emerald-950/60 backdrop-blur-2xl border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all hover:bg-emerald-950/70 hover:shadow-[0_20px_50px_rgba(16,185,129,0.1)]">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
               <div className="relative w-full max-w-[380px] flex justify-center items-center flex-col">
@@ -223,11 +214,12 @@ export default function Home() {
               <p className="text-emerald-50/90 text-lg leading-relaxed mb-12 font-medium">
                 윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 '메트로폴리탄교회연합(MCA)'의 역사를 다룬 선구적인 연구서입니다. '점퍼스'라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 border-t border-emerald-400/40 pt-10">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-emerald-800/50 pt-10">
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">William Kostlevy</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg whitespace-nowrap">김상기, 오주영, 장혜선</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg">김상기, 오주영, 장혜선</span></div>
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">도서출판 선인</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publication Year & Pages</span><span className="text-white font-black text-lg text-emerald-100/90">2025.02 / 432p</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publication Year</span><span className="text-white font-black text-lg">2025년 2월</span></div>
+                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">432p</span></div>
               </div>
             </div>
           </div>
@@ -249,7 +241,7 @@ export default function Home() {
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className="group relative overflow-hidden bg-white/60 backdrop-blur-xl p-8 rounded-3xl border-2 border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+                className="group relative overflow-hidden bg-white/70 backdrop-blur-2xl p-8 rounded-3xl border border-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-2 cursor-default"
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.boxShadow = item.iconColor === '#ffffff'
                     ? `0 20px 60px rgba(245,158,11,0.15), 0 0 25px rgba(245,158,11,0.5), inset 0 1px 0 rgba(255,255,255,1)`
@@ -277,18 +269,18 @@ export default function Home() {
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="mb-6 flex justify-start">
                     <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-500 group-hover:shadow-md" style={{
-                      boxShadow: item.id === 2 ? '0 0 15px rgba(251,191,36,0.6)' : `0 4px 15px ${item.glowColor}`
+                      boxShadow: item.iconColor === '#ffffff' ? '0 4px 15px rgba(0,0,0,0.1)' : `0 4px 15px ${item.glowColor}`
                     }}>
-                      <div style={{ filter: item.id === 2 ? 'drop-shadow(0 0 8px rgba(251,191,36,0.8))' : 'none' }}>
-                        <item.Icon color={item.iconColor === '#ffffff' ? '#eab308' : item.iconColor} />
+                      <div style={{ filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.3))' : 'none' }}>
+                        <item.Icon color={item.iconColor} />
                       </div>
                     </div>
                   </div>
                   <h3
                     className="text-2xl font-black mb-1 drop-shadow-sm transition-all duration-500"
                     style={{
-                      color: item.iconColor === '#ffffff' ? '#ffffff' : item.iconColor,
-                      textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 2px 5px rgba(0,0,0,0.6)'
+                      color: item.iconColor,
+                      textShadow: item.iconColor === '#ffffff' ? '0 2px 5px rgba(0,0,0,0.3), 0 0 1px rgba(0,0,0,0.5)' : 'none'
                     }}
                   >
                     {item.title}
@@ -296,8 +288,8 @@ export default function Home() {
                   <p
                     className="text-[10px] uppercase font-black tracking-widest mb-6"
                     style={{
-                      color: item.iconColor === '#ffffff' ? '#ffffff' : item.iconColor,
-                      textShadow: item.iconColor === '#ffffff' ? '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 2px 5px rgba(0,0,0,0.6)' : 'none'
+                      color: item.iconColor,
+                      textShadow: item.iconColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.4)' : 'none'
                     }}
                   >
                     {item.subtitle}
