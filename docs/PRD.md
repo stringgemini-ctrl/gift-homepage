@@ -75,25 +75,27 @@ Supabase를 기반으로 구성되어 있으며 메인 테이블은 아래와 �
 
 ---
 
-## 5. 향후 개발 로드맵 (Roadmap: Phase 1 ~ 3)
+## 5. 현재 구현 상태 (Current Status: 2026-02-28 기준)
 
-### [Phase 1] 1층 안내 데스크 & 갤러리
-- **목표**: 연구소의 첫인상과 활동 내역을 시각적으로 전달.
-- **주요 기능**:
-  - 연구소 소개 및 이사회 명단 UI 구현.
-  - 인스타그램 형상(Grid 형태)의 활동 갤러리 고도화 (`Activity` 테이블 활용).
-  - 전체적인 진입점(Landing) 경험을 프리미엄 다크 브랜드 톤으로 일관성 있게 조율.
+### 5.1. 아키텍처 및 폴더 구조 (FSD 기반 모듈화)
+- 기존 `/components` 및 `/lib`의 파편화된 파일들을 도메인 주도 설계(FSD) 방식에 따라 `/features` 디렉터리로 전면 개편 완료.
+- **주요 도메인 분리**: `admin`, `auth`, `core`, `database`, `main`, `publications`
+- 라우팅은 Next.js App Router(`/app`)를 유지하며 비즈니스 로직과 UI 컴포넌트는 `/features` 내 위임.
 
-### [Phase 2] 2층 대형 아카이브 도서관
-- **목표**: 연구소의 핵심 역량인 신학/신앙 서적과 저널 데이터의 확장성 있는 아카이빙.
-- **주요 기능**:
-  - `publications`(`books`) 테이블 데이터 및 카테고리 태그 체계 확장.
-  - 기존의 이중 필터링 구조(Category + Year) 최적화 및 페이징/무한 스크롤 도입(필요 시).
-  - Admin 패널의 단행본/저널 업로드 기능(PDF 안정성 등) 고도화.
+### 5.2. 핵심 기능 구현 완료 내역
+- **메인 페이지 (Main & Gallery)**:
+  - 프리미엄 다크 테마(Dark Charcoal) 및 에메랄드 오로라 파티클(`HeroParticles`) 적용 완료.
+  - Supabase `Activity` 테이블 수동 연동을 통한 `GallerySection` 및 `ResourceSection` 구현 완료.
+- **출판물 및 저널 시스템 (Publications)**:
+  - `BookCard` 및 `JournalCard` 컴포넌트를 분리하고, 강렬한 3D 글래스모피즘(두꺼운 반투명 유리, 그림자, 호버 리프트) UI 완벽 적용.
+  - 도서/저널 필터링 로직 구현 (`CategoryFilter`).
+  - 브라우저 내장(In-app) PDF 뷰어 탑재 (`PdfModal`, `<object>` 태그 기반 렌더링).
+- **관리자 패널 및 데이터 조작 (Admin & Auth)**:
+  - `BookManagement`: 단행본 및 영문 저널 객체의 메타데이터 수정 및 파일(표지 이미지, PDF 파일) Supabase Storage 다이렉트 업로드 기능 구현.
+  - `GalleryUpload`: 갤러리 이미지 업로드 및 관리 컨트롤 패널 연동.
+  - 권한 처리(`permissions.ts`) 로직 확립 및 인증(Auth) 세션 기반 접근 제어.
 
-### [Phase 3] 3층 목회자 소통 라운지 (신규)
-- **목표**: 성결교회 목회자 및 신학자들 간의 자율적 소통 커뮤니티 공간 신설.
-- **주요 기능**:
-  - `lounge_posts` 신규 테이블 설계 (게시판/라운지 역할).
-  - 오픈 라운지 형태의 깔끔하고 개방감 있는 UI 구성 (본관의 프리미엄 다크와는 별도의 공간감 부여 혹은 통일성 유지 방안 검토).
-  - 댓글, 좋아요 기능 혹은 단순 의견 교환 기능 (추후 기획 세분화).
+### 5.3. 향후 과제 (Next Steps)
+- **Phase 3 (커뮤니티 라운지)**: 목회자 소통 공간 (`lounge_posts` 기반) 백엔드 스키마 설계 및 UI 착수 대기 중.
+- 성능 최적화: 렌더링 속도 향상을 위한 Suspense 및 Next.js 14 Image placeholder 고도화.
+- 다이내믹 SEO 메타태그(Open Graph 등) 적용.
