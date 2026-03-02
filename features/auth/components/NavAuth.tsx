@@ -29,14 +29,14 @@ export default function NavAuth() {
       <div className="flex items-center gap-6">
         <Link
           href="/mypage"
-          className="text-[15px] font-bold text-slate-600 hover:text-[#0098a6] transition-colors"
+          className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors"
         >
           마이페이지
         </Link>
         <button
           type="button"
           onClick={handleLogout}
-          className="text-[15px] font-bold text-slate-600 hover:text-[#0098a6] transition-colors cursor-pointer"
+          className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors cursor-pointer"
         >
           로그아웃
         </button>
@@ -48,13 +48,13 @@ export default function NavAuth() {
     <div className="flex items-center gap-6">
       <Link
         href="/login"
-        className="text-[15px] font-bold text-slate-600 hover:text-[#0098a6] transition-colors"
+        className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors"
       >
         로그인
       </Link>
       <Link
         href="/signup"
-        className="text-[15px] font-bold text-[#0098a6] hover:text-[#007c88] transition-colors"
+        className="text-[15px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors"
       >
         회원가입
       </Link>

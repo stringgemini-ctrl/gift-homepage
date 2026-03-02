@@ -3,6 +3,7 @@
 import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import GallerySection from '@/features/main/components/GallerySection'
 import ResourceSection from '@/features/main/components/ResourceSection'
 import HeroParticles from '@/features/publications/components/HeroParticles'
@@ -79,6 +80,7 @@ export default function Home() {
   const [leftIndex, setLeftIndex] = useState(0);
   const [rightIndex, setRightIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const router = useRouter();
 
   const leftFigures = [
     { name: '이명직 목사', title: '성결교회의 사부', img: '/leemyungjikleft.png' },
@@ -105,10 +107,21 @@ export default function Home() {
     try {
       const { data, error } = await supabase
         .from('archive').select('*').order('created_at', { ascending: false }).limit(8)
-      if (error) { console.error('[fetchLatestPosts] Supabase error:', error.message); return }
-      if (data) setPosts(data)
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setPosts(data);
+      } else {
+        // Fallback
+        setPosts([
+          { id: 'fb1', title: '연구소 시스템 점검 또는 데이터가 없습니다.', category: '안내', created_at: new Date().toISOString() }
+        ])
+      }
     } catch (e) {
       console.error('[fetchLatestPosts] 예기치 못한 에러:', e)
+      setPosts([
+        { id: 'err1', title: '자료 서버에 연결할 수 없습니다. (Fallback)', category: '시스템', created_at: new Date().toISOString() }
+      ])
     }
   };
 
@@ -119,10 +132,21 @@ export default function Home() {
         .select('id, title, image_url, created_at')
         .order('created_at', { ascending: false })
         .limit(8)
-      if (error) { console.error('[fetchActivities] Supabase error:', error.message); return }
-      if (data) setActivities(data)
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setActivities(data);
+      } else {
+        // Fallback
+        setActivities([
+          { id: 'fb1', title: '갤러리 등록 예정입니다.', image_url: null, created_at: new Date().toISOString() }
+        ])
+      }
     } catch (e) {
       console.error('[fetchActivities] 예기치 못한 에러:', e)
+      setActivities([
+        { id: 'err1', title: '갤러리 서버에 연결할 수 없습니다. (Fallback)', image_url: null, created_at: new Date().toISOString() }
+      ])
     }
   };
 
@@ -169,7 +193,7 @@ export default function Home() {
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
             <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-white">{leftFigures[leftIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-gray-900">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
 
@@ -190,7 +214,7 @@ export default function Home() {
         <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`right-${rightIndex}`} className="animate-figure-majestic-right text-center">
             <img src={rightFigures[rightIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{rightFigures[rightIndex].title}<br /><span className="text-xl text-black">{rightFigures[rightIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{rightFigures[rightIndex].title}<br /><span className="text-xl text-gray-900">{rightFigures[rightIndex].name}</span></p>
           </div>
         </div>
       </section>
@@ -241,16 +265,16 @@ export default function Home() {
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className="group relative overflow-hidden bg-white/70 backdrop-blur-2xl p-8 rounded-3xl border border-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+                className="group relative overflow-hidden bg-[#1e2533]/90 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 cursor-default"
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.boxShadow = item.iconColor === '#ffffff'
-                    ? `0 20px 60px rgba(245,158,11,0.15), 0 0 25px rgba(245,158,11,0.5), inset 0 1px 0 rgba(255,255,255,1)`
-                    : `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1)`;
+                    ? `0 20px 60px rgba(255,255,255,0.15), 0 0 25px rgba(255,255,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2)`
+                    : `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)`;
                   const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
                   if (bgGlow) bgGlow.style.opacity = '1';
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 30px rgba(0,0,0,0.04)`
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 30px rgba(0,0,0,0.15)`
                   const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
                   if (bgGlow) bgGlow.style.opacity = '0';
                 }}
@@ -259,19 +283,17 @@ export default function Home() {
                   className="bg-glow absolute inset-0 opacity-0 transition-opacity duration-500 pointer-events-none rounded-3xl"
                   style={{
                     background: item.iconColor === '#ffffff'
-                      ? `radial-gradient(circle at top right, rgba(255,255,255,0.8), transparent 70%)`
+                      ? `radial-gradient(circle at top right, rgba(255,255,255,0.15), transparent 70%)`
                       : `radial-gradient(circle at top right, ${item.glowColor}, transparent 70%)`
                   }}
                 />
 
-                {/* 워터마크 삭제됨 */}
-
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="mb-6 flex justify-start">
-                    <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-500 group-hover:shadow-md" style={{
-                      boxShadow: item.iconColor === '#ffffff' ? '0 4px 15px rgba(0,0,0,0.1)' : `0 4px 15px ${item.glowColor}`
+                    <div className="p-3 rounded-2xl bg-white/5 border border-white/10 shadow-sm transition-all duration-500 group-hover:shadow-md" style={{
+                      boxShadow: item.iconColor === '#ffffff' ? '0 4px 15px rgba(255,255,255,0.15)' : `0 4px 15px ${item.glowColor}`
                     }}>
-                      <div style={{ filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.3))' : 'none' }}>
+                      <div style={{ filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 0 8px rgba(255,255,255,0.5))' : 'none' }}>
                         <item.Icon color={item.iconColor} />
                       </div>
                     </div>
@@ -280,7 +302,7 @@ export default function Home() {
                     className="text-2xl font-black mb-1 drop-shadow-sm transition-all duration-500"
                     style={{
                       color: item.iconColor,
-                      textShadow: item.iconColor === '#ffffff' ? '0 2px 5px rgba(0,0,0,0.3), 0 0 1px rgba(0,0,0,0.5)' : 'none'
+                      textShadow: item.iconColor === '#ffffff' ? '0 0 10px rgba(255,255,255,0.4)' : 'none'
                     }}
                   >
                     {item.title}
@@ -289,15 +311,15 @@ export default function Home() {
                     className="text-[10px] uppercase font-black tracking-widest mb-6"
                     style={{
                       color: item.iconColor,
-                      textShadow: item.iconColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.4)' : 'none'
+                      textShadow: item.iconColor === '#ffffff' ? '0 0 5px rgba(255,255,255,0.3)' : 'none'
                     }}
                   >
                     {item.subtitle}
                   </p>
-                  <p className="text-sm font-medium text-slate-600 leading-relaxed flex-1">
+                  <p className="text-sm font-medium text-slate-300 leading-relaxed flex-1">
                     {item.desc}
                   </p>
-                  <p className="mt-6 text-[11px] font-bold text-slate-500 px-3 py-1.5 bg-slate-100/80 rounded-lg inline-block self-start border border-slate-200">{item.scripture}</p>
+                  <p className="mt-6 text-[11px] font-bold text-slate-400 px-3 py-1.5 bg-white/5 rounded-lg inline-block self-start border border-white/10">{item.scripture}</p>
                 </div>
               </div>
             ))}
