@@ -6,7 +6,6 @@ interface ArchiveViewerProps {
 }
 
 export default function ArchiveViewer({ pdfUrl, content }: ArchiveViewerProps) {
-    // PDF URL도 없고 컨텐츠도 없을 경우
     if (!pdfUrl && !content) {
         return (
             <div className="mt-6 p-8 rounded-2xl bg-white border border-slate-200 shadow-sm text-center text-slate-400 text-sm">
@@ -15,19 +14,23 @@ export default function ArchiveViewer({ pdfUrl, content }: ArchiveViewerProps) {
         )
     }
 
+    // Google Docs Viewer를 경유하여 백지 현상 우회
+    // Supabase Storage의 퍼블릭 URL을 인코딩하여 Google 서버에서 직접 렌더링
+    const googleViewerUrl = pdfUrl
+        ? `https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`
+        : null
+
     return (
         <div className="mt-6 rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm">
-            {pdfUrl ? (
-                // PDF 뷰어: 충분한 높이를 확보하여 브라우저 내장 뷰어로 렌더링
-                <div className="w-full min-h-[800px]">
-                    <iframe
-                        src={pdfUrl}
-                        className="w-full min-h-[800px] rounded-xl"
-                        title="PDF 뷰어"
-                    />
-                </div>
+            {googleViewerUrl ? (
+                <iframe
+                    src={googleViewerUrl}
+                    className="w-full min-h-[800px]"
+                    title="PDF 뷰어"
+                    allowFullScreen
+                />
             ) : (
-                // HTML 컨텐츠 렌더링 (pdf_url이 없을 때 폴백)
+                // HTML 콘텐츠 폴백 (pdf_url이 없는 경우)
                 <div className="p-8 prose prose-slate max-w-none text-slate-700 leading-loose">
                     <div dangerouslySetInnerHTML={{ __html: content || "" }} />
                 </div>
