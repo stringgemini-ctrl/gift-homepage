@@ -42,42 +42,44 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
 
   if (!archive) {
     return (
-      <div className="min-h-screen bg-[#0a0f12] flex items-center justify-center text-gray-400">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500">
         자료를 찾을 수 없거나 불러오는 중 오류가 발생했습니다.
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0f12] text-white p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <Link href="/archive" className="inline-block text-sm text-emerald-400 hover:underline transition-colors">
-          &larr; 목록으로 돌아가기
+    <div className="min-h-screen bg-slate-50 text-slate-900 p-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Link href="/archive" className="inline-block text-sm text-emerald-700 hover:underline transition-colors">
+          ← 목록으로 돌아가기
         </Link>
 
-        <div className="p-8 rounded-2xl bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] backdrop-blur-md space-y-6">
-          <div className="text-sm font-medium text-emerald-400">
-            {archive.category || "Uncategorized"}
+        {/* 논문 메타 정보 카드 */}
+        <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">
+            {archive.category || "기타"}
           </div>
-          <h1 className="text-3xl font-semibold leading-relaxed text-white">
+          <h1 className="text-2xl font-bold leading-relaxed text-slate-900">
             {archive.title}
           </h1>
-          <div className="text-gray-400 text-sm">
-            작성자: <span className="text-gray-300">{archive.author || "Unknown"}</span>
+          <div className="text-slate-500 text-sm">
+            저자: <span className="text-slate-700 font-medium">{archive.author || "저자 미상"}</span>
           </div>
 
           {archive.abstract_text && (
-            <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.08)]">
-              <h2 className="text-lg font-medium mb-3 text-emerald-400">
+            <div className="pt-4 border-t border-slate-100">
+              <h2 className="text-base font-semibold mb-2 text-emerald-700">
                 요약 (Abstract)
               </h2>
-              <p className="text-gray-300 leading-loose whitespace-pre-wrap text-sm md:text-base">
+              <p className="text-slate-600 leading-loose whitespace-pre-wrap text-sm md:text-base">
                 {archive.abstract_text}
               </p>
             </div>
           )}
         </div>
 
+        {/* PDF 뷰어 */}
         <ArchiveViewer pdfUrl={archive.pdf_url} content={archive.content} />
       </div>
     </div>
