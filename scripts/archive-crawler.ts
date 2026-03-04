@@ -61,7 +61,6 @@ async function fetchArchiveList(page: number): Promise<string[]> {
 async function fetchArchiveDetail(url: string): Promise<ArchiveData | null> {
     try {
         const fetchUrl = url.replace("&no=", "&num=").replace("mode=view", "Mode=view");
-
         const { data } = await axios.get(fetchUrl);
         const $ = cheerio.load(data);
 
@@ -77,29 +76,22 @@ async function fetchArchiveDetail(url: string): Promise<ArchiveData | null> {
         }
 
         const abstract_text = "";
-
         let content = $("#lightgallery").html() || $(".mdView_cont").html() || "";
         content = content.replace(/src="\/user/g, `src="${BASE_URL}/user`);
 
+        // PDF 다운로드 링크 추출 (anyboard.fileDown 방식)
         let pdf_url = "";
         const pdfAnchor = $("a:contains('.pdf')");
         if (pdfAnchor.length > 0) {
             const href = pdfAnchor.attr("href");
             const fileNumMatch = href?.match(/fileDown\('(\d+)'\)/);
             if (fileNumMatch) {
+                // 실제 다운로드 엔드포인트: /core/anyboard/download.php
                 pdf_url = `${BASE_URL}/core/anyboard/download.php?boardID=www40&fileNum=${fileNumMatch[1]}`;
             }
         }
 
-        return {
-            title,
-            author,
-            category,
-            abstract_text,
-            content,
-            pdf_url,
-            original_url: url,
-        };
+        return { title, author, category, abstract_text, content, pdf_url, original_url: url };
     } catch (error) {
         console.error(`상세 페이지 크롤링 중 에러 발생 (${url}):`, error);
         return null;
@@ -112,14 +104,14 @@ async function uploadPdfToStorage(originalPdfUrl: string, archiveId: string): Pr
         console.log(`  -> 원본 PDF 다운로드 중: ${originalPdfUrl}`);
         const response = await axios.get(originalPdfUrl, { responseType: "arraybuffer" });
         const buffer = Buffer.from(response.data);
-
         const fileName = `${archiveId}-${crypto.randomUUID()}.pdf`;
 
-        console.log(`  -> Supabase에 PDF 업로드 중: ${fileName}`);
-        const { data, error } = await supabase.storage
+        console.log(`  -> Supabase Storage 업로드 중: ${fileName}`);
+        // ─── [핵심 수정] contentType을 반드시 'application/pdf'로 명시 ───
+        const { error } = await supabase.storage
             .from("archives")
             .upload(fileName, buffer, {
-                contentType: "application/pdf",
+                contentType: "application/pdf",  // Google Docs Viewer 정상 렌더링에 필수
                 upsert: true,
             });
 
@@ -129,110 +121,91 @@ async function uploadPdfToStorage(originalPdfUrl: string, archiveId: string): Pr
         }
 
         const { data: publicData } = supabase.storage.from("archives").getPublicUrl(fileName);
-        console.log(`  ✅ URL 발급됨: ${publicData.publicUrl}`);
+        console.log(`  ✅ 영구 URL 발급: ${publicData.publicUrl}`);
         return publicData.publicUrl;
     } catch (error: any) {
-        console.error(`  ❌ PDF 다운로드/업로드 중 에러 발생:`, error.message);
+        console.error(`  ❌ PDF 다운로드/업로드 중 에러:`, error.message);
         return originalPdfUrl;
     }
 }
 
 async function runCrawler() {
-    console.log("전체 페이지 크롤링을 시작합니다...");
+    console.log("전체 페이지 크롤링을 시작합니다...\n");
 
-    // Supabase 스토리지 버킷 'archives' 생성 (이미 존재하면 에러 없이 넘어감)
-    const { error: bucketError } = await supabase.storage.createBucket("archives", {
-        public: true,
-    });
-    if (!bucketError) {
-        console.log("✅ 'archives' 스토리지 버킷이 없어서 새로 생성했습니다.");
-    }
+    // 버킷 없을 경우 자동 생성 (이미 있으면 무시)
+    await supabase.storage.createBucket("archives", { public: true });
 
     let currentPage = 1;
-    let totalSuccessCount = 0;
-    let totalFailCount = 0;
-
+    let totalSuccess = 0;
+    let totalFail = 0;
     let lastFirstPostNum = "";
 
     while (true) {
-        console.log(`\n--- [ ${currentPage} 페이지 처리 시작 ] ---`);
+        console.log(`--- [ ${currentPage} 페이지 처리 시작 ] ---`);
         const postUrls = await fetchArchiveList(currentPage);
 
         if (postUrls.length === 0) {
-            console.log(`게시물이 더 이상 존재하지 않으므로 크롤링을 종료합니다.`);
+            console.log("게시물 없음. 종료합니다.");
             break;
         }
 
-        const firstPostMatch = postUrls[0].match(/no=(\d+)/);
-        const currentFirstPostNum = firstPostMatch ? firstPostMatch[1] : "";
+        const currentFirstPostNum = postUrls[0].match(/no=(\d+)/)?.[1] ?? "";
         if (currentPage > 1 && currentFirstPostNum === lastFirstPostNum) {
-            console.log(`마지막 페이지에 도달하여 이전 페이지의 내용이 반복되고 있습니다. 크롤링 루프를 종료합니다.`);
+            console.log("마지막 페이지 반복 감지. 루프를 종료합니다.");
             break;
         }
         lastFirstPostNum = currentFirstPostNum;
 
-        let successCount = 0;
-        let failCount = 0;
-
         for (const url of postUrls) {
-            console.log(`데이터 추출 중: ${url}`);
+            console.log(`\n데이터 추출 중: ${url}`);
             const archiveData = await fetchArchiveDetail(url);
-
-            if (archiveData) {
-                let finalPdfUrl = archiveData.pdf_url;
-
-                if (finalPdfUrl && finalPdfUrl.startsWith("http")) {
-                    const idMatch = url.match(/no=(\d+)/);
-                    const articleId = idMatch ? idMatch[1] : "unknown";
-
-                    finalPdfUrl = await uploadPdfToStorage(finalPdfUrl, articleId);
-                }
-
-                const { error } = await supabase
-                    .from("archives")
-                    .upsert(
-                        {
-                            title: archiveData.title,
-                            author: archiveData.author,
-                            category: archiveData.category,
-                            abstract_text: archiveData.abstract_text,
-                            content: archiveData.content,
-                            pdf_url: finalPdfUrl,
-                            original_url: archiveData.original_url,
-                        },
-                        { onConflict: "original_url" }
-                    );
-
-                if (error) {
-                    console.error(`❌ DB Insert/Upsert 실패 (${url}):`, error.message);
-                    failCount++;
-                    totalFailCount++;
-                } else {
-                    console.log(`✅ DB 저장 성공: ${archiveData.title}`);
-                    successCount++;
-                    totalSuccessCount++;
-                }
-
-                await new Promise((resolve) => setTimeout(resolve, 800));
-            } else {
-                failCount++;
-                totalFailCount++;
+            if (!archiveData) {
+                totalFail++;
+                continue;
             }
+
+            let finalPdfUrl = archiveData.pdf_url;
+            if (finalPdfUrl.startsWith("http")) {
+                const articleId = url.match(/no=(\d+)/)?.[1] ?? "unknown";
+                finalPdfUrl = await uploadPdfToStorage(finalPdfUrl, articleId);
+            }
+
+            // ─── [핵심 수정] onConflict: 'title' 기준으로 중복 방지 Upsert ───
+            const { error: dbError } = await supabase
+                .from("archives")
+                .upsert(
+                    {
+                        title: archiveData.title,
+                        author: archiveData.author,
+                        category: archiveData.category,
+                        abstract_text: archiveData.abstract_text,
+                        content: archiveData.content,
+                        pdf_url: finalPdfUrl,
+                        original_url: archiveData.original_url,
+                    },
+                    { onConflict: "title" }  // title 기준으로 중복 시 업데이트
+                );
+
+            if (dbError) {
+                console.error(`❌ DB Upsert 실패 (${archiveData.title}):`, dbError.message);
+                totalFail++;
+            } else {
+                console.log(`✅ DB 저장 성공: ${archiveData.title}`);
+                totalSuccess++;
+            }
+
+            await new Promise((r) => setTimeout(r, 800));
         }
 
-        console.log(`[ ${currentPage} 페이지 완료 ] 성공: ${successCount}건 | 실패: ${failCount}건`);
-
-        console.log("다음 페이지로 이동 전 대기 중...");
-        await new Promise((resolve) => setTimeout(resolve, 2500));
-
+        console.log(`\n[ ${currentPage} 페이지 완료 ]`);
+        await new Promise((r) => setTimeout(r, 2500));
         currentPage++;
     }
 
     console.log("\n========================================");
-    console.log(`전체 크롤링 및 DB 삽입 최종 완료!`);
-    console.log(`총 성공: ${totalSuccessCount}건 | 총 실패: ${totalFailCount}건`);
+    console.log(`전체 완료! 총 성공: ${totalSuccess}건 | 총 실패: ${totalFail}건`);
 }
 
 runCrawler().catch((error) => {
-    console.error("크롤러 실행 중 치명적 에러 발생:", error);
+    console.error("치명적 에러:", error);
 });
