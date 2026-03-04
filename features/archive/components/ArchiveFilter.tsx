@@ -4,9 +4,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { useCallback } from "react"
 
 interface ArchiveFilterProps {
-    // 전체 카테고리 목록을 부모(Server Component)에서 주입받음
     categories: string[]
-    // 현재 활성화된 카테고리 (URL 쿼리파람 기반)
     activeCategory: string
 }
 
@@ -15,11 +13,11 @@ export default function ArchiveFilter({ categories, activeCategory }: ArchiveFil
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
-    // 카테고리 클릭 시 URL 쿼리 파라미터를 업데이트 (shallow routing)
     const handleFilter = useCallback(
         (category: string) => {
             const params = new URLSearchParams(searchParams.toString())
-            if (category === "전체") {
+            // '전체' 클릭 또는 빈 값이면 category 쿼리 파라미터 자체를 제거
+            if (category === "전체" || !category) {
                 params.delete("category")
             } else {
                 params.set("category", category)
@@ -34,6 +32,7 @@ export default function ArchiveFilter({ categories, activeCategory }: ArchiveFil
     return (
         <div className="flex flex-wrap gap-2">
             {allCategories.map((cat) => {
+                // '전체' 버튼은 activeCategory가 없을 때(쿼리 파라미터 없음) 활성화
                 const isActive =
                     cat === "전체" ? !activeCategory : cat === activeCategory
 
@@ -44,8 +43,8 @@ export default function ArchiveFilter({ categories, activeCategory }: ArchiveFil
                         className={[
                             "px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer",
                             isActive
-                                ? "bg-gradient-to-r from-[#065f46] to-[#047857] text-white shadow-[0_4px_16px_rgba(4,120,87,0.4)]"
-                                : "bg-[rgba(255,255,255,0.05)] text-slate-300 border border-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.10)] hover:text-white",
+                                ? "bg-gradient-to-r from-[#065f46] to-[#047857] text-white shadow-[0_4px_16px_rgba(4,120,87,0.3)]"
+                                : "bg-slate-100 text-slate-600 hover:bg-slate-200",
                         ].join(" ")}
                     >
                         {cat}
