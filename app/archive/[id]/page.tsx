@@ -62,19 +62,20 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
             </span>
           </div>
 
-          {/* 세리프 폰트 대제목 */}
+          {/* 현대적 무게감 있는 제목 */}
           <h1
-            className="text-3xl md:text-4xl font-bold leading-tight text-white mb-6"
-            style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}
+            className="text-3xl md:text-4xl font-extrabold tracking-tight leading-snug text-white mb-6 font-sans"
           >
             {archive.title}
           </h1>
 
-          {/* 메타 정보 인라인 */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-teal-300/80">
-            <span>✍️ {archive.author || "저자 미상"}</span>
-            <span>📅 {publishedAt}</span>
-            <span>📂 {archive.category || "기타"}</span>
+          {/* 메타 정보 – 수직선 구분자 */}
+          <div className="flex flex-wrap items-center text-sm text-teal-300/80">
+            <span>{archive.author || "저자 미상"}</span>
+            <span className="text-white/40 mx-3">|</span>
+            <span>{publishedAt}</span>
+            <span className="text-white/40 mx-3">|</span>
+            <span>{archive.category || "기타"}</span>
           </div>
         </div>
       </div>
