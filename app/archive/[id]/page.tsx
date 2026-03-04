@@ -1,144 +1,84 @@
-'use client'
+import { createServerClient } from "@supabase/ssr"
+import { cookies } from "next/headers"
+import Link from "next/link"
+import ArchiveViewer from "@/features/archive/components/ArchiveViewer"
 
-import { supabase } from '@/features/database/lib/supabase'
-import Link from 'next/link'
-import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+export const revalidate = 0
 
-export default function ArchiveDetailPage() {
-  const { id } = useParams()
-  const [post, setPost] = useState<any>(null)
-  const [prevPost, setPrevPost] = useState<any>(null)
-  const [nextPost, setNextPost] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+interface PageProps {
+  params: Promise<{
+    id: string
+  }>
+}
 
-  useEffect(() => {
-    fetchPostData()
-  }, [id])
-
-  const fetchPostData = async () => {
-    setLoading(true)
-    // 1. 현재 게시글 호출
-    const { data: current } = await supabase.from('archive').select('*').eq('id', id).single()
-
-    if (current) {
-      setPost(current)
-
-      // 2. 이전글 호출 (현재보다 과거)
-      const { data: prev } = await supabase.from('archive')
-        .select('id, title')
-        .lt('created_at', current.created_at)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single()
-
-      // 3. 다음글 호출 (현재보다 미래)
-      const { data: next } = await supabase.from('archive')
-        .select('id, title')
-        .gt('created_at', current.created_at)
-        .order('created_at', { ascending: true })
-        .limit(1)
-        .single()
-
-      setPrevPost(prev)
-      setNextPost(next)
+export default async function ArchiveDetailPage({ params }: PageProps) {
+  const { id } = await params
+  const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
     }
-    setLoading(false)
+  )
+
+  let archive = null
+  try {
+    const { data, error } = await supabase
+      .from("archives")
+      .select("*")
+      .eq("id", id)
+      .single()
+
+    if (error) throw error
+    archive = data
+  } catch (error) {
+    console.error("[ArchiveDetailPage] Failed to fetch archive detail:", error)
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-400 font-bold">자료를 불러오는 중...</div>
-  if (!post) return <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-400 font-bold">자료를 찾을 수 없습니다.</div>
+  if (!archive) {
+    return (
+      <div className="min-h-screen bg-[#0a0f12] flex items-center justify-center text-gray-400">
+        자료를 찾을 수 없거나 불러오는 중 오류가 발생했습니다.
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/20 to-slate-100 py-24 px-6">
-      <div className="mx-auto max-w-[780px]"> {/* 가독성을 위해 너비를 900px에서 780px로 축소 */}
+    <div className="min-h-screen bg-[#0a0f12] text-white p-8">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <Link href="/archive" className="inline-block text-sm text-emerald-400 hover:underline transition-colors">
+          &larr; 목록으로 돌아가기
+        </Link>
 
-        <div className="mb-10 animate-fadeInUp">
-          <Link href="/archive" className="group inline-flex items-center gap-2 text-sm font-black text-emerald-600 hover:text-emerald-700 transition-all">
-            <span className="group-hover:-translate-x-1 transition-transform">←</span> 연구소 자료실 목록
-          </Link>
-        </div>
+        <div className="p-8 rounded-2xl bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] backdrop-blur-md space-y-6">
+          <div className="text-sm font-medium text-emerald-400">
+            {archive.category || "Uncategorized"}
+          </div>
+          <h1 className="text-3xl font-semibold leading-relaxed text-white">
+            {archive.title}
+          </h1>
+          <div className="text-gray-400 text-sm">
+            작성자: <span className="text-gray-300">{archive.author || "Unknown"}</span>
+          </div>
 
-        <article className="bg-white/90 backdrop-blur-3xl rounded-[3rem] p-8 md:p-16 shadow-[0_40px_100px_rgba(0,0,0,0.06)] border border-white relative overflow-hidden animate-fadeInUp">
-          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-[#f68d2e]"></div>
-
-          <header className="mb-12 border-b border-slate-100 pb-10">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 font-black text-[10px] uppercase tracking-widest">
-                {post.category}
-              </span>
-              <span className="text-sm font-bold text-slate-400">
-                {new Date(post.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
-              </span>
-            </div>
-
-            <h1 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight tracking-tighter mb-4">
-              {post.title}
-            </h1>
-            {post.subtitle && (
-              <p className="text-lg font-bold text-emerald-600/70 leading-relaxed italic">
-                {post.subtitle}
+          {archive.abstract_text && (
+            <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.08)]">
+              <h2 className="text-lg font-medium mb-3 text-emerald-400">
+                요약 (Abstract)
+              </h2>
+              <p className="text-gray-300 leading-loose whitespace-pre-wrap text-sm md:text-base">
+                {archive.abstract_text}
               </p>
-            )}
-          </header>
-
-          {/* 본문 텍스트: 행간 및 자간 최적화 */}
-          <div className="prose prose-slate prose-lg max-w-none text-slate-700 leading-[1.85] font-medium mb-20 tracking-tight">
-            {post.content ? (
-              post.content.split('\n').map((line: string, i: number) => (
-                <p key={i} className="mb-8">{line}</p>
-              ))
-            ) : (
-              <div className="text-center py-20 bg-slate-50/50 rounded-3xl border border-dashed border-slate-200 text-slate-400 font-bold italic">
-                본문 내용을 준비 중입니다.
-              </div>
-            )}
-          </div>
-
-          {/* 이전글 / 다음글 네비게이션 추가 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-12 border-t border-slate-100">
-            <div className="flex flex-col gap-2 text-left">
-              {prevPost ? (
-                <Link href={`/archive/${prevPost.id}`} className="group p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50 transition-all border border-transparent hover:border-emerald-100">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Previous</span>
-                  <p className="font-bold text-slate-700 group-hover:text-emerald-700 truncate mt-1">
-                    {prevPost.title}
-                  </p>
-                </Link>
-              ) : (
-                <div className="p-4 rounded-2xl bg-slate-50 opacity-40 grayscale border border-transparent cursor-not-allowed">
-                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Previous</span>
-                  <p className="font-bold text-slate-400 mt-1">이전 글이 없습니다</p>
-                </div>
-              )}
             </div>
-            <div className="flex flex-col gap-2 text-right">
-              {nextPost ? (
-                <Link href={`/archive/${nextPost.id}`} className="group p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50 transition-all border border-transparent hover:border-emerald-100">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Next</span>
-                  <p className="font-bold text-slate-700 group-hover:text-emerald-700 truncate mt-1">
-                    {nextPost.title}
-                  </p>
-                </Link>
-              ) : (
-                <div className="p-4 rounded-2xl bg-slate-50 opacity-40 grayscale border border-transparent cursor-not-allowed">
-                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Next</span>
-                  <p className="font-bold text-slate-400 mt-1">다음 글이 없습니다</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <footer className="pt-16 text-center">
-            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4">
-              Global Institute for the Fourfold-gospel Theology
-            </p>
-          </footer >
-        </article>
-
-        <div className="mt-12 text-center text-slate-400 text-xs font-medium opacity-60">
-          © 2026 글로벌사중복음연구소(GIFT). All rights reserved.
+          )}
         </div>
+
+        <ArchiveViewer pdfUrl={archive.pdf_url} content={archive.content} />
       </div>
     </div>
   )
