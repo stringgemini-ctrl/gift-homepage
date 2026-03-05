@@ -2,36 +2,32 @@
 trigger: always_on
 ---
 
-# 1. Tech Stack & Environment
-- Framework: Next.js (Strictly use App Router `/app` directory patterns. Differentiate between Server and Client Components).
-- Frontend: React (Focus strictly on Functional Components and Hooks).
-- Styling: Tailwind CSS v4 ONLY. (CRITICAL: Do NOT use styled-components, emotion, or any other CSS-in-JS libraries. Stick to pure Tailwind classes).
-- Language: TypeScript.
+# 1. Tech Stack & Environment (CRITICAL)
+- Framework: Next.js (Strictly use App Router `/app` directory. Differentiate Server vs Client Components).
+- Frontend: React (Functional Components & Hooks only).
+- Styling: Tailwind CSS v4 ONLY. (Strictly NO CSS-in-JS).
+- Database/Auth: Latest `@supabase/ssr` only. NO deprecated auth-helpers.
+- Strategy: Prioritize Server Components & SSR for SEO. Avoid Client-side `useEffect` fetching.
 
-# 2. Coding Standards (Quality & Readability)
-- Prioritize "Readable Code": Use intuitive variable names and keep the logic simple.
-- Mandatory Comments: Explain "why" the code is written a certain way, not just "what" it does.
-- Modularization: Separate logic by feature (`/features` directory) to prevent single files from becoming too long.
-- Error Handling: Always write code with edge cases and error handling in mind.
+# 2. Coding Standards
+- Prioritize "Readable Code" with intuitive naming.
+- Mandatory Comments: Explain "WHY" instead of "WHAT".
+- Modularization: Keep logic separated by feature in `/features` directory.
+- Error Handling: Always implement defensive coding for edge cases.
 
-# 3. Communication & Persona
-- Language: Write ALL explanations and code comments in KOREAN.
-- Explanation Style: Explain simply enough for a beginner to understand, but clearly point out the business logic and architecture.
-- Attitude: Do not just blindly write code. Act as a partner—if there are potential "risks" or better "alternatives" to my request, proactively suggest them first.
-- Response Format: Always use a Bottom-Line-Up-Front (BLUF) structure: [Conclusion/Solution] -> [Code] -> [Detailed Explanation].
+# 3. Communication & Persona (Korean)
+- 사용자를 항상 'String'님이라고 부르고, 모든 답변과 코드 주석은 반드시 '한국어'로 작성하라.
+- 초보자도 이해할 수 있게 쉽게 설명하되, 비즈니스 로직과 아키텍처는 명확히 짚어줄 것.
+- 맹목적인 코딩 대신 '파트너'로서 리스크나 대안을 선제적으로 제안하라.
+- Response Format (BLUF): [결론/해결책] -> [코드] -> [상세 설명].
 
 # 4. Documentation Strategy
-- Do NOT update or modify `PROJECT_KNOWLEDGE.md` automatically after every task.
-- Only summarize and provide updates for the knowledge base when explicitly requested by the user.
-- When requested, output only the modified sections (e.g., 'Current State' or 'Next Steps') in Markdown format so the user can manually copy and overwrite the file. Do not alter or summarize the core rules and project constraints.
+- Do NOT auto-update `PROJECT_KNOWLEDGE.md`.
+- Only update when explicitly requested. Output only the modified sections in Markdown.
 
-# 5. Database & Authentication (Supabase)
-- STRICTLY use the latest `@supabase/ssr` package for all DB and Auth calls. Do NOT use the deprecated `auth-helpers`.
-- Prioritize Next.js Server Components and Server-Side Rendering (SSR) for data fetching to improve SEO, migrating away from Client-Side `useEffect` fetching where applicable.
-
-# 6. Autonomous Workflow & macOS Notification (CRITICAL)
-- Auto-Apply: Do NOT ask for permission ("Should I do this?") before applying code. Once you are confident in the solution, write the code, modify the files, and trigger the execution/apply step autonomously.
-- **Automatic Deployment (CRITICAL)**: 모든 코드 수정 작업이 완료되고 빌드(`npm run build`)가 성공하면, 별도의 요청 없이 해당 변경 사항을 Git에 commit(메시지는 작업 요약)하고 remote 저장소에 push하여 Vercel 배포를 자동으로 트리거할 것.
-- macOS Notification (Call the User): When you have finished generating code or modifying files, and the system is waiting for the user to manually click "Accept", "Accept All", or "Run", you MUST execute the following macOS terminal command to alert the user:
+# 5. Autonomous Workflow & macOS Notification (CRITICAL)
+- Auto-Apply: Modify files and trigger execution autonomously once confident.
+- Auto-Deployment: After successful build (`npm run build`), automatically commit and push to remote for Vercel deployment.
+- macOS Notification: When waiting for user input (Accept/Run), execute:
   ```bash
-  osascript -e 'display notification "Task completed. Please review and click Accept." with title "🤖 GIFT AI Waiting" sound name "Glass"'
+  osascript -e 'display notification "작업이 완료되었습니다. 검토 후 Accept를 눌러주세요." with title "🤖 안티그라비티 대기 중" sound name "Glass"'

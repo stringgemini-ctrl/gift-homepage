@@ -45,10 +45,11 @@ export default async function ArchivePage({ searchParams }: PageProps) {
     }
 
     // 현재 페이지에 해당하는 9개 데이터 + 전체 개수를 함께 가져옴
+    // published_date(실제 출판일) 기준으로 정렬 — null인 경우 최하단 노출
     let query = supabase
       .from("archives")
-      .select("id, title, author, category, created_at", { count: "exact" })
-      .order("created_at", { ascending: false })
+      .select("id, title, author, category, published_date", { count: "exact" })
+      .order("published_date", { ascending: false, nullsFirst: false })
       .range(from, to)
 
     if (category && category !== "전체") {
@@ -99,8 +100,19 @@ export default async function ArchivePage({ searchParams }: PageProps) {
                 <h2 className="text-base font-medium leading-relaxed mb-4 text-slate-900 line-clamp-2">
                   {item.title}
                 </h2>
-                <div className="text-sm text-slate-500">
-                  {item.author || "저자 미상"}
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <span>{item.author || "저자 미상"}</span>
+                  {item.published_date && (
+                    <>
+                      <span className="text-slate-300">|</span>
+                      <span>
+                        {(() => {
+                          const d = new Date(item.published_date)
+                          return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`
+                        })()}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
             </Link>
