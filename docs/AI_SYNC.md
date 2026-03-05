@@ -24,6 +24,11 @@
 - **UI/UX**: 보관함(Archive) 전체 목록 페이지에 한 페이지당 9개의 항목을 노출하는 페이지네이션(Pagination)이 성공적으로 적용되었습니다. 상세 페이지의 경우 기존 렌더링이 불안정하던 Google Docs Viewer 우회 방식을 벗어나, 빠르고 안정적인 브라우저 네이티브 PDF 뷰어를 구현 완료했습니다. 또한 상세 페이지 전반에 걸쳐 글래스모피즘(Glassmorphism) 기반의 라이트 테마를 적용하여 쾌적한 가독성을 제공합니다.
 
 ## 4. 당면 과제 (Immediate Next Steps)
+- **[Auth] 소셜 로그인(Google/Kakao) UI 및 로직 구현**: ✅ 완료
+  - `features/auth/components/OAuthButtons.tsx` — 공유 컴포넌트 신규 생성 (브랜드 컬러 버튼, loading 상태, 에러 방어 처리)
+  - `app/auth/callback/route.ts` — OAuth code → 세션 교환 콜백 라우트 신규 생성
+  - `app/login/page.tsx`, `app/signup/page.tsx` — 소셜 버튼 삽입 및 구분선 UI 적용
+  - **주의**: Supabase Dashboard > Authentication > URL Configuration 에서 `{YOUR_DOMAIN}/auth/callback` 을 Redirect URL로 등록해야 실제 동작함
 - **[UI] 상세 페이지 개선 (Detail Page)**: ✅ 완료
   - `font-sans font-extrabold` 타이포그래피 적용 완료 (`app/archive/[id]/page.tsx` line 67)
   - 이모지(✍️, 📅, 📂) 제거 및 수직 바(`|`) 구분자로 대체 완료
