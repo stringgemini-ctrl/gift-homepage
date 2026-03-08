@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const fetchRole = async (userId: string | undefined): Promise<string | null> => {
             if (!userId) return null
             try {
-                const { data } = await supabase.from('profiles').select('role').eq('id', userId).single()
+                const { data } = await supabase.from('users').select('role').eq('auth_id', userId).single()
                 return data?.role ?? null
             } catch {
                 console.error('[AuthProvider] fetchRole 실패')
@@ -42,11 +42,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // try/finally로 isLoading이 반드시 false가 되도록 보장
         const initAuth = async () => {
             try {
-                const { data: { session: initialSession } } = await supabase.auth.getSession()
-                setSession(initialSession)
-                setUser(initialSession?.user ?? null)
-                const fetchedRole = await fetchRole(initialSession?.user?.id)
-                const finalRole = fetchedRole ?? initialSession?.user?.user_metadata?.role ?? null
+                const { data: { user: initialUser } } = await supabase.auth.getUser()
+                setUser(initialUser ?? null)
+                const fetchedRole = await fetchRole(initialUser?.id)
+                const finalRole = fetchedRole ?? initialUser?.user_metadata?.role ?? null
                 setRole(finalRole)
             } catch (e) {
                 console.error('[AuthProvider] initAuth 실패:', e)

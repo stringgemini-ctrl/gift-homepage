@@ -51,14 +51,14 @@ function ClientSideTest() {
         }
 
         const client = createClient(url, key)
-        const { data, error } = await client.auth.getSession()
+        const { data, error } = await client.auth.getUser()
 
         if (error) {
-            setResult(`❌ getSession() 에러: ${error.message}`)
-        } else if (data.session) {
-            setResult(`✅ 세션 확인됨! User ID: ${data.session.user.id}, Email: ${data.session.user.email}`)
+            setResult(`❌ getUser() 에러: ${error.message}`)
+        } else if (data.user) {
+            setResult(`✅ 유저 확인됨! User ID: ${data.user.id}, Email: ${data.user.email}`)
         } else {
-            setResult(`⚠️ 세션 없음 (로그인 필요). URL/KEY 자체는 정상 동작합니다.`)
+            setResult(`⚠️ 유저 없음 (로그인 필요). URL/KEY 자체는 정상 동작합니다.`)
         }
     }
 
@@ -68,13 +68,13 @@ function ClientSideTest() {
         const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
         const client = createClient(url, key)
 
-        const { data: session } = await client.auth.getSession()
-        if (!session.session) {
+        const { data: { user } } = await client.auth.getUser()
+        if (!user) {
             setProfileResult('⚠️ 로그아웃 상태입니다. 먼저 로그인하고 다시 시도하세요.')
             return
         }
 
-        const userId = session.session.user.id
+        const userId = user.id
         const { data, error } = await client.from('profiles').select('role').eq('id', userId).single()
 
         if (error) {
