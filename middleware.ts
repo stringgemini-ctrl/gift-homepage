@@ -8,9 +8,15 @@ export async function middleware(request: NextRequest) {
     request,
   })
 
-  // ─── 1단계: 유저 식별 ───
-  // getUser()는 Supabase 서버에 재검증 요청을 보내므로 Edge에서 실패할 수 있습니다.
-  // getSession()은 쿠키에 저장된 JWT를 직접 파싱하므로 Edge에서도 안정적으로 동작합니다.
+  // 1. 퍼블릭 경로 무한 루프 방지 (미들웨어 즉시 통과)
+  const publicPaths = ['/login', '/pending', '/unauthorized']
+  const isPublicPath = publicPaths.some(path => request.nextUrl.pathname.startsWith(path))
+
+  if (isPublicPath) {
+    return supabaseResponse
+  }
+
+  // 2. JWT 기반 일반 세션 확인 및 갱신
   const supabaseAuth = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -30,51 +36,58 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // getSession()으로 쿠키의 JWT를 직접 파싱합니다. (네트워크 왕복 없음 = Edge에서 안정적)
-  const { data: { session }, error: sessionError } = await supabaseAuth.auth.getSession()
-  const user = session?.user
+  const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
 
-  console.log('[MW] 1. Session User ID:', user?.id ?? 'NULL')
-  if (sessionError) console.error('[MW] Session Error:', sessionError.message)
+  if (authError || !user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    const res = NextResponse.redirect(url)
+    supabaseResponse.cookies.getAll().forEach(c => res.cookies.set(c.name, c.value))
+    return res
+  }
 
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    // 유저 없음 → 로그인 페이지로
-    if (!user) {
-      console.error('[MW] No user in session. Redirecting to /unauthorized.')
-      const url = request.nextUrl.clone()
-      url.pathname = '/unauthorized'
-      const res = NextResponse.redirect(url)
-      supabaseResponse.cookies.getAll().forEach(c => res.cookies.set(c.name, c.value))
-      return res
+  // 3 & 4. Supabase Admin 클라이언트 생성 (RLS 우회 및 fetch 캐싱 무효화)
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        persistSession: false,
+      },
+      global: {
+        // Next.js 라우트 캐싱을 막기 위해 no-store 적용
+        fetch: (url, options) => fetch(url, { ...options, cache: 'no-store' }),
+      },
     }
+  )
 
-    // ─── 2단계: 권한 조회 (RLS 완전 우회) ───
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+  // public.users 테이블 실시간 조회 (auth_id 매칭)
+  const { data: dbUser, error } = await supabaseAdmin
+    .from('users')
+    .select('role, is_approved')
+    .eq('auth_id', user.id)
+    .single()
 
-    const { data: profile, error: profileError } = await supabaseAdmin
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+  if (error || !dbUser) {
+    console.error('[MW] DB fetch error:', error?.message)
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
 
-    const userRole = profile?.role ?? null
+  // 5. 조건별 리다이렉트 처리
+  // 승인 대기 상태 검증 (무한 루프 방지를 위해 이미 /pending은 위에서 처리됨)
+  if (dbUser.is_approved === false) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/pending'
+    return NextResponse.redirect(url)
+  }
 
-    console.log('[MW] 2. Profile Role READ:', userRole)
-    if (profileError) console.error('[MW] Profile Fetch Error:', profileError.message, '| Code:', profileError.code)
-
-    if (!userRole || userRole.toUpperCase() !== 'ADMIN') {
-      console.error(`[MW] Access DENIED. Role was: "${userRole}". Expected ADMIN. Redirecting.`)
-      const url = request.nextUrl.clone()
-      url.pathname = '/unauthorized'
-      const res = NextResponse.redirect(url)
-      supabaseResponse.cookies.getAll().forEach(c => res.cookies.set(c.name, c.value))
-      return res
-    }
-
-    console.log('[MW] Access GRANTED. Role:', userRole)
+  // 관리자(admin) 권한 검증
+  if (request.nextUrl.pathname.startsWith('/admin') && dbUser.role !== 'admin') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/unauthorized'
+    return NextResponse.redirect(url)
   }
 
   return supabaseResponse
