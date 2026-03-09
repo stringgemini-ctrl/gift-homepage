@@ -4,14 +4,12 @@ import { cookies } from "next/headers"
 import Link from "next/link"
 import ArchiveViewer from "@/features/archive/components/ArchiveViewer"
 
-// revalidate = 0 + noStore() 이중 캐시 우회 — DB 변경사항 즉각 반영
 export const revalidate = 0
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 
-/** YYYY.MM.DD 포맷 헬퍼 */
 function fmt(dateStr: string | null | undefined): string {
   if (!dateStr) return "미상"
   const d = new Date(dateStr)
@@ -41,8 +39,10 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
 
   if (!archive) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-zinc-400"
-        style={{ background: "#040c09" }}>
+      <div
+        className="min-h-screen flex items-center justify-center text-sm"
+        style={{ background: "#fdfcf9", color: "#a8a29e" }}
+      >
         자료를 찾을 수 없거나 불러오는 중 오류가 발생했습니다.
       </div>
     )
@@ -52,19 +52,19 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
   const publishedAt = fmt(archive.published_date)
 
   return (
-    <div className="min-h-screen" style={{ background: "#040c09" }}>
+    <div className="min-h-screen" style={{ background: "#fdfcf9" }}>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           히어로 섹션
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div className="relative overflow-hidden pt-16 pb-28 px-6">
 
-        {/* 에메랄드 방사형 광원 레이어 */}
+        {/* 은은한 민트 광원 (형태 유지, 투명도 낮춤) */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: "radial-gradient(ellipse 140% 80% at 30% 50%, rgba(16,185,129,0.18) 0%, transparent 65%)",
+          background: "radial-gradient(ellipse 140% 80% at 30% 50%, rgba(16,185,129,0.07) 0%, transparent 65%)",
         }} />
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: "radial-gradient(ellipse 60% 100% at 10% 50%, rgba(6,78,59,0.24) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 60% 100% at 10% 50%, rgba(6,78,59,0.04) 0%, transparent 70%)",
         }} />
 
         <div className="relative z-10 max-w-4xl mx-auto">
@@ -73,7 +73,7 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
           <Link
             href="/archive"
             className="inline-flex items-center gap-1 text-sm font-semibold transition-colors mb-10"
-            style={{ color: "rgba(255,255,255,0.38)" }}
+            style={{ color: "#78716c" }}
           >
             ← 자료실 목록으로
           </Link>
@@ -82,7 +82,7 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
           <div className="mb-5">
             <span
               className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
-              style={{ background: "rgba(16,185,129,0.14)", color: "#34d399" }}
+              style={{ background: "rgba(5,150,105,0.10)", color: "#047857" }}
             >
               {archive.category || "학술논문"}
             </span>
@@ -91,7 +91,7 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
           {/* 제목 */}
           <h1
             className="font-black tracking-[-0.03em] leading-[1.15] mb-8"
-            style={{ fontSize: "clamp(26px, 4vw, 46px)", color: "#e2e8f0" }}
+            style={{ fontSize: "clamp(26px, 4vw, 46px)", color: "#1c1917" }}
           >
             {archive.title}
           </h1>
@@ -99,24 +99,24 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
           {/* 메타 3종: 게시일 | 저자 | 분류 */}
           <div className="flex flex-wrap items-start gap-x-6 gap-y-3 text-sm">
             <div className="flex flex-col gap-0.5">
-              <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#34d399" }}>
+              <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#059669" }}>
                 게시일
               </span>
-              <span style={{ color: "rgba(255,255,255,0.55)" }}>{createdAt}</span>
+              <span style={{ color: "#57534e" }}>{createdAt}</span>
             </div>
-            <span className="pt-4 leading-none" style={{ color: "rgba(255,255,255,0.12)" }}>|</span>
+            <span className="pt-4 leading-none" style={{ color: "#d6d3d1" }}>|</span>
             <div className="flex flex-col gap-0.5">
-              <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#34d399" }}>
+              <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#059669" }}>
                 저자
               </span>
-              <span className="font-semibold" style={{ color: "#34d399" }}>{archive.author || "저자 미상"}</span>
+              <span className="font-semibold" style={{ color: "#047857" }}>{archive.author || "저자 미상"}</span>
             </div>
-            <span className="pt-4 leading-none" style={{ color: "rgba(255,255,255,0.12)" }}>|</span>
+            <span className="pt-4 leading-none" style={{ color: "#d6d3d1" }}>|</span>
             <div className="flex flex-col gap-0.5">
-              <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#34d399" }}>
+              <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#059669" }}>
                 분류
               </span>
-              <span style={{ color: "rgba(255,255,255,0.55)" }}>{archive.category || "학술논문"}</span>
+              <span style={{ color: "#57534e" }}>{archive.category || "학술논문"}</span>
             </div>
           </div>
 
@@ -132,21 +132,20 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
         <div
           className="rounded-2xl overflow-hidden"
           style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.09)",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.40)",
+            background: "#ffffff",
+            border: "1px solid #e7e5e4",
+            boxShadow: "0 4px 24px rgba(28,25,23,0.08)",
           }}
         >
           <div
             className="px-6 md:px-8 py-3"
-            style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+            style={{ borderBottom: "1px solid #f0efee" }}
           >
-            <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#34d399" }}>
+            <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#059669" }}>
               논문 상세 정보
             </span>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4"
-            style={{ borderTop: "none" }}>
+          <div className="grid grid-cols-2 md:grid-cols-4">
             <MetaCell label="저자" value={archive.author || "저자 미상"} />
             <MetaCell label="실제 발행일" value={publishedAt} highlight />
             <MetaCell label="자료 유형" value="학술 논문 (PDF)" />
@@ -159,14 +158,14 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
           <div
             className="rounded-2xl p-6 md:p-8"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "#ffffff",
+              border: "1px solid #e7e5e4",
             }}
           >
-            <h2 className="text-[9px] font-black uppercase tracking-widest mb-4" style={{ color: "#34d399" }}>
+            <h2 className="text-[9px] font-black uppercase tracking-widest mb-4" style={{ color: "#059669" }}>
               초록 (Abstract)
             </h2>
-            <p className="leading-relaxed whitespace-pre-wrap text-sm md:text-base" style={{ color: "rgba(255,255,255,0.62)" }}>
+            <p className="leading-relaxed whitespace-pre-wrap text-sm md:text-base" style={{ color: "#57534e" }}>
               {archive.abstract_text}
             </p>
           </div>
@@ -193,14 +192,14 @@ function MetaCell({
   return (
     <div
       className="flex flex-col gap-1 px-6 md:px-8 py-5"
-      style={{ borderRight: "1px solid rgba(255,255,255,0.07)" }}
+      style={{ borderRight: "1px solid #f0efee" }}
     >
-      <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "rgba(52,211,153,0.55)" }}>
+      <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "rgba(5,150,105,0.60)" }}>
         {label}
       </span>
       <span
         className="text-sm font-semibold"
-        style={{ color: highlight ? "#34d399" : "#e2e8f0" }}
+        style={{ color: highlight ? "#047857" : "#1c1917" }}
       >
         {value}
       </span>
