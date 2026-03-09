@@ -154,7 +154,7 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-stone-50 overflow-x-hidden pt-20">
+    <div className="min-h-screen overflow-x-hidden pt-20" style={{ background: 'radial-gradient(ellipse 120% 60% at 50% 0%, rgba(16,185,129,0.08) 0%, transparent 55%), radial-gradient(ellipse 80% 50% at 80% 80%, rgba(16,185,129,0.05) 0%, transparent 60%), #f8faf9' }}>
       <style jsx global>{`
         @keyframes radiant-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 30px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
@@ -253,11 +253,11 @@ export default function Home() {
       </section>
 
       {/* 3. 사중복음 섹션 - 톤업 및 글로우 (밝고 우아한 글래스모피즘) */}
-      <section className="pt-56 pb-32 px-8 w-full text-left relative overflow-hidden bg-slate-50">
-        {/* 북 섹션(stone-100)과의 완벽한 브릿지 전환을 위한 매우 길고 부드러운 상단 그라디언트 */}
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-stone-100 via-stone-50 to-transparent pointer-events-none z-0"></div>
-        {/* 에메랄드 혼합 밝은 글로우 (대폭 확장) */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.06),transparent_60%)] pointer-events-none scale-150"></div>
+      <section className="pt-56 pb-32 px-8 w-full text-left relative overflow-hidden" style={{ background: 'transparent' }}>
+        {/* 북 섹션에서 이어지는 부드러운 상단 전환 */}
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-stone-100/60 to-transparent pointer-events-none z-0"></div>
+        {/* 에메랄드 혼합 글로우 — 투명도 강화 */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.11),transparent_55%)] pointer-events-none"></div>
 
         <div className="mx-auto max-w-[1200px] relative z-10">
           <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter drop-shadow-sm">사중복음의 은혜</h2>
@@ -316,10 +316,10 @@ export default function Home() {
                   >
                     {item.subtitle}
                   </p>
-                  <p className="text-sm font-medium text-slate-300 leading-relaxed flex-1">
+                  <p className="text-sm font-medium text-stone-200/85 leading-relaxed flex-1">
                     {item.desc}
                   </p>
-                  <p className="mt-6 text-[11px] font-bold text-slate-400 px-3 py-1.5 bg-white/5 rounded-lg inline-block self-start border border-white/10">{item.scripture}</p>
+                  <p className="mt-6 text-[11px] font-bold text-emerald-200/70 px-3 py-1.5 bg-white/5 rounded-lg inline-block self-start border border-white/10">{item.scripture}</p>
                 </div>
               </div>
             ))}
