@@ -50,6 +50,8 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
 
   const createdAt   = fmt(archive.created_at)
   const publishedAt = fmt(archive.published_date)
+  // '활천' 카테고리는 상세 페이지 자료유형 표기만 '활천 기고문'으로 표시
+  const displayType = archive.category === "활천" ? "활천 기고문" : "학술 논문 (PDF)"
 
   return (
     <div className="min-h-screen" style={{ background: "#fdfcf9" }}>
@@ -148,7 +150,7 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
           <div className="grid grid-cols-2 md:grid-cols-4">
             <MetaCell label="저자" value={archive.author || "저자 미상"} />
             <MetaCell label="실제 발행일" value={publishedAt} highlight />
-            <MetaCell label="자료 유형" value="학술 논문 (PDF)" />
+            <MetaCell label="자료 유형" value={displayType} />
             <MetaCell label="분류" value={archive.category || "학술논문"} />
           </div>
         </div>

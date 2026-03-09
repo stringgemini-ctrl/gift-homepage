@@ -7,7 +7,7 @@ import {
     type ArchiveItem, type ArchivePayload,
 } from '@/app/admin/actions'
 
-const CATEGORIES = ['사중복음 논문', '활천 기고문', '중생', '성결', '신유', '재림', '사중복음 교단발행물']
+const CATEGORIES = ['사중복음 논문', '활천', '중생', '성결', '신유', '재림', '사중복음 교단발행물']
 
 const EMPTY_FORM = {
     title: '',
