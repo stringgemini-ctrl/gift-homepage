@@ -119,3 +119,72 @@ export async function deleteBook(id: string): Promise<{ error: string | null }> 
         return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
     }
 }
+
+// ================================================================
+// 📄 자료실(archive) 서버 액션
+// ================================================================
+
+export type ArchiveItem = {
+    id: string
+    title: string
+    author: string | null
+    category: string | null
+    published_date: string | null
+    abstract_text: string | null
+    content: string | null
+    pdf_url: string | null
+    original_url: string | null
+    created_at: string
+}
+
+export type ArchivePayload = Omit<ArchiveItem, 'id' | 'created_at'>
+
+export async function getAllArchives(): Promise<{ data: ArchiveItem[] | null; error: string | null }> {
+    try {
+        const admin = getAdminClient()
+        const { data, error } = await admin
+            .from('archive')
+            .select('id, title, author, category, published_date, abstract_text, content, pdf_url, original_url, created_at')
+            .order('published_date', { ascending: false, nullsFirst: false })
+        if (error) return { data: null, error: error.message }
+        return { data, error: null }
+    } catch (e) {
+        return { data: null, error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
+export async function createArchive(payload: ArchivePayload): Promise<{ error: string | null }> {
+    try {
+        const admin = getAdminClient()
+        const { error } = await admin.from('archive').insert([payload])
+        if (error) return { error: error.message }
+        return { error: null }
+    } catch (e) {
+        return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
+export async function updateArchive(
+    id: string,
+    payload: Partial<ArchivePayload>
+): Promise<{ error: string | null }> {
+    try {
+        const admin = getAdminClient()
+        const { error } = await admin.from('archive').update(payload).eq('id', id)
+        if (error) return { error: error.message }
+        return { error: null }
+    } catch (e) {
+        return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
+export async function deleteArchive(id: string): Promise<{ error: string | null }> {
+    try {
+        const admin = getAdminClient()
+        const { error } = await admin.from('archive').delete().eq('id', id)
+        if (error) return { error: error.message }
+        return { error: null }
+    } catch (e) {
+        return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
