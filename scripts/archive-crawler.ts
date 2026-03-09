@@ -1,17 +1,17 @@
 /**
  * archive-crawler.ts
- * 타겟: http://www.fourfoldgospel.org/main/sub.html?boardID=www40 (사중복음 논문 게시판)
- * 목적: fourfoldgospel.org 논문 17건을 Supabase archive 테이블에 이관
+ *
+ * ── 타겟 1 (www40): 사중복음 논문 게시판 — 17건 (이미 적재 완료, upsert로 안전 재실행 가능)
+ *    http://www.fourfoldgospel.org/main/sub.html?boardID=www40
+ *    제목 패턴: [저자] 제목
+ *
+ * ── 타겟 2 (www36): 사중복음 교단발행물 게시판 — 74건
+ *    http://www.fourfoldgospel.org/main/sub.html?boardID=www36
+ *    서브카테고리: 활천(48), 중생(8), 성결(5), 신유(7), 재림(6)
+ *    제목 패턴: [서브카테고리] 제목 - 저자  (저자 없는 경우도 있음)
  *
  * 실행: npm run scrape:archive:full
- *
- * [DOM 분석 기준: 2026-03-08]
- * 목록 선택자 : .mdWebzineSbj a  (href → /main/sub.html?Mode=view&boardID=www40&num=NNN...)
- * 상세 제목   : .mdView_sbj text  → "[저자] 제목" 패턴
- * 상세 날짜   : .mdView_date text → "등록일 : YYYY.MM.DD" 패턴
- * 상세 본문   : #lightgallery html
- * 상세 PDF    : .mdView_file 내 a[href*="fileDown"] 중 .pdf 텍스트 포함 항목
- *               → /core/anyboard/download.php?boardID=www40&fileNum={ID}
+ * upsert 기준: original_url UNIQUE → 기존 17건 절대 훼손 없음
  */
 
 import axios from "axios";
@@ -36,7 +36,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
 interface ArchiveData {
     title: string;
     author: string;
-    published_date: string | null;  // "YYYY-MM-DD" 또는 null
+    published_date: string | null;
     category: string;
     abstract_text: string;
     content: string;
@@ -47,26 +47,66 @@ interface ArchiveData {
 // ─── 상수 ─────────────────────────────────────────────────────
 const BASE_URL = "http://www.fourfoldgospel.org";
 
-// 목록 페이지 URL — 총 17건, 페이지당 10건이므로 2페이지까지 존재
-const getListUrl = (page: number) =>
-    `${BASE_URL}/main/sub.html?page=${page}&boardID=www40&keyfield=&key=&bCate=`;
+// 게시판 설정
+interface BoardConfig {
+    boardID: string;
+    label: string;         // 로그용 이름
+    defaultCategory: string; // category 컬럼 기본값 (서브카테고리 파싱 실패 시)
+    maxPages: number;
+    parseTitleFn: (rawTitle: string) => { title: string; author: string; category: string };
+}
 
-// PDF 다운로드 엔드포인트 (fileNum 변수 치환)
-const getPdfUrl = (fileNum: string) =>
-    `${BASE_URL}/core/anyboard/download.php?boardID=www40&fileNum=${fileNum}`;
+// www40: [저자] 제목 패턴
+function parseTitleWww40(rawTitle: string): { title: string; author: string; category: string } {
+    const m = rawTitle.match(/^\[(.+?)]\s*(.+)$/);
+    if (m) return { author: m[1].trim(), title: m[2].trim(), category: "사중복음 논문" };
+    return { author: "Unknown", title: rawTitle, category: "사중복음 논문" };
+}
+
+// www36: [서브카테고리] 제목 - 저자 패턴
+function parseTitleWww36(rawTitle: string): { title: string; author: string; category: string } {
+    let rest = rawTitle;
+    let category = "사중복음 교단발행물";
+    let author = "";
+
+    // [서브카테고리] 접두어 추출
+    const catMatch = rest.match(/^\[(.+?)]\s*/);
+    if (catMatch) {
+        category = catMatch[1].trim(); // 활천 | 중생 | 성결 | 신유 | 재림
+        rest = rest.slice(catMatch[0].length);
+    }
+
+    // 제목 - 저자 분리: 마지막 " - " 기준
+    const dashIdx = rest.lastIndexOf(" - ");
+    if (dashIdx !== -1) {
+        author = rest.slice(dashIdx + 3).trim();
+        rest = rest.slice(0, dashIdx).trim();
+    }
+
+    return { title: rest.trim() || rawTitle, author, category };
+}
+
+const BOARDS: BoardConfig[] = [
+    {
+        boardID: "www40",
+        label: "사중복음 논문",
+        defaultCategory: "사중복음 논문",
+        maxPages: 5,
+        parseTitleFn: parseTitleWww40,
+    },
+    {
+        boardID: "www36",
+        label: "사중복음 교단발행물",
+        defaultCategory: "사중복음 교단발행물",
+        maxPages: 10, // 74건 / 15 = 5페이지 + 여유
+        parseTitleFn: parseTitleWww36,
+    },
+];
 
 
 // ─── 1. 목록 파싱 ─────────────────────────────────────────────
-/**
- * 목록 페이지에서 게시글 상세 URL 배열을 파싱한다.
- *
- * 실제 HTML:
- * <p class="mdWebzineSbj">
- *   <a href="/main/sub.html?Mode=view&boardID=www40&num=928&page=1&...">...</a>
- * </p>
- */
-async function fetchArchiveList(page: number): Promise<string[]> {
-    const url = getListUrl(page);
+async function fetchArchiveList(boardID: string, page: number): Promise<string[]> {
+    const url = `${BASE_URL}/main/sub.html?page=${page}&boardID=${boardID}&keyfield=&key=&bCate=`;
     const postUrls: string[] = [];
 
     try {
@@ -76,23 +116,18 @@ async function fetchArchiveList(page: number): Promise<string[]> {
         });
         const $ = cheerio.load(data);
 
-        // .mdWebzineSbj a → href가 이미 올바른 상세 페이지 상대 경로
-        $(".mdWebzineSbj a").each((_, el) => {
+        $(".mdWebzineSbj a, td a[href*='Mode=view']").each((_, el) => {
             const href = $(el).attr("href");
             if (!href) return;
-
-            // 상대경로 → 절대경로 변환
             const fullUrl = href.startsWith("http") ? href : `${BASE_URL}${href}`;
-
-            // num= 파라미터가 있는 실제 게시글 URL만 수집
             if (/[?&]num=\d+/.test(fullUrl) && !postUrls.includes(fullUrl)) {
                 postUrls.push(fullUrl);
             }
         });
 
-        console.log(`[Page ${page}] ${postUrls.length}개 게시글 발견`);
+        console.log(`  [Page ${page}] ${postUrls.length}개 발견`);
     } catch (err) {
-        console.error(`[Page ${page}] 목록 크롤링 실패:`, (err as Error).message);
+        console.error(`  [Page ${page}] 목록 크롤링 실패:`, (err as Error).message);
     }
 
     return postUrls;
@@ -100,16 +135,10 @@ async function fetchArchiveList(page: number): Promise<string[]> {
 
 
 // ─── 2. 상세 페이지 파싱 ──────────────────────────────────────
-/**
- * 상세 페이지에서 논문 메타데이터와 본문을 추출한다.
- *
- * 실제 HTML 예시:
- * - 제목: <div class="mdView_sbj"> <span class='mdPx16'>[조기연]</span> 초기 기독교 세례예전과 사중복음 </div>
- * - 날짜: <div class="mdView_date"> ... 등록일 : 2024.04.24 | 조회수 : 630 ... </div>
- * - 본문: <div id="lightgallery"> ... </div>
- * - PDF:  <a href="javascript:anyboard.fileDown('1966');"> ... 파일명.pdf ... </a>
- */
-async function fetchArchiveDetail(url: string): Promise<ArchiveData | null> {
+async function fetchArchiveDetail(
+    url: string,
+    parseTitleFn: BoardConfig["parseTitleFn"]
+): Promise<ArchiveData | null> {
     try {
         const { data } = await axios.get(url, {
             timeout: 15_000,
@@ -117,56 +146,35 @@ async function fetchArchiveDetail(url: string): Promise<ArchiveData | null> {
         });
         const $ = cheerio.load(data);
 
-        // ── 제목 & 저자 파싱 ──────────────────────────────────
-        // ".mdView_sbj" text → "[조기연] 초기 기독교 세례예전과 사중복음"
-        const rawTitle = $(".mdView_sbj").first().text().trim();
-        let title = rawTitle;
-        let author = "Unknown";
+        // ── 제목 파싱 ──
+        const rawTitle = $(".mdView_sbj").first().text().replace(/\s+/g, " ").trim();
+        const { title, author, category } = parseTitleFn(rawTitle);
 
-        // "[저자명] 제목" 패턴 파싱
-        const authorMatch = rawTitle.match(/^\[(.+?)]\s*(.+)$/);
-        if (authorMatch) {
-            author = authorMatch[1].trim();
-            title = authorMatch[2].trim();
-        }
-
-        // ── 등록일 파싱 ───────────────────────────────────────
-        // ".mdView_date" text → "... 등록일 : 2024.04.24 | 조회수 ..."
+        // ── 등록일 파싱 ──
         let published_date: string | null = null;
         const dateText = $(".mdView_date").first().text();
         const dateMatch = dateText.match(/등록일\s*:\s*(\d{4})\.(\d{2})\.(\d{2})/);
         if (dateMatch) {
-            published_date = `${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}`; // "YYYY-MM-DD"
+            published_date = `${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}`;
         }
 
-        // ── 카테고리 ──────────────────────────────────────────
-        // boardID=www40 게시판 이름 = "사중복음 논문" (페이지 title 태그로 확인)
-        const category = "사중복음 논문";
-
-        // ── 본문 HTML ─────────────────────────────────────────
-        // #lightgallery 안에 이미지, 텍스트 등 본문 HTML이 위치
+        // ── 본문 HTML ──
         let content = $("#lightgallery").html() || $(".mdView_cont").html() || "";
-        // 이미지 상대경로 → 절대경로 치환 (Supabase에서 렌더링 시 필요)
         content = content.replace(/src="\/user/g, `src="${BASE_URL}/user`);
 
-        // abstract_text: 본문 HTML에서 텍스트만 추출한 요약 (최대 300자)
+        // ── abstract_text ──
         const abstract_text = $(".mdView_cont").text().replace(/\s+/g, " ").trim().slice(0, 300);
 
-        // ── PDF 링크 추출 ─────────────────────────────────────
-        // <a href="javascript:anyboard.fileDown('1966');"> ... 파일명.pdf ... </a>
+        // ── PDF 링크 추출 ──
         let pdf_url = "";
         $(".mdView_file a").each((_, el) => {
+            if (pdf_url) return;
             const linkText = $(el).text();
             const href = $(el).attr("href") || "";
-
-            // 이미 PDF를 찾았으면 건너뜀
-            if (pdf_url) return;
-
-            // 링크 텍스트에 ".pdf" 포함 + fileDown 패턴에서 ID 추출
             if (linkText.toLowerCase().includes(".pdf")) {
                 const fileNumMatch = href.match(/fileDown\('(\d+)'\)/);
                 if (fileNumMatch) {
-                    pdf_url = getPdfUrl(fileNumMatch[1]);
+                    pdf_url = `${BASE_URL}/core/anyboard/download.php?boardID=${url.match(/boardID=([a-z0-9]+)/i)?.[1] || ""}&fileNum=${fileNumMatch[1]}`;
                 }
             }
         });
@@ -179,44 +187,41 @@ async function fetchArchiveDetail(url: string): Promise<ArchiveData | null> {
         return { title, author, published_date, category, abstract_text, content, pdf_url, original_url: url };
 
     } catch (err) {
-        console.error(`상세 파싱 실패 (${url}):`, (err as Error).message);
+        console.error(`  상세 파싱 실패 (${url}):`, (err as Error).message);
         return null;
     }
 }
 
 
-// ─── 3. PDF → Supabase Storage 업로드 ────────────────────────
-async function uploadPdfToStorage(originalPdfUrl: string, articleNum: string): Promise<string> {
+// ─── 3. PDF → Supabase Storage ────────────────────────────────
+async function uploadPdfToStorage(originalPdfUrl: string, boardID: string, articleNum: string): Promise<string> {
     if (!originalPdfUrl) return "";
 
     try {
-        console.log(`  → PDF 다운로드 중: ${originalPdfUrl}`);
+        console.log(`    → PDF 다운로드: ${originalPdfUrl}`);
         const response = await axios.get(originalPdfUrl, {
             responseType: "arraybuffer",
             timeout: 30_000,
             headers: { "User-Agent": "Mozilla/5.0 (compatible; GIFT-Crawler/1.0)" },
         });
         const buffer = Buffer.from(response.data);
-        const fileName = `fourfoldgospel_${articleNum}_${crypto.randomUUID()}.pdf`;
+        const fileName = `${boardID}_${articleNum}_${crypto.randomUUID()}.pdf`;
 
         const { error } = await supabase.storage
             .from("archives")
-            .upload(fileName, buffer, {
-                contentType: "application/pdf",
-                upsert: true,
-            });
+            .upload(fileName, buffer, { contentType: "application/pdf", upsert: true });
 
         if (error) {
-            console.error(`  ❌ PDF 업로드 실패: ${error.message}`);
-            return originalPdfUrl; // 실패 시 원본 URL 유지
+            console.error(`    ❌ PDF 업로드 실패: ${error.message}`);
+            return originalPdfUrl;
         }
 
         const { data: publicData } = supabase.storage.from("archives").getPublicUrl(fileName);
-        console.log(`  ✅ PDF 영구 URL 발급: ${publicData.publicUrl}`);
+        console.log(`    ✅ PDF 업로드 완료`);
         return publicData.publicUrl;
 
     } catch (err: any) {
-        console.error(`  ❌ PDF 처리 에러: ${err.message}`);
+        console.error(`    ❌ PDF 처리 에러: ${err.message}`);
         return originalPdfUrl;
     }
 }
@@ -225,27 +230,24 @@ async function uploadPdfToStorage(originalPdfUrl: string, articleNum: string): P
 // ─── 4. DB Upsert ─────────────────────────────────────────────
 async function upsertToDb(item: ArchiveData): Promise<boolean> {
     const { error } = await supabase
-        .from("archive")                        // 앱 코드와 동일한 테이블명 (singular)
-        .upsert(item, { onConflict: "original_url" }); // migration 002에서 UNIQUE 설정됨
+        .from("archive")
+        .upsert(item, { onConflict: "original_url" }); // original_url UNIQUE 기준 — 기존 데이터 안전
 
     if (error) {
-        console.error(`  ❌ DB 저장 실패 [${item.title}]: ${error.message}`);
+        console.error(`    ❌ DB 실패 [${item.title.slice(0, 30)}]: ${error.message}`);
         return false;
     }
-    console.log(`  ✅ DB 저장 성공: ${item.title}`);
+    console.log(`    ✅ DB 저장: ${item.title.slice(0, 50)}`);
     return true;
 }
 
 
-// ─── 5. 메인 실행 ─────────────────────────────────────────────
-async function runCrawler() {
-    console.log("═══════════════════════════════════════════");
-    console.log("🚀 fourfoldgospel.org → archive 이관 시작");
-    console.log(`📌 타겟: ${BASE_URL}/main/sub.html?boardID=www40`);
-    console.log(`📂 게시판: 사중복음 논문 (총 17건 / 최대 2페이지)`);
-    console.log("═══════════════════════════════════════════\n");
+// ─── 5. 게시판 크롤러 ─────────────────────────────────────────
+async function crawlBoard(board: BoardConfig): Promise<{ success: number; fail: number }> {
+    console.log(`\n${"═".repeat(55)}`);
+    console.log(`📋 [${board.label}] boardID=${board.boardID} 크롤링 시작`);
+    console.log(`${"═".repeat(55)}`);
 
-    // 스토리지 버킷 준비 (없으면 생성, 있으면 무시)
     await supabase.storage.createBucket("archives", { public: true });
 
     let page = 1;
@@ -253,54 +255,70 @@ async function runCrawler() {
     let totalFail = 0;
     let lastFirstNum = "";
 
-    while (page <= 5) { // 여유롭게 5페이지까지 허용 (실제 2페이지)
-        console.log(`\n── Page ${page} ${"─".repeat(37)}`);
-        const postUrls = await fetchArchiveList(page);
+    while (page <= board.maxPages) {
+        console.log(`\n── Page ${page} ${"─".repeat(40)}`);
+        const postUrls = await fetchArchiveList(board.boardID, page);
 
         if (postUrls.length === 0) {
-            console.log("게시물 없음. 크롤링을 종료합니다.");
+            console.log("  게시물 없음. 종료.");
             break;
         }
 
-        // 마지막 페이지 반복 감지 (URL 중 num= 값으로 비교)
+        // 마지막 페이지 반복 감지
         const firstNum = (postUrls[0].match(/num=(\d+)/) ?? [])[1] ?? "";
         if (page > 1 && firstNum === lastFirstNum) {
-            console.log("마지막 페이지 반복 감지 → 종료");
+            console.log("  마지막 페이지 반복 감지 → 종료");
             break;
         }
         lastFirstNum = firstNum;
 
         for (const url of postUrls) {
-            // URL에서 게시글 번호 추출 (스토리지 파일명용)
             const articleNum = (url.match(/num=(\d+)/) ?? [])[1] ?? "unknown";
-            console.log(`\n[#${articleNum}] ${url}`);
+            console.log(`\n  [#${articleNum}] ${url}`);
 
-            const archiveData = await fetchArchiveDetail(url);
+            const archiveData = await fetchArchiveDetail(url, board.parseTitleFn);
             if (!archiveData) {
                 totalFail++;
                 continue;
             }
 
-            // PDF 첨부가 있으면 Supabase Storage에 영구 보관
             if (archiveData.pdf_url.startsWith("http")) {
-                archiveData.pdf_url = await uploadPdfToStorage(archiveData.pdf_url, articleNum);
+                archiveData.pdf_url = await uploadPdfToStorage(archiveData.pdf_url, board.boardID, articleNum);
             }
 
             const ok = await upsertToDb(archiveData);
             ok ? totalSuccess++ : totalFail++;
 
-            // 서버 과부하 방지 딜레이 (0.8초)
             await new Promise(r => setTimeout(r, 800));
         }
 
-        console.log(`\n[ Page ${page} 완료 ]`);
+        console.log(`\n  [ Page ${page} 완료 ]`);
         page++;
-        await new Promise(r => setTimeout(r, 2500)); // 페이지 전환 딜레이
+        await new Promise(r => setTimeout(r, 2000));
     }
 
-    console.log("\n═══════════════════════════════════════════");
-    console.log(`🎉 완료!  성공: ${totalSuccess}건 | 실패: ${totalFail}건`);
-    console.log("═══════════════════════════════════════════");
+    console.log(`\n✅ [${board.label}] 완료 — 성공: ${totalSuccess}건 / 실패: ${totalFail}건`);
+    return { success: totalSuccess, fail: totalFail };
+}
+
+
+// ─── 6. 메인 ──────────────────────────────────────────────────
+async function runCrawler() {
+    console.log("\n🚀 GIFT Archive Crawler 시작");
+    console.log(`📌 타겟: www36(교단발행물 74건) + www40(논문 17건, upsert 안전)\n`);
+
+    let grandSuccess = 0;
+    let grandFail = 0;
+
+    for (const board of BOARDS) {
+        const { success, fail } = await crawlBoard(board);
+        grandSuccess += success;
+        grandFail += fail;
+    }
+
+    console.log(`\n${"═".repeat(55)}`);
+    console.log(`🎉 전체 완료!  신규/갱신: ${grandSuccess}건 | 실패: ${grandFail}건`);
+    console.log(`${"═".repeat(55)}\n`);
 }
 
 runCrawler().catch(err => {
