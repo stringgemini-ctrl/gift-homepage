@@ -93,6 +93,19 @@ export default async function ArchivePage({ searchParams }: PageProps) {
 
   return (
     <div className="min-h-screen" style={{ background: "#040c09" }}>
+      <style>{`
+        .archive-card {
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
+          box-shadow: 0 2px 16px rgba(0,0,0,0.30);
+          transition: background 200ms, border-color 200ms, transform 200ms;
+        }
+        .archive-card:hover {
+          background: rgba(255,255,255,0.07);
+          border-color: rgba(52,211,153,0.22);
+          transform: translateY(-2px);
+        }
+      `}</style>
 
       {/* ── 히어로 헤더 ────────────────────────────────────────── */}
       <div className="relative overflow-hidden pt-20 pb-16 px-6">
@@ -173,24 +186,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
               const dateStr = fmt(item.published_date)
               return (
                 <Link key={item.id} href={`/archive/${item.id}`}>
-                  <div
-                    className="group flex flex-col h-full p-6 rounded-2xl transition-all duration-200"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      boxShadow: "0 2px 16px rgba(0,0,0,0.30)",
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)"
-                      ;(e.currentTarget as HTMLElement).style.border = "1px solid rgba(52,211,153,0.22)"
-                      ;(e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)"
-                      ;(e.currentTarget as HTMLElement).style.border = "1px solid rgba(255,255,255,0.08)"
-                      ;(e.currentTarget as HTMLElement).style.transform = "translateY(0)"
-                    }}
-                  >
+                  <div className="archive-card flex flex-col h-full p-6 rounded-2xl">
                     {/* 카테고리 뱃지 */}
                     <div className="mb-3">
                       <span
