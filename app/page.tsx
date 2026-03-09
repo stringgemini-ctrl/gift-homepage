@@ -1,7 +1,6 @@
 'use client'
 
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
@@ -36,41 +35,41 @@ const Icons = {
   ),
 };
 
-// 사중복음 4색 테마 (스펙 5.8 기준 + 요청사항 반영: Crimson, Pure White, Sage Green, Slate Blue)
+// 사중복음 4색 테마 — 카드 배경: 밝은 다크 에메랄드 / 아이콘·텍스트: 고휘도 파스텔 톤업
 const fourfoldGospel = [
   {
     id: 1, Icon: Icons.Regeneration,
     title: '중생', subtitle: 'Regeneration',
-    iconColor: '#9f1239', // Crimson Red
-    borderColor: 'rgba(159,18,57,0.3)',
-    glowColor: 'rgba(159,18,57,0.25)', // 밝은 배경에 맞춘 강한 글로우
+    iconColor: '#fda4af', // rose-300 — 크림슨 정체성 유지, 밝은 파스텔로 톤업
+    borderColor: 'rgba(159,18,57,0.45)',  // 원본 Crimson Red — 정체성 보존
+    glowColor: 'rgba(253,164,175,0.45)',  // rose-300 기반 밝은 글로우
     desc: '천국 시민의 자격을 갖추는 기독교의 입문입니다. 십자가에 달려 속죄의 피를 흘리신 예수 그리스도를 믿을 때, 성령의 역사로 새 생명을 얻어 심령과 인격 전체에 근본적인 변혁이 일어나는 영적 신비입니다.',
     scripture: '요한복음 3:3',
   },
   {
     id: 2, Icon: Icons.Sanctification,
     title: '성결', subtitle: 'Sanctification',
-    iconColor: '#ffffff', // Pure White (밝은 배경에서 튀도록 그림자 적용 필수)
-    borderColor: 'rgba(148,163,184,0.3)', // slate-400 border
-    glowColor: 'rgba(255,255,255,0.8)', // pure white glow
+    iconColor: '#ffffff', // Pure White — 기준값 유지
+    borderColor: 'rgba(148,163,184,0.35)',
+    glowColor: 'rgba(255,255,255,0.55)',
     desc: '구원받은 신자가 마땅히 사모해야 할 성령 세례의 은혜입니다. 오순절 다락방에 임했던 성령의 역사처럼, 죄의 본성을 정결케 하고 하나님을 향한 온전한 사랑과 거룩한 삶의 능력을 덧입는 과정입니다.',
     scripture: '히브리서 12:14',
   },
   {
     id: 3, Icon: Icons.DivineHealing,
     title: '신유', subtitle: 'Divine Healing',
-    iconColor: '#0f766e', // Sage Green
-    borderColor: 'rgba(15,118,110,0.3)',
-    glowColor: 'rgba(15,118,110,0.25)',
+    iconColor: '#5eead4', // teal-300 — Sage Green 정체성 유지, 밝은 파스텔로 톤업
+    borderColor: 'rgba(15,118,110,0.45)',  // 원본 Sage Green — 정체성 보존
+    glowColor: 'rgba(94,234,212,0.45)',    // teal-300 기반 밝은 글로우
     desc: '하나님의 보호하심 아래 육신의 강건함을 누리며, 병들었을 때 기도함으로 나음을 얻는 은사입니다. 이는 단순한 기적을 넘어, 깨어진 육신을 안전케 하시는 주님의 전인적인 구원과 사랑의 표적입니다.',
     scripture: '마가복음 16:17–18',
   },
   {
     id: 4, Icon: Icons.SecondComing,
     title: '재림', subtitle: 'Second Coming',
-    iconColor: '#1e40af', // Slate Blue
-    borderColor: 'rgba(30,64,175,0.3)',
-    glowColor: 'rgba(30,64,175,0.25)',
+    iconColor: '#93c5fd', // blue-300 — Slate Blue 정체성 유지, 밝은 파스텔로 톤업
+    borderColor: 'rgba(30,64,175,0.45)',   // 원본 Slate Blue — 정체성 보존
+    glowColor: 'rgba(147,197,253,0.45)',   // blue-300 기반 밝은 글로우
     desc: '신약성경 예언의 중심이자 우리 신앙의 궁극적인 소망입니다. \'내가 속히 오리라\' 하신 약속을 믿으며, 주님의 공중 재림과 지상 재림을 대망하여 오늘을 깨어 있는 신앙으로 살아가게 하는 원동력입니다.',
     scripture: '요한계시록 22:20',
   },
@@ -268,11 +267,9 @@ export default function Home() {
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className="group relative overflow-hidden bg-[#1e2533]/90 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+                className="group relative overflow-hidden bg-[#112820]/95 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 cursor-default"
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = item.iconColor === '#ffffff'
-                    ? `0 20px 60px rgba(255,255,255,0.15), 0 0 25px rgba(255,255,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2)`
-                    : `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)`;
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.12)`;
                   const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
                   if (bgGlow) bgGlow.style.opacity = '1';
                 }}
@@ -294,9 +291,9 @@ export default function Home() {
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="mb-6 flex justify-start">
                     <div className="p-3 rounded-2xl bg-white/5 border border-white/10 shadow-sm transition-all duration-500 group-hover:shadow-md" style={{
-                      boxShadow: item.iconColor === '#ffffff' ? '0 4px 15px rgba(255,255,255,0.15)' : `0 4px 15px ${item.glowColor}`
+                      boxShadow: `0 4px 18px ${item.glowColor}`
                     }}>
-                      <div style={{ filter: item.iconColor === '#ffffff' ? 'drop-shadow(0 0 8px rgba(255,255,255,0.5))' : 'none' }}>
+                      <div style={{ filter: `drop-shadow(0 0 8px ${item.iconColor}99)` }}>
                         <item.Icon color={item.iconColor} />
                       </div>
                     </div>
@@ -305,7 +302,7 @@ export default function Home() {
                     className="text-2xl font-black mb-1 drop-shadow-sm transition-all duration-500"
                     style={{
                       color: item.iconColor,
-                      textShadow: item.iconColor === '#ffffff' ? '0 0 10px rgba(255,255,255,0.4)' : 'none'
+                      textShadow: `0 0 12px ${item.iconColor}80`
                     }}
                   >
                     {item.title}
@@ -314,7 +311,7 @@ export default function Home() {
                     className="text-[10px] uppercase font-black tracking-widest mb-6"
                     style={{
                       color: item.iconColor,
-                      textShadow: item.iconColor === '#ffffff' ? '0 0 5px rgba(255,255,255,0.3)' : 'none'
+                      textShadow: `0 0 6px ${item.iconColor}60`
                     }}
                   >
                     {item.subtitle}
