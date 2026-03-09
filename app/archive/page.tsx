@@ -14,7 +14,7 @@ interface PageProps {
 // 카테고리별 뱃지 색상 — 라이트 배경 기준 (진한 색상)
 const CATEGORY_STYLES: Record<string, { bg: string; color: string }> = {
   "사중복음 논문":       { bg: "rgba(5,150,105,0.10)",   color: "#047857" },  // emerald-700
-  "활천":               { bg: "rgba(217,119,6,0.10)",    color: "#b45309" },  // amber-700
+  "활천 기고문":         { bg: "rgba(217,119,6,0.10)",    color: "#b45309" },  // amber-700
   "중생":               { bg: "rgba(29,78,216,0.10)",    color: "#1d4ed8" },  // blue-700
   "성결":               { bg: "rgba(109,40,217,0.10)",   color: "#6d28d9" },  // violet-700
   "신유":               { bg: "rgba(190,18,60,0.10)",    color: "#be123c" },  // rose-700
