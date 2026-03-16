@@ -202,7 +202,7 @@ export default function Home() {
         {/* 중앙 텍스트 */}
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-900 bg-emerald-100/80 border border-emerald-400/40 backdrop-blur-md rounded-full animate-fadeInUp shadow-[0_0_15px_rgba(16,185,129,0.2)]">THE GOOD NEWS</span>
-          <h1 className="text-6xl font-black tracking-tighter text-stone-900 md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_2px_10px_rgba(0,0,0,0.05)]">성결의 빛, <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]">온 누리에</span></h1>
+          <h1 className="text-6xl font-black tracking-tighter text-stone-900 md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_2px_10px_rgba(0,0,0,0.05)]">하나님의 선물 <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]">사중복음</span></h1>
           <p className="mt-8 text-sm md:text-lg font-bold text-stone-600 tracking-wide animate-fadeInUp uppercase leading-relaxed drop-shadow-sm">
             <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">G</span>lobal <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">I</span>nstitute for the <br className="hidden md:block" />
             <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">F</span>ourfold-gospel <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">T</span>heology
@@ -261,7 +261,7 @@ export default function Home() {
 
         <div className="mx-auto max-w-[1200px] relative z-10">
           <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter drop-shadow-sm">사중복음의 은혜</h2>
-          <p className="text-slate-600 font-bold mb-16 shadow-sm">복음의 영광이 투영된 기독교대한성결교회의 핵심적인 네 가지 신학적 기둥을 소개합니다.</p>
+          <p className="text-slate-600 font-bold mb-16 shadow-sm">핵심적인 네 가지 전도표제를 소개합니다.</p>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {fourfoldGospel.map((item) => (

@@ -113,13 +113,13 @@ export default async function PublicationsPage() {
                         className="font-black tracking-[-0.03em] leading-[1.15] mb-7"
                         style={{ fontSize: 'clamp(34px, 5vw, 60px)', color: '#f4f4f5' }}
                     >
-                        진리를 향한 좁은 길,&nbsp;
+                        성결교회 신앙의 규범.&nbsp;
                         <span style={{
                             background: 'linear-gradient(120deg, #a7f3d0, #34d399)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                         }}>
-                            사중복음의 궤적
+                            사중복음
                         </span>
                     </h1>
 
