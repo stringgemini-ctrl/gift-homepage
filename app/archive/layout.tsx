@@ -21,9 +21,13 @@ export default async function ArchiveLayout({
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    // getUser 실패 시 user=null → 잠금 화면 표시
+  }
 
   if (!user) {
     return (
