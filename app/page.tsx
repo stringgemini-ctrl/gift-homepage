@@ -289,7 +289,7 @@ export default function Home() {
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className="group relative overflow-hidden bg-[#1e3d2f]/70 backdrop-blur-2xl p-8 rounded-3xl border border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+                className="group relative overflow-hidden bg-[#1a3528]/88 backdrop-blur-2xl p-8 rounded-3xl border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all duration-500 hover:-translate-y-2 cursor-default"
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.12)`;
                   const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
@@ -338,10 +338,10 @@ export default function Home() {
                   >
                     {item.subtitle}
                   </p>
-                  <p className="text-sm font-medium text-stone-200/85 leading-relaxed flex-1">
+                  <p className="text-sm font-medium text-white/90 leading-relaxed flex-1">
                     {item.desc}
                   </p>
-                  <p className="mt-6 text-[11px] font-bold text-emerald-200/70 px-3 py-1.5 bg-white/5 rounded-lg inline-block self-start border border-white/10">{item.scripture}</p>
+                  <p className="mt-6 text-[11px] font-bold text-emerald-300/90 px-3 py-1.5 bg-white/8 rounded-lg inline-block self-start border border-white/15">{item.scripture}</p>
                 </div>
               </div>
             ))}
