@@ -4,7 +4,7 @@ import { supabase } from '@/features/database/lib/supabase'
 
 type OAuthProvider = 'google' | 'kakao'
 
-export default function OAuthButtons() {
+export default function OAuthButtons({ redirectTo = '/archive' }: { redirectTo?: string }) {
   const [loading, setLoading] = useState<OAuthProvider | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -12,11 +12,12 @@ export default function OAuthButtons() {
     setLoading(provider)
     setError(null)
     try {
+      const callbackUrl = new URL('/auth/callback', window.location.origin)
+      callbackUrl.searchParams.set('next', redirectTo)
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          // 인증 완료 후 /auth/callback 라우트에서 세션을 교환하고 /archive로 리다이렉트
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: callbackUrl.toString(),
         },
       })
       if (error) throw error

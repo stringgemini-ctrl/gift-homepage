@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '@/features/database/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import OAuthButtons from '@/features/auth/components/OAuthButtons'
 
@@ -9,14 +9,15 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo') || '/archive'
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) alert('로그인 실패: ' + error.message)
     else {
-      // 성공 알림 없이 바로 리다이렉트 (흐름 끊김 방지)
-      router.push('/archive')
+      router.push(redirectTo)
     }
   }
 
@@ -26,7 +27,7 @@ export default function LoginPage() {
         <h1 className="mb-6 text-2xl font-bold">로그인</h1>
 
         {/* 소셜 로그인 버튼 */}
-        <OAuthButtons />
+        <OAuthButtons redirectTo={redirectTo} />
 
         {/* 구분선 */}
         <div className="flex items-center gap-3 my-6">

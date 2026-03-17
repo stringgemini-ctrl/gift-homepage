@@ -27,8 +27,17 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // 세션 갱신만 수행 (결과는 사용하지 않음)
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // /archive 경로 보호: 비로그인 사용자 → /login?redirectTo=... 으로 리다이렉트
+  const { pathname } = request.nextUrl
+  if (pathname.startsWith('/archive') && !user) {
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = '/login'
+    loginUrl.search = ''
+    loginUrl.searchParams.set('redirectTo', pathname)
+    return NextResponse.redirect(loginUrl)
+  }
 
   return supabaseResponse
 }
