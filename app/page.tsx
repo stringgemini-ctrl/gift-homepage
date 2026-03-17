@@ -11,26 +11,48 @@ import ResourceSection from '@/features/main/components/ResourceSection'
 import HeroParticles from '@/features/publications/components/HeroParticles'
 
 const Icons = {
+  // 중생 — 십자가 (Cross)
   Regeneration: ({ color }: { color: string }) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" className="w-9 h-9">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+    <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" className="w-9 h-9">
+      <line x1="12" y1="2" x2="12" y2="22" strokeLinecap="round" />
+      <line x1="4" y1="8" x2="20" y2="8" strokeLinecap="round" />
     </svg>
   ),
+  // 성결 — 성배 (Chalice)
   Sanctification: ({ color }: { color: string }) => (
     <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" className="w-9 h-9">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M3 12h1m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+      {/* Cup bowl */}
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 3h12l-2.5 7a3.5 3.5 0 01-7 0L6 3z" />
+      {/* Stem */}
+      <line x1="12" y1="10" x2="12" y2="18" strokeLinecap="round" />
+      {/* Base */}
+      <line x1="7" y1="21" x2="17" y2="21" strokeLinecap="round" />
+      {/* Stem-base connector */}
+      <path strokeLinecap="round" d="M9 18a6 6 0 006 0" />
     </svg>
   ),
+  // 신유 — 물고기 (Ichthys / Christian Fish)
   DivineHealing: ({ color }: { color: string }) => (
     <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" className="w-9 h-9">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-      <circle cx="12" cy="12" r="9" strokeOpacity="0.25" />
+      {/* Fish body: upper arc */}
+      <path strokeLinecap="round" d="M4 12 Q9 5 16 12" />
+      {/* Fish body: lower arc */}
+      <path strokeLinecap="round" d="M4 12 Q9 19 16 12" />
+      {/* Fish tail */}
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16 8l4 4-4 4" />
+      {/* Eye */}
+      <circle cx="9" cy="12" r="1" fill={color} stroke="none" />
     </svg>
   ),
+  // 재림 — 왕관 (Crown)
   SecondComing: ({ color }: { color: string }) => (
     <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" className="w-9 h-9">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v6m0 0l-2-2m2 2l2-2" />
+      {/* Crown body */}
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 18h18M3 18V10l4.5 4.5L12 5l4.5 9.5L21 10v8" />
+      {/* Crown jewel dots */}
+      <circle cx="3" cy="10" r="1" fill={color} stroke="none" />
+      <circle cx="21" cy="10" r="1" fill={color} stroke="none" />
+      <circle cx="12" cy="5" r="1" fill={color} stroke="none" />
     </svg>
   ),
 };
