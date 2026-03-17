@@ -289,7 +289,7 @@ export default function Home() {
             {fourfoldGospel.map((item) => (
               <div
                 key={item.id}
-                className="group relative overflow-hidden bg-[#112820]/95 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+                className="group relative overflow-hidden bg-[#1e3d2f]/70 backdrop-blur-2xl p-8 rounded-3xl border border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 cursor-default"
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 60px ${item.glowColor}, 0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.12)`;
                   const bgGlow = e.currentTarget.querySelector('.bg-glow') as HTMLElement;
