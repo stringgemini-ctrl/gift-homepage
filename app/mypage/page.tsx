@@ -13,13 +13,22 @@ type ArchivePost = {
   created_at: string
 }
 
+type InquiryPost = {
+  id: string
+  title: string
+  password: string | null
+  answer: string | null
+  created_at: string
+}
+
 export default function MyPage() {
   // AuthProvider에서 role을 직접 가져옵니다.
   // 이미 DB의 profiles 테이블에서 읽어온 값이므로 가장 신뢰할 수 있는 소스입니다.
   const { user, role, isLoading: isAuthLoading } = useAuth()
   const [myPosts, setMyPosts] = useState<ArchivePost[]>([])
+  const [myInquiries, setMyInquiries] = useState<InquiryPost[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'posts'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'posts' | 'inquiries'>('profile')
 
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -37,13 +46,21 @@ export default function MyPage() {
     }
 
     async function fetchPosts() {
-      const { data: posts } = await supabase
-        .from('archive')
-        .select('id, title, category, created_at')
-        .eq('user_id', user!.id)
-        .order('created_at', { ascending: false })
+      const [archiveRes, inquiryRes] = await Promise.all([
+        supabase
+          .from('archive')
+          .select('id, title, category, created_at')
+          .eq('user_id', user!.id)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('inquiries')
+          .select('id, title, password, answer, created_at')
+          .eq('user_id', user!.id)
+          .order('created_at', { ascending: false }),
+      ])
 
-      if (posts) setMyPosts(posts)
+      if (archiveRes.data) setMyPosts(archiveRes.data)
+      if (inquiryRes.data) setMyInquiries(inquiryRes.data)
       setLoading(false)
     }
 
@@ -100,6 +117,7 @@ export default function MyPage() {
     { id: 'profile' as const, label: '내 정보' },
     { id: 'password' as const, label: '비밀번호 변경' },
     { id: 'posts' as const, label: '내 게시글' },
+    { id: 'inquiries' as const, label: '내 문의' },
   ]
 
   return (
@@ -265,6 +283,75 @@ export default function MyPage() {
                     className="inline-block px-6 py-3 rounded-xl bg-[#0098a6] text-white text-[14px] font-semibold hover:bg-[#007c88] transition-colors"
                   >
                     글쓰기
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 탭: 내 문의 */}
+        {activeTab === 'inquiries' && (
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+            <div className="h-1 w-12 rounded-full bg-[#0098a6] ml-8 mt-6 mb-4" />
+            <div className="px-8 pb-8">
+              {myInquiries.length > 0 ? (
+                <ul className="space-y-2">
+                  {myInquiries.map((inq) => (
+                    <li key={inq.id}>
+                      <Link
+                        href={`/contact/${inq.id}`}
+                        className="flex items-center justify-between py-4 px-4 rounded-xl hover:bg-slate-50 transition-colors group"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            {inq.password && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-600 text-[11px] font-bold">
+                                비밀글
+                              </span>
+                            )}
+                            {inq.answer ? (
+                              <span className="inline-flex px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[11px] font-bold">
+                                답변완료
+                              </span>
+                            ) : (
+                              <span className="inline-flex px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[11px] font-bold">
+                                대기중
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[15px] font-medium text-[#1d1d1f] truncate group-hover:text-[#0098a6]">
+                            {inq.title}
+                          </p>
+                          <p className="text-[13px] text-[#6e6e73] mt-0.5">
+                            {new Date(inq.created_at).toLocaleDateString('ko-KR', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </p>
+                        </div>
+                        <span className="text-slate-300 group-hover:text-[#0098a6] ml-2">→</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="py-16 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center text-3xl">
+                    💬
+                  </div>
+                  <p className="text-[15px] font-medium text-[#6e6e73] mb-1">
+                    아직 작성한 문의글이 없습니다.
+                  </p>
+                  <p className="text-[13px] text-slate-400 mb-6">
+                    문의 게시판에서 글을 작성해 보세요.
+                  </p>
+                  <Link
+                    href="/contact/write"
+                    className="inline-block px-6 py-3 rounded-xl bg-[#0098a6] text-white text-[14px] font-semibold hover:bg-[#007c88] transition-colors"
+                  >
+                    문의하기
                   </Link>
                 </div>
               )}
