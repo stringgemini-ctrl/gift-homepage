@@ -38,17 +38,17 @@ export default function BookCard({ book, priority = false }: { book: Book; prior
                           - rotate(2deg): 너무 과하지 않게 2도
                           - transform-origin: bottom left → 하단 왼쪽을 축으로 기울어짐
                         */
-                        transform: 'rotate(2deg)',
+                        transform: 'rotate(0deg)',
                         transformOrigin: 'bottom left',
                         willChange: 'transform',
                     }}
                     onMouseEnter={e =>
                     ((e.currentTarget as HTMLElement).style.transform =
-                        'rotate(1deg) translateY(-10px)')
+                        'rotate(0deg) translateY(-10px)')
                     }
                     onMouseLeave={e =>
                     ((e.currentTarget as HTMLElement).style.transform =
-                        'rotate(2deg)')
+                        'rotate(0deg)')
                     }
                 >
                     {/*
