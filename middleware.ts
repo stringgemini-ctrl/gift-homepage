@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser().catch(() => ({ data: { user: null } }))
 
   // /archive 경로 보호: 비로그인 사용자 → /login?redirectTo=... 으로 리다이렉트
   const { pathname } = request.nextUrl

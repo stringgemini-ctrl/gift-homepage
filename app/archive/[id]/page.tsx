@@ -1,6 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import Link from "next/link"
 import ArchiveViewer from "@/features/archive/components/ArchiveViewer"
 
@@ -26,6 +27,12 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     { cookies: { get(name: string) { return cookieStore.get(name)?.value } } }
   )
+
+  // 인증 체크: 비로그인 사용자 → /login?redirectTo=현재경로
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    redirect(`/login?redirectTo=${encodeURIComponent(`/archive/${id}`)}`)
+  }
 
   let archive: any = null
   try {

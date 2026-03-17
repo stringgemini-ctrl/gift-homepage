@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import Link from "next/link"
 import { unstable_noStore as noStore } from "next/cache"
 
@@ -46,6 +47,15 @@ export default async function ArchivePage({ searchParams }: PageProps) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     { cookies: { get(name: string) { return cookieStore.get(name)?.value } } }
   )
+
+  // 인증 체크: 비로그인 사용자 → /login?redirectTo=현재경로
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    const redirectTo = category
+      ? `/archive?category=${encodeURIComponent(category)}`
+      : "/archive"
+    redirect(`/login?redirectTo=${encodeURIComponent(redirectTo)}`)
+  }
 
   let archives: any[] = []
   let categories: string[] = []
