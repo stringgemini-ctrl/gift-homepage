@@ -176,7 +176,7 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen overflow-x-hidden pt-20" style={{ background: 'radial-gradient(ellipse 120% 60% at 50% 0%, rgba(16,185,129,0.08) 0%, transparent 55%), radial-gradient(ellipse 80% 50% at 80% 80%, rgba(16,185,129,0.05) 0%, transparent 60%), #f8faf9' }}>
+    <div className="min-h-screen overflow-x-hidden pt-20" style={{ background: 'radial-gradient(ellipse 140% 70% at 50% 0%, rgba(16,185,129,0.18) 0%, transparent 60%), radial-gradient(ellipse 80% 50% at 80% 90%, rgba(16,185,129,0.08) 0%, transparent 60%), #0d1f16' }}>
       <style jsx global>{`
         @keyframes radiant-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 30px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
@@ -207,7 +207,7 @@ export default function Home() {
       `}</style>
 
       {/* 1. 히어로 섹션 — 홀리 라이트 베이스 (stone-50) + 맑은 에메랄드 대비 */}
-      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-200/50 via-emerald-100/30 to-white/80 overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-b border-emerald-100/30">
+      <section className="relative z-30 flex h-[85vh] items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-900/50 via-emerald-950/30 to-transparent overflow-hidden text-center shadow-[0_20px_60px_rgba(0,0,0,0.4)] border-b border-emerald-800/40">
         {/* 에메랄드 베이스 넓고 맑은 글로우 */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.15)_0%,transparent_70%)] pointer-events-none -z-10" style={{ animation: 'radiant-glow 10s infinite' }} />
         {/* 주황/앰버 파티클 */}
@@ -217,15 +217,15 @@ export default function Home() {
         <div className="hidden lg:block absolute left-15 xl:left-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`left-${leftIndex}`} className="animate-figure-majestic-left text-center">
             <img src={leftFigures[leftIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-gray-900">{leftFigures[leftIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-400 tracking-tighter drop-shadow-sm">{leftFigures[leftIndex].title}<br /><span className="text-xl text-white">{leftFigures[leftIndex].name}</span></p>
           </div>
         </div>
 
         {/* 중앙 텍스트 */}
         <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-900 bg-emerald-100/80 border border-emerald-400/40 backdrop-blur-md rounded-full animate-fadeInUp shadow-[0_0_15px_rgba(16,185,129,0.2)]">THE GOOD NEWS</span>
-          <h1 className="text-6xl font-black tracking-tighter text-stone-900 md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_2px_10px_rgba(0,0,0,0.05)]">하나님의 선물 <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]">사중복음</span></h1>
-          <p className="mt-8 text-sm md:text-lg font-bold text-stone-600 tracking-wide animate-fadeInUp uppercase leading-relaxed drop-shadow-sm">
+          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-300 bg-emerald-900/60 border border-emerald-500/40 backdrop-blur-md rounded-full animate-fadeInUp shadow-[0_0_15px_rgba(16,185,129,0.3)]">THE GOOD NEWS</span>
+          <h1 className="text-6xl font-black tracking-tighter text-white md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_2px_20px_rgba(0,0,0,0.4)]">하나님의 선물 <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">사중복음</span></h1>
+          <p className="mt-8 text-sm md:text-lg font-bold text-emerald-100/70 tracking-wide animate-fadeInUp uppercase leading-relaxed drop-shadow-sm">
             <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">G</span>lobal <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">I</span>nstitute for the <br className="hidden md:block" />
             <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">F</span>ourfold-gospel <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">T</span>heology
           </p>
@@ -238,15 +238,15 @@ export default function Home() {
         <div className="hidden lg:block absolute right-15 xl:right-30 top-1/2 -translate-y-1/2 z-10 w-[22%] max-w-[280px]">
           <div key={`right-${rightIndex}`} className="animate-figure-majestic-right text-center">
             <img src={rightFigures[rightIndex].img} className="w-full h-auto object-contain drop-shadow-xl" alt="" />
-            <p className="mt-5 text-lg font-black text-emerald-800 tracking-tighter">{rightFigures[rightIndex].title}<br /><span className="text-xl text-gray-900">{rightFigures[rightIndex].name}</span></p>
+            <p className="mt-5 text-lg font-black text-emerald-400 tracking-tighter">{rightFigures[rightIndex].title}<br /><span className="text-xl text-white">{rightFigures[rightIndex].name}</span></p>
           </div>
         </div>
       </section>
 
       {/* 2. 북 섹션 — 홀리 라이트 기반 아늑한 서재 (stone-100) + 부드러운 그라데이션 브릿지 */}
-      <section className="relative z-20 bg-stone-100 pt-56 pb-32 px-8 overflow-hidden">
-        {/* 히어로 섹션에서 북 섹션으로 이어지는 밝은 그라데이션 브릿지 */}
-        <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-stone-100 to-transparent pointer-events-none z-10"></div>
+      <section className="relative z-20 bg-transparent pt-56 pb-32 px-8 overflow-hidden">
+        {/* 히어로 → 북 섹션 자연스러운 연결 */}
+        <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-[#0d1f16] to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none"></div>
         <div className="mx-auto max-w-[1300px] relative z-10 bg-emerald-950/60 backdrop-blur-2xl border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all hover:bg-emerald-950/70 hover:shadow-[0_20px_50px_rgba(16,185,129,0.1)]">
           <div className="flex flex-col lg:flex-row items-center gap-20">
@@ -277,13 +277,13 @@ export default function Home() {
       {/* 3. 사중복음 섹션 - 톤업 및 글로우 (밝고 우아한 글래스모피즘) */}
       <section className="pt-56 pb-32 px-8 w-full text-left relative overflow-hidden" style={{ background: 'transparent' }}>
         {/* 북 섹션에서 이어지는 부드러운 상단 전환 */}
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-stone-100/60 to-transparent pointer-events-none z-0"></div>
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-[#0d1f16]/90 to-transparent pointer-events-none z-0"></div>
         {/* 에메랄드 혼합 글로우 — 투명도 강화 */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[radial-gradient(ellipse,rgba(16,185,129,0.11),transparent_55%)] pointer-events-none"></div>
 
         <div className="mx-auto max-w-[1200px] relative z-10">
-          <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter drop-shadow-sm">사중복음의 은혜</h2>
-          <p className="text-slate-600 font-bold mb-16 shadow-sm">핵심적인 네 가지 전도표제를 소개합니다.</p>
+          <h2 className="text-4xl font-black text-white mb-4 tracking-tighter drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">사중복음의 은혜</h2>
+          <p className="text-emerald-200/70 font-bold mb-16">핵심적인 네 가지 전도표제를 소개합니다.</p>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {fourfoldGospel.map((item) => (
