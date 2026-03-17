@@ -79,7 +79,7 @@ export default function ContactWritePage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="문의 제목을 입력하세요"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-[15px] focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
                 maxLength={100}
               />
             </div>
@@ -94,7 +94,7 @@ export default function ContactWritePage() {
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="문의 내용을 자세히 작성해 주세요"
                 rows={8}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-[15px] focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 resize-none"
               />
             </div>
 
@@ -132,7 +132,7 @@ export default function ContactWritePage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="비밀번호를 설정하세요"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-[15px] focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
                     minLength={4}
                     autoComplete="off"
                   />
