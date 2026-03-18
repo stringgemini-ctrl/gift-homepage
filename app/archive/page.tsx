@@ -2,6 +2,12 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import Link from "next/link"
 import { unstable_noStore as noStore } from "next/cache"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: '자료실 — GIFT 글로벌사중복음연구소',
+  description: '사중복음 관련 학술 논문, 연구 자료, 간행물을 열람할 수 있는 아카이브입니다.',
+}
 
 export const revalidate = 0
 

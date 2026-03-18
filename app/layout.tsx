@@ -1,11 +1,17 @@
 import './globals.css'
 import Link from 'next/link'
-import NavAuth from '@/features/auth/components/NavAuth'
 import { AuthProvider } from '@/features/auth/components/AuthProvider'
+import MobileNav from '@/features/core/components/MobileNav'
 
 export const metadata = {
   title: 'GIFT - 글로벌사중복음연구소',
-  description: 'Seoul Theological University',
+  description: '서울신학대학교 글로벌사중복음연구소 — 중생, 성결, 신유, 재림의 사중복음 신학을 연구하고 전파합니다.',
+  openGraph: {
+    title: 'GIFT - 글로벌사중복음연구소',
+    description: '서울신학대학교 글로벌사중복음연구소 — 중생, 성결, 신유, 재림의 사중복음 신학을 연구하고 전파합니다.',
+    locale: 'ko_KR',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
@@ -33,29 +39,8 @@ export default function RootLayout({
                 </Link>
               </div>
 
-              {/* 오른쪽: 메뉴 영역 (하위 항목 삭제됨) */}
-              <div className="flex items-center gap-10">
-                {/* 연구소 소개: 이제 드롭다운 없이 바로 클릭해서 이동합니다 */}
-                <Link href="/about" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
-                  연구소 소개
-                </Link>
-
-                <Link href="/archive" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
-                  자료실
-                </Link>
-
-                <Link href="/publications" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
-                  출간 도서
-                </Link>
-
-                <Link href="/contact" className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors">
-                  문의 및 요청
-                </Link>
-
-
-                {/* 로그인 / 마이페이지·로그아웃 */}
-                <NavAuth />
-              </div>
+              {/* 오른쪽: 메뉴 영역 (데스크톱 + 모바일 햄버거) */}
+              <MobileNav />
             </div>
           </nav>
 

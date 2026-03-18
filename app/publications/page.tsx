@@ -1,6 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 import CategoryFilter from '@/features/publications/components/CategoryFilter'
 import HeroParticles from '@/features/publications/components/HeroParticles'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: '출간 도서 — GIFT 글로벌사중복음연구소',
+  description: '글로벌사중복음연구소에서 출간한 신앙 시리즈, 신학 시리즈, 영문 저널을 소개합니다.',
+}
 
 type Book = {
     id: string
