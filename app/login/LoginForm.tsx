@@ -23,8 +23,8 @@ export default function LoginForm() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f5f5f7]">
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm">
-        <h1 className="mb-6 text-2xl font-bold">로그인</h1>
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm text-center">
+        <h1 className="mb-6 text-2xl font-bold text-black text-center">로그인</h1>
 
         {/* 소셜 로그인 버튼 */}
         <OAuthButtons redirectTo={redirectTo} />
@@ -32,12 +32,12 @@ export default function LoginForm() {
         {/* 구분선 */}
         <div className="flex items-center gap-3 my-6">
           <hr className="flex-1 border-slate-200" />
-          <span className="text-xs text-slate-400 whitespace-nowrap">또는 이메일로 계속하기</span>
+          <span className="text-xs text-black whitespace-nowrap">또는 이메일로 계속하기</span>
           <hr className="flex-1 border-slate-200" />
         </div>
 
         {/* 이메일/비밀번호 폼 */}
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4 text-left">
           <input
             type="email"
             placeholder="이메일"
@@ -62,7 +62,7 @@ export default function LoginForm() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-500">
+        <p className="mt-6 text-center text-sm text-black">
           아직 계정이 없으신가요?{' '}
           <Link href="/signup" className="font-bold text-[#0098a6] hover:underline">
             회원가입
