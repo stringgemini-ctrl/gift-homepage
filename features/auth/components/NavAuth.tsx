@@ -48,13 +48,13 @@ export default function NavAuth() {
     <div className="flex items-center gap-6">
       <Link
         href="/login"
-        className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors"
+        className="text-[15px] font-bold text-black hover:text-emerald-600 transition-colors"
       >
         로그인
       </Link>
       <Link
         href="/signup"
-        className="text-[15px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors"
+        className="text-[15px] font-bold text-black hover:text-emerald-600 transition-colors"
       >
         회원가입
       </Link>

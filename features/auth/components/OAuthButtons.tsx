@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { supabase } from '@/features/database/lib/supabase'
 
-type OAuthProvider = 'google' | 'kakao'
+type OAuthProvider = 'google'
 
 export default function OAuthButtons({ redirectTo = '/archive' }: { redirectTo?: string }) {
   const [loading, setLoading] = useState<OAuthProvider | null>(null)
@@ -40,17 +40,6 @@ export default function OAuthButtons({ redirectTo = '/archive' }: { redirectTo?:
         {loading === 'google' ? '연결 중...' : 'Google로 계속하기'}
       </button>
 
-      {/* Kakao 로그인 */}
-      <button
-        type="button"
-        onClick={() => handleOAuth('kakao')}
-        disabled={loading !== null}
-        className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg bg-[#FEE500] hover:bg-[#F5DC00] transition-colors text-sm font-medium text-[#191919] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <KakaoIcon />
-        {loading === 'kakao' ? '연결 중...' : 'Kakao로 계속하기'}
-      </button>
-
       {error && (
         <p className="text-xs text-red-500 text-center pt-1">{error}</p>
       )}
@@ -69,11 +58,3 @@ function GoogleIcon() {
   )
 }
 
-function KakaoIcon() {
-  return (
-    // 카카오 공식 말풍선 아이콘 (단색 #191919)
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="#191919">
-      <path d="M12 3C6.477 3 2 6.582 2 11c0 2.795 1.686 5.258 4.27 6.836-.188.703-.68 2.547-.778 2.942-.12.487.178.48.374.35.153-.102 2.438-1.656 3.43-2.328.549.076 1.113.115 1.704.115 5.523 0 10-3.582 10-8s-4.477-8-10-8z" />
-    </svg>
-  )
-}
