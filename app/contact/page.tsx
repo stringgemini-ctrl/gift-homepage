@@ -23,16 +23,22 @@ export default function ContactPage() {
   const isAdmin = role?.toUpperCase() === 'ADMIN'
 
   useEffect(() => {
-    async function fetch() {
-      const { data } = await supabase
-        .from('inquiries')
-        .select('id, title, password, user_id, user_email, answer, created_at')
-        .order('created_at', { ascending: false })
+    async function fetchInquiries() {
+      try {
+        const { data, error } = await supabase
+          .from('inquiries')
+          .select('id, title, password, user_id, user_email, answer, created_at')
+          .order('created_at', { ascending: false })
 
-      if (data) setInquiries(data)
-      setLoading(false)
+        if (error) console.error('[Contact] fetch error:', error.message)
+        if (data) setInquiries(data)
+      } catch (err) {
+        console.error('[Contact] unexpected error:', err)
+      } finally {
+        setLoading(false)
+      }
     }
-    fetch()
+    fetchInquiries()
   }, [])
 
   // 비밀글 접근 가능 여부

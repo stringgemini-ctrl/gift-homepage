@@ -30,17 +30,20 @@ export default function MobileNav() {
         <NavAuth />
       </div>
 
-      {/* 모바일 햄버거 버튼 */}
-      <button
-        type="button"
-        className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="메뉴 열기"
-      >
-        <span className={`block w-6 h-0.5 bg-slate-700 transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
-        <span className={`block w-6 h-0.5 bg-slate-700 transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-        <span className={`block w-6 h-0.5 bg-slate-700 transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-      </button>
+      {/* 모바일: 로그인/마이페이지 + 햄버거 */}
+      <div className="flex md:hidden items-center gap-3">
+        <NavAuth />
+        <button
+          type="button"
+          className="flex flex-col justify-center items-center w-10 h-10 gap-1.5"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="메뉴 열기"
+        >
+          <span className={`block w-6 h-0.5 bg-slate-700 transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-slate-700 transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-slate-700 transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+        </button>
+      </div>
 
       {/* 모바일 오버레이 메뉴 */}
       {isOpen && (
@@ -59,9 +62,6 @@ export default function MobileNav() {
                 {item.name}
               </Link>
             ))}
-            <div className="border-t border-slate-100 mt-4 pt-6 px-4">
-              <NavAuth />
-            </div>
           </div>
         </div>
       )}
