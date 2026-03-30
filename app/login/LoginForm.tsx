@@ -17,6 +17,7 @@ export default function LoginForm() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) alert('로그인 실패: ' + error.message)
     else {
+      router.refresh()
       router.push(redirectTo)
     }
   }
