@@ -21,8 +21,8 @@ export default function OAuthButtons({ redirectTo = '/archive' }: { redirectTo?:
         },
       })
       if (error) throw error
-    } catch (err: any) {
-      setError(err?.message ?? '소셜 로그인 중 오류가 발생했습니다.')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : '소셜 로그인 중 오류가 발생했습니다.')
       setLoading(null)
     }
   }
@@ -57,4 +57,3 @@ function GoogleIcon() {
     </svg>
   )
 }
-

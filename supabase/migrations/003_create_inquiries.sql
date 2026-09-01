@@ -15,11 +15,18 @@ CREATE TABLE IF NOT EXISTS public.inquiries (
 -- RLS 활성화
 ALTER TABLE public.inquiries ENABLE ROW LEVEL SECURITY;
 
--- 인증된 사용자는 모든 글 조회 가능 (비밀글 필터링은 앱 레벨에서 처리)
-CREATE POLICY "Authenticated users can view inquiries"
+DROP POLICY IF EXISTS "Authenticated users can view inquiries" ON public.inquiries;
+DROP POLICY IF EXISTS "Authenticated users can view allowed inquiries" ON public.inquiries;
+
+-- 공개글은 인증 사용자 전체가 볼 수 있고, 비밀글은 작성자와 관리자만 볼 수 있음
+CREATE POLICY "Authenticated users can view allowed inquiries"
   ON public.inquiries FOR SELECT
   TO authenticated
-  USING (true);
+  USING (
+    password IS NULL
+    OR auth.uid() = user_id
+    OR public.get_user_role() = 'admin'
+  );
 
 -- 자신의 글만 삽입 가능
 CREATE POLICY "Users can insert own inquiries"

@@ -2,12 +2,13 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/features/database/lib/supabase'
 import { useRouter } from 'next/navigation'
+import type { User } from '@supabase/supabase-js'
 
 export default function WritePage() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [category, setCategory] = useState('채널소식')
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function WritePage() {
       setUser(user)
     }
     getUser()
-  }, [])
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

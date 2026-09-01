@@ -44,7 +44,7 @@ export default function MemberManagement() {
         }
         // role이 확정된 후에만 데이터 로드
         if (role?.toUpperCase() === 'ADMIN') {
-            fetchData()
+            void Promise.resolve().then(fetchData)
         }
     }, [user, role, isAuthLoading, router, fetchData])
 

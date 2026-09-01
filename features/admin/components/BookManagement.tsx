@@ -33,7 +33,6 @@ export default function BookManagement() {
     // 수정 모드: null이면 신규 등록, string이면 해당 id 수정 중
     const [editingId, setEditingId] = useState<string | null>(null)
     const [form, setForm] = useState<FormState>(EMPTY_FORM)
-    const [coverFile, setCoverFile] = useState<File | null>(null)
     const [coverPreview, setCoverPreview] = useState<string | null>(null)
     // 커버 이미지 업로드 상태
     const [isUploading, setIsUploading] = useState(false)
@@ -66,7 +65,6 @@ export default function BookManagement() {
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null
         if (!file) return
-        setCoverFile(file)
         setCoverPreview(URL.createObjectURL(file))  // 로컈 미리보기
         setUploadStatus('uploading')
         setIsUploading(true)
@@ -109,9 +107,9 @@ export default function BookManagement() {
             series: book.series ?? '',
             category: book.category ?? '',
             description: book.description ?? '',
-            long_description: (book as any).long_description ?? '',
-            table_of_contents: (book as any).table_of_contents ?? '',
-            author_bio: (book as any).author_bio ?? '',
+            long_description: book.long_description ?? '',
+            table_of_contents: book.table_of_contents ?? '',
+            author_bio: book.author_bio ?? '',
             buy_link: book.buy_link ?? '',
             price: book.price?.toString() ?? '',
             download_url: book.download_url ?? '',
@@ -121,7 +119,6 @@ export default function BookManagement() {
             is_featured: book.is_featured,
         })
         setCoverPreview(book.cover_url)
-        setCoverFile(null)
         setUploadStatus('idle')
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
@@ -129,7 +126,6 @@ export default function BookManagement() {
     const cancelEdit = () => {
         setEditingId(null)
         setForm(EMPTY_FORM)
-        setCoverFile(null)
         setCoverPreview(null)
         setUploadStatus('idle')
         setPdfUploadStatus('idle')

@@ -3,10 +3,33 @@
 import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import GallerySection from '@/features/main/components/GallerySection'
 import ResourceSection from '@/features/main/components/ResourceSection'
 import HeroParticles from '@/features/publications/components/HeroParticles'
+
+type HomePost = {
+  id: string
+  title: string
+  category: string
+  created_at: string
+}
+
+type HomeActivity = {
+  id: string
+  title: string | null
+  image_url: string | null
+  created_at: string
+}
+
+const leftFigures = [
+  { name: '이명직 목사', title: '성결교회의 사부', img: '/leemyungjikleft.png' },
+  { name: '이성봉 목사', title: '부흥의 사도', img: '/leesungbongleft.png' }
+]
+
+const rightFigures = [
+  { name: '마틴 냅 목사', title: '성결의 불꽃', img: '/knappright.png' },
+  { name: '찰스 카우만 선교사 부부', title: '동양선교회 창립자', img: '/lettiecowmanright.png' }
+]
 
 const Icons = {
   // 중생 — 십자가 (Cross)
@@ -97,22 +120,11 @@ const fourfoldGospel = [
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [posts, setPosts] = useState<any[]>([]);
-  const [activities, setActivities] = useState<any[]>([]);
+  const [posts, setPosts] = useState<HomePost[]>([]);
+  const [activities, setActivities] = useState<HomeActivity[]>([]);
   const [leftIndex, setLeftIndex] = useState(0);
   const [rightIndex, setRightIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const router = useRouter();
-
-  const leftFigures = [
-    { name: '이명직 목사', title: '성결교회의 사부', img: '/leemyungjikleft.png' },
-    { name: '이성봉 목사', title: '부흥의 사도', img: '/leesungbongleft.png' }
-  ];
-
-  const rightFigures = [
-    { name: '마틴 냅 목사', title: '성결의 불꽃', img: '/knappright.png' },
-    { name: '찰스 카우만 선교사 부부', title: '동양선교회 창립자', img: '/lettiecowmanright.png' }
-  ];
 
   useEffect(() => {
     setIsLoaded(true);
@@ -128,11 +140,11 @@ export default function Home() {
   const fetchLatestPosts = async () => {
     try {
       const { data, error } = await supabase
-        .from('archive').select('*').order('created_at', { ascending: false }).limit(8)
+        .from('archive').select('id, title, category, created_at').order('created_at', { ascending: false }).limit(8)
       if (error) throw error;
 
       if (data && data.length > 0) {
-        setPosts(data);
+        setPosts(data as HomePost[]);
       } else {
         // Fallback
         setPosts([
@@ -257,7 +269,7 @@ export default function Home() {
               <span className="text-emerald-400 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
               <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-emerald-100/70 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
               <p className="text-emerald-50/90 text-lg leading-relaxed mb-12 font-medium">
-                윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 '메트로폴리탄교회연합(MCA)'의 역사를 다룬 선구적인 연구서입니다. '점퍼스'라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
+                윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 &apos;메트로폴리탄교회연합(MCA)&apos;의 역사를 다룬 선구적인 연구서입니다. &apos;점퍼스&apos;라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-emerald-800/50 pt-10">
                 <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">William Kostlevy</span></div>

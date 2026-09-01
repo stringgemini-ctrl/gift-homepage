@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@supabase/supabase-js'
+import { createServiceClient, requireAdmin } from '@/features/auth/lib/server'
 
 // ─── 공통 타입 ───────────────────────────────────────────────────
 export type Profile = {
@@ -33,11 +33,9 @@ export type Book = {
 }
 
 // ─── Admin 클라이언트 (RLS 완전 우회) ────────────────────────────
-function getAdminClient() {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-    if (!url || !serviceKey) throw new Error('[Server Action] Supabase 환경 변수 누락')
-    return createClient(url, serviceKey, { auth: { persistSession: false } })
+async function getVerifiedAdminClient() {
+    await requireAdmin()
+    return createServiceClient()
 }
 
 // ================================================================
@@ -46,7 +44,7 @@ function getAdminClient() {
 
 export async function getAllProfiles(): Promise<{ data: Profile[] | null; error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { data, error } = await admin.from('profiles').select('id, email, role')
         if (error) return { data: null, error: error.message }
         return { data, error: null }
@@ -57,8 +55,9 @@ export async function getAllProfiles(): Promise<{ data: Profile[] | null; error:
 
 export async function updateUserRole(userId: string, newRole: string): Promise<{ error: string | null }> {
     try {
-        const admin = getAdminClient()
-        const { error } = await admin.from('profiles').update({ role: newRole }).eq('id', userId)
+        const admin = await getVerifiedAdminClient()
+        const normalizedRole = newRole.toLowerCase()
+        const { error } = await admin.from('profiles').update({ role: normalizedRole }).eq('id', userId)
         if (error) return { error: error.message }
         return { error: null }
     } catch (e) {
@@ -72,7 +71,7 @@ export async function updateUserRole(userId: string, newRole: string): Promise<{
 
 export async function getAllBooks(): Promise<{ data: Book[] | null; error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { data, error } = await admin
             .from('books').select('*').order('created_at', { ascending: false })
         if (error) return { data: null, error: error.message }
@@ -86,7 +85,7 @@ export async function createBook(
     payload: Omit<Book, 'id' | 'created_at'>
 ): Promise<{ error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { error } = await admin.from('books').insert([payload])
         if (error) return { error: error.message }
         return { error: null }
@@ -100,7 +99,7 @@ export async function updateBook(
     payload: Partial<Omit<Book, 'id' | 'created_at'>>
 ): Promise<{ error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { error } = await admin.from('books').update(payload).eq('id', id)
         if (error) return { error: error.message }
         return { error: null }
@@ -111,7 +110,7 @@ export async function updateBook(
 
 export async function deleteBook(id: string): Promise<{ error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { error } = await admin.from('books').delete().eq('id', id)
         if (error) return { error: error.message }
         return { error: null }
@@ -141,7 +140,7 @@ export type ArchivePayload = Omit<ArchiveItem, 'id' | 'created_at'>
 
 export async function getAllArchives(): Promise<{ data: ArchiveItem[] | null; error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { data, error } = await admin
             .from('archive')
             .select('id, title, author, category, published_date, abstract_text, content, pdf_url, original_url, created_at')
@@ -155,7 +154,7 @@ export async function getAllArchives(): Promise<{ data: ArchiveItem[] | null; er
 
 export async function createArchive(payload: ArchivePayload): Promise<{ error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { error } = await admin.from('archive').insert([payload])
         if (error) return { error: error.message }
         return { error: null }
@@ -169,7 +168,7 @@ export async function updateArchive(
     payload: Partial<ArchivePayload>
 ): Promise<{ error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { error } = await admin.from('archive').update(payload).eq('id', id)
         if (error) return { error: error.message }
         return { error: null }
@@ -180,7 +179,7 @@ export async function updateArchive(
 
 export async function deleteArchive(id: string): Promise<{ error: string | null }> {
     try {
-        const admin = getAdminClient()
+        const admin = await getVerifiedAdminClient()
         const { error } = await admin.from('archive').delete().eq('id', id)
         if (error) return { error: error.message }
         return { error: null }

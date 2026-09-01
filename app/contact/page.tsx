@@ -1,17 +1,17 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/features/database/lib/supabase'
 import { useAuth } from '@/features/auth/components/AuthProvider'
 import Link from 'next/link'
 
 type Inquiry = {
   id: string
   title: string
-  password: string | null
+  is_private: boolean
+  accessible: boolean
   user_id: string
   user_email: string
-  answer: string | null
+  has_answer: boolean
   created_at: string
 }
 
@@ -25,13 +25,10 @@ export default function ContactPage() {
   useEffect(() => {
     async function fetchInquiries() {
       try {
-        const { data, error } = await supabase
-          .from('inquiries')
-          .select('id, title, password, user_id, user_email, answer, created_at')
-          .order('created_at', { ascending: false })
-
-        if (error) console.error('[Contact] fetch error:', error.message)
-        if (data) setInquiries(data)
+        const res = await fetch('/api/inquiries', { cache: 'no-store' })
+        const payload = await res.json()
+        if (!res.ok) throw new Error(payload?.error ?? '문의글을 불러오지 못했습니다.')
+        setInquiries(payload.inquiries ?? [])
       } catch (err) {
         console.error('[Contact] unexpected error:', err)
       } finally {
@@ -40,14 +37,6 @@ export default function ContactPage() {
     }
     fetchInquiries()
   }, [])
-
-  // 비밀글 접근 가능 여부
-  const canView = (inquiry: Inquiry) => {
-    if (!inquiry.password) return true  // 공개글
-    if (isAdmin) return true            // 관리자
-    if (user?.id === inquiry.user_id) return true  // 작성자
-    return false
-  }
 
   if (loading) {
     return (
@@ -100,8 +89,8 @@ export default function ContactPage() {
           ) : (
             <ul className="divide-y divide-slate-100">
               {inquiries.map((inquiry) => {
-                const isPrivate = !!inquiry.password
-                const accessible = canView(inquiry)
+                const isPrivate = inquiry.is_private
+                const accessible = inquiry.accessible || isAdmin || user?.id === inquiry.user_id
 
                 return (
                   <li key={inquiry.id}>
@@ -121,12 +110,12 @@ export default function ContactPage() {
                                 비밀글
                               </span>
                             )}
-                            {inquiry.answer && (
+                            {inquiry.has_answer && (
                               <span className="inline-flex px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[11px] font-bold">
                                 답변완료
                               </span>
                             )}
-                            {!inquiry.answer && (
+                            {!inquiry.has_answer && (
                               <span className="inline-flex px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[11px] font-bold">
                                 대기중
                               </span>
@@ -160,7 +149,7 @@ export default function ContactPage() {
                             </span>
                           </div>
                           <p className="text-[15px] font-medium text-slate-400">
-                            비밀글입니다.
+                            {inquiry.title}
                           </p>
                           <div className="flex items-center gap-3 mt-1">
                             <span className="text-[13px] text-slate-400">{inquiry.user_email}</span>

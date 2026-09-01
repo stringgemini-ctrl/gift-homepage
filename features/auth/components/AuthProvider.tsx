@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const fetchRole = async (userId: string | undefined): Promise<string | null> => {
             if (!userId) return null
             try {
-                const { data } = await supabase.from('users').select('role').eq('auth_id', userId).single()
+                const { data } = await supabase.from('profiles').select('role').eq('id', userId).single()
                 return data?.role ?? null
             } catch {
                 console.error('[AuthProvider] fetchRole 실패')

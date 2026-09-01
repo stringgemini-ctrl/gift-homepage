@@ -10,6 +10,18 @@ interface PageProps {
   params: Promise<{ id: string }>
 }
 
+type ArchiveDetail = {
+  id: string
+  title: string
+  author: string | null
+  category: string | null
+  created_at: string | null
+  published_date: string | null
+  abstract_text: string | null
+  content: string | null
+  pdf_url: string | null
+}
+
 function fmt(dateStr: string | null | undefined): string {
   if (!dateStr) return "미상"
   const d = new Date(dateStr)
@@ -32,7 +44,7 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
     }
   )
 
-  let archive: any = null
+  let archive: ArchiveDetail | null = null
   try {
     const { data, error } = await supabase
       .from("archive").select("*").eq("id", id).single()

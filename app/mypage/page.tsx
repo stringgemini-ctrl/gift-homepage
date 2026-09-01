@@ -16,8 +16,9 @@ type ArchivePost = {
 type InquiryPost = {
   id: string
   title: string
-  password: string | null
-  answer: string | null
+  is_private: boolean
+  user_id: string
+  has_answer: boolean
   created_at: string
 }
 
@@ -52,15 +53,14 @@ export default function MyPage() {
           .select('id, title, category, created_at')
           .eq('user_id', user!.id)
           .order('created_at', { ascending: false }),
-        supabase
-          .from('inquiries')
-          .select('id, title, password, answer, created_at')
-          .eq('user_id', user!.id)
-          .order('created_at', { ascending: false }),
+        fetch('/api/inquiries', { cache: 'no-store' }),
       ])
 
       if (archiveRes.data) setMyPosts(archiveRes.data)
-      if (inquiryRes.data) setMyInquiries(inquiryRes.data)
+      if (inquiryRes.ok) {
+        const payload = await inquiryRes.json()
+        setMyInquiries((payload.inquiries ?? []).filter((inq: InquiryPost) => inq.user_id === user!.id))
+      }
       setLoading(false)
     }
 
@@ -305,12 +305,12 @@ export default function MyPage() {
                       >
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            {inq.password && (
+                            {inq.is_private && (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-600 text-[11px] font-bold">
                                 비밀글
                               </span>
                             )}
-                            {inq.answer ? (
+                            {inq.has_answer ? (
                               <span className="inline-flex px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[11px] font-bold">
                                 답변완료
                               </span>

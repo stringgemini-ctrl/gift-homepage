@@ -10,7 +10,7 @@ type Inquiry = {
   id: string
   title: string
   content: string
-  password: string | null
+  is_private: boolean
   user_id: string
   user_email: string
   answer: string | null
@@ -40,27 +40,21 @@ export default function ContactDetailPage() {
     if (isAuthLoading) return
 
     async function fetchInquiry() {
-      const { data } = await supabase
-        .from('inquiries')
-        .select('*')
-        .eq('id', id)
-        .single()
+      const res = await fetch(`/api/inquiries/${id}`, { cache: 'no-store' })
+      const payload = await res.json()
 
-      if (!data) {
+      if (res.status === 403) {
+        setDenied(true)
+        setLoading(false)
+        return
+      }
+
+      if (!res.ok || !payload.inquiry) {
         router.push('/contact')
         return
       }
 
-      // 비밀글 접근 체크
-      if (data.password) {
-        const canAccess = isAdmin || user?.id === data.user_id
-        if (!canAccess) {
-          setDenied(true)
-          setLoading(false)
-          return
-        }
-      }
-
+      const data = payload.inquiry as Inquiry
       setInquiry(data)
       if (data.answer) setAnswerText(data.answer)
       setLoading(false)
@@ -162,7 +156,7 @@ export default function ContactDetailPage() {
           <div className="p-8">
             {/* 뱃지 */}
             <div className="flex items-center gap-2 mb-4">
-              {inquiry.password && (
+              {inquiry.is_private && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-600 text-[11px] font-bold">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />

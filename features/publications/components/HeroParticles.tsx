@@ -1,25 +1,34 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
+
+type Particle = {
+    id: number
+    left: string
+    bottom: string
+    size: number
+    delay: string
+    duration: string
+    opacity: number
+}
+
+const particleValue = (seed: number) => {
+    const value = Math.sin(seed * 12.9898) * 43758.5453
+    return value - Math.floor(value)
+}
 
 export default function HeroParticles() {
-    const [particles, setParticles] = useState<any[]>([])
-
-    useEffect(() => {
-        // Hydration Mismatch 방지를 위해 클라이언트 마운트 시점에 완전 무작위 입자 생성
-        const newParticles = Array.from({ length: 25 }, (_, i) => ({
+    const particles = useMemo<Particle[]>(() => {
+        return Array.from({ length: 25 }, (_, i) => ({
             id: i,
-            left: `${Math.random() * 95}%`,
-            bottom: `${Math.random() * 70}%`,
-            size: Math.random() > 0.6 ? 4 : Math.random() > 0.3 ? 3 : 2,
-            delay: `-${Math.random() * 20}s`, // 음수 딜레이로 처음부터 화면 곳곳에 애니메이션 진행 상태로 존재하게 함
-            duration: `${8 + Math.random() * 6}s`,
-            opacity: Math.random() > 0.5 ? 0.9 : 0.6, // 투명도 대폭 증가로 밝기(조도) 상승
+            left: `${particleValue(i + 1) * 95}%`,
+            bottom: `${particleValue(i + 31) * 70}%`,
+            size: particleValue(i + 61) > 0.6 ? 4 : particleValue(i + 91) > 0.3 ? 3 : 2,
+            delay: `-${particleValue(i + 121) * 20}s`, // 음수 딜레이로 처음부터 화면 곳곳에 애니메이션 진행 상태로 존재하게 함
+            duration: `${8 + particleValue(i + 151) * 6}s`,
+            opacity: particleValue(i + 181) > 0.5 ? 0.9 : 0.6, // 투명도 대폭 증가로 밝기(조도) 상승
         }))
-        setParticles(newParticles)
     }, [])
-
-    if (particles.length === 0) return null // 마운트 전에는 렌더링 생략 (깜빡임 최소화)
 
     return (
         <>

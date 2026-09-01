@@ -17,6 +17,19 @@ interface PageProps {
   searchParams: Promise<{ category?: string; page?: string }>
 }
 
+type ArchiveListItem = {
+  id: string
+  title: string
+  author: string | null
+  category: string | null
+  published_date: string | null
+  abstract_text: string | null
+}
+
+type ArchiveCategoryRow = {
+  category: string | null
+}
+
 // 카테고리별 뱃지 색상 — 라이트 배경 기준 (진한 색상)
 const CATEGORY_STYLES: Record<string, { bg: string; color: string }> = {
   "사중복음 논문":       { bg: "rgba(5,150,105,0.10)",   color: "#047857" },  // emerald-700
@@ -58,7 +71,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
     }
   )
 
-  let archives: any[] = []
+  let archives: ArchiveListItem[] = []
   let categories: string[] = []
   let totalCount = 0
 
@@ -66,8 +79,8 @@ export default async function ArchivePage({ searchParams }: PageProps) {
     const { data: catData } = await supabase.from("archive").select("category")
     if (catData) {
       categories = Array.from(
-        new Set(catData.map((d: any) => d.category).filter(Boolean))
-      ).sort() as string[]
+        new Set((catData as ArchiveCategoryRow[]).map((d) => d.category).filter((cat): cat is string => Boolean(cat)))
+      ).sort()
     }
 
     let query = supabase
@@ -81,7 +94,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
     }
 
     const { data, count } = await query
-    archives = data || []
+    archives = (data ?? []) as ArchiveListItem[]
     totalCount = count || 0
   } catch (err) {
     console.error("[ArchivePage] fetch error:", err)
