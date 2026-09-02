@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { supabase } from '@/features/database/lib/supabase'
+import { uploadAdminFile } from '@/features/admin/lib/upload'
 import {
     getAllBooks, createBook, updateBook, deleteBook, type Book,
 } from '@/app/admin/actions'
@@ -84,23 +84,11 @@ export default function BookManagement() {
         setUploadStatus('uploading')
         setIsUploading(true)
         try {
-            /*
-              파일명 난수화: Date.now() + Math.random().toString(36)
-              두 사람이 동시에 같은 이름을 올릴 수 없도록 Collision 완백 차단
-            */
-            const ext = file.name.split('.').pop()
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`
-            const { error: upErr } = await supabase.storage
-                .from('book-covers')
-                .upload(fileName, file, { upsert: false })
-            if (upErr) throw upErr
-            const { data: urlData } = supabase.storage
-                .from('book-covers')
-                .getPublicUrl(fileName)
+            const publicUrl = await uploadAdminFile('book-covers', file)
             // 폼 cover_url 상태에 바로 동기화 → 제운시 이 URL을 바로 사용
-            setField('cover_url', urlData.publicUrl)
+            setField('cover_url', publicUrl)
             URL.revokeObjectURL(localPreview)
-            setCoverPreview(urlData.publicUrl)
+            setCoverPreview(publicUrl)
             setUploadStatus('success')
             showToast('✅ 이미지 업로드 성공!')
         } catch (err) {
@@ -183,33 +171,8 @@ export default function BookManagement() {
         setPdfUploadStatus('uploading')
         setIsPdfUploading(true)
         try {
-            /*
-              파일명 난수화: 타임스탬프 + 랜덤 문자열
-              동시 업로드 시 Collision 완전 차단
-            */
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.pdf`
-
-            const { error: upErr } = await supabase.storage
-                .from('journals')
-                .upload(fileName, file, {
-                    upsert: false,
-                    contentType: 'application/pdf',  // Content-Type 명시 → iframe PDF 렌더링 보장
-                })
-
-            if (upErr) {
-                console.error('[handlePdfUpload] Storage 업로드 실패:', upErr)
-                throw upErr
-            }
-
-            // ── 3. Public URL 취득 → download_url 컬럼에 즉시 동기화 ──
-            const { data: urlData } = supabase.storage.from('journals').getPublicUrl(fileName)
-
-            if (!urlData.publicUrl) {
-                throw new Error('Public URL을 가져오지 못했습니다. 버킷 공개 설정을 확인하세요.')
-            }
-
-            console.log('[handlePdfUpload] 업로드 성공, URL:', urlData.publicUrl)
-            setField('download_url', urlData.publicUrl)
+            const publicUrl = await uploadAdminFile('journals', file)
+            setField('download_url', publicUrl)
             setPdfUploadStatus('success')
             showToast('✅ PDF 업로드 성공! URL이 자동 입력되었습니다.')
         } catch (err) {

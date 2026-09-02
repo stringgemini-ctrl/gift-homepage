@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { supabase } from '@/features/database/lib/supabase'
 import {
     getAllArchives, createArchive, updateArchive, deleteArchive,
     type ArchiveItem, type ArchivePayload,
 } from '@/app/admin/actions'
+import { uploadAdminFile } from '@/features/admin/lib/upload'
 
 const CATEGORIES = ['사중복음 논문', '활천', '중생', '성결', '신유', '재림', '사중복음 교단발행물']
 
@@ -67,14 +67,8 @@ export default function ArchiveManagement() {
         setPdfUploadStatus('uploading')
         setIsPdfUploading(true)
         try {
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.pdf`
-            const { error: upErr } = await supabase.storage
-                .from('archives')
-                .upload(fileName, file, { upsert: false, contentType: 'application/pdf' })
-            if (upErr) throw upErr
-            const { data: urlData } = supabase.storage.from('archives').getPublicUrl(fileName)
-            if (!urlData.publicUrl) throw new Error('Public URL 취득 실패')
-            setField('pdf_url', urlData.publicUrl)
+            const publicUrl = await uploadAdminFile('archives', file)
+            setField('pdf_url', publicUrl)
             setPdfUploadStatus('success')
             showToast('✅ PDF 업로드 성공! URL이 자동 입력되었습니다.')
         } catch (err) {

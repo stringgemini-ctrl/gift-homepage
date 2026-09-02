@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { supabase } from '@/features/database/lib/supabase'
 import {
     createActivity,
     deleteActivity,
@@ -9,6 +8,7 @@ import {
     updateActivity,
     type ActivityItem,
 } from '@/app/admin/actions'
+import { uploadAdminFile } from '@/features/admin/lib/upload'
 
 export default function GalleryUpload() {
     const [items, setItems] = useState<ActivityItem[]>([])
@@ -63,14 +63,7 @@ export default function GalleryUpload() {
     }
 
     const uploadImage = async (selected: File): Promise<string> => {
-        const extension = selected.name.split('.').pop() || 'jpg'
-        const fileName = `${crypto.randomUUID()}.${extension}`
-        const { error } = await supabase.storage
-            .from('activity-images')
-            .upload(fileName, selected, { contentType: selected.type || undefined })
-        if (error) throw error
-
-        return supabase.storage.from('activity-images').getPublicUrl(fileName).data.publicUrl
+        return uploadAdminFile('activity-images', selected)
     }
 
     const handleSubmit = async (event: React.FormEvent) => {

@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { createServiceClient } from '@/features/auth/lib/server'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,14 +10,6 @@ type Activity = {
   title: string | null
   image_url: string | null
   created_at: string
-}
-
-function createPublicClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { auth: { persistSession: false } }
-  )
 }
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
@@ -38,7 +30,9 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
 }
 
 export async function GET() {
-  const supabase = createPublicClient()
+  // Public homepage data is deliberately exposed through this narrow server API.
+  // The service client keeps raw tables private when RLS is tightened.
+  const supabase = createServiceClient()
 
   try {
     const [postsResult, activitiesResult] = await withTimeout(

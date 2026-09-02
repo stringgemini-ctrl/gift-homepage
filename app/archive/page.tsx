@@ -1,8 +1,8 @@
-import { createServerClient } from "@supabase/ssr"
-import { cookies } from "next/headers"
 import Link from "next/link"
 import { unstable_noStore as noStore } from "next/cache"
 import type { Metadata } from "next"
+import { redirect } from "next/navigation"
+import { createServiceClient, getCurrentUserAndRole } from "@/features/auth/lib/server"
 
 export const metadata: Metadata = {
   title: '자료실 — GIFT 글로벌사중복음연구소',
@@ -59,17 +59,10 @@ export default async function ArchivePage({ searchParams }: PageProps) {
   const from = (currentPage - 1) * ITEMS_PER_PAGE
   const to = from + ITEMS_PER_PAGE - 1
 
-  const cookieStore = await cookies()
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return cookieStore.getAll() },
-        setAll() {},
-      },
-    }
-  )
+  const { user } = await getCurrentUserAndRole()
+  if (!user) redirect('/login?redirectTo=/archive')
+
+  const supabase = createServiceClient()
 
   let archives: ArchiveListItem[] = []
   let categories: string[] = []

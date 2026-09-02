@@ -1,8 +1,8 @@
 import { unstable_noStore as noStore } from "next/cache"
-import { createServerClient } from "@supabase/ssr"
-import { cookies } from "next/headers"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import ArchiveViewer from "@/features/archive/components/ArchiveViewer"
+import { createServiceClient, getCurrentUserAndRole } from "@/features/auth/lib/server"
 
 export const revalidate = 0
 
@@ -32,17 +32,10 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
   noStore()
 
   const { id } = await params
-  const cookieStore = await cookies()
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return cookieStore.getAll() },
-        setAll() {},
-      },
-    }
-  )
+  const { user } = await getCurrentUserAndRole()
+  if (!user) redirect(`/login?redirectTo=${encodeURIComponent(`/archive/${id}`)}`)
+
+  const supabase = createServiceClient()
 
   let archive: ArchiveDetail | null = null
   try {
@@ -191,11 +184,33 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
         )}
 
         {/* PDF 뷰어 */}
-        <ArchiveViewer pdfUrl={archive.pdf_url} content={archive.content} />
+        <ArchiveViewer
+          pdfUrl={getProtectedPdfUrl(archive.pdf_url)}
+          content={archive.content}
+        />
 
       </div>
     </div>
   )
+}
+
+function getProtectedPdfUrl(pdfUrl: string | null): string | null {
+  if (!pdfUrl) return null
+
+  try {
+    const url = new URL(pdfUrl)
+    const projectHost = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).hostname
+    if (
+      url.hostname === projectHost
+      && url.pathname.startsWith('/storage/v1/object/public/archives/')
+    ) {
+      return `/api/archive/file?src=${encodeURIComponent(pdfUrl)}`
+    }
+  } catch {
+    return pdfUrl
+  }
+
+  return pdfUrl
 }
 
 /** 논문 정보 카드 내 개별 셀 */
