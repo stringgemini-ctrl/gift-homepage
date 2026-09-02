@@ -29,6 +29,16 @@ export async function GET(request: NextRequest) {
   const objectPath = source ? getArchiveObjectPath(source) : null
   if (!objectPath) return new NextResponse('Invalid archive file.', { status: 400 })
 
+  // Confirm that this member can read the archive record before the service
+  // client retrieves its private object. The authenticated client enforces the
+  // archive table's min_role RLS policy.
+  const { data: archive, error: archiveError } = await auth
+    .from('archive')
+    .select('id')
+    .eq('pdf_url', source)
+    .maybeSingle()
+  if (archiveError || !archive) return new NextResponse('Archive file not found.', { status: 404 })
+
   const admin = createServiceClient()
   const { data, error } = await admin.storage.from('archives').download(objectPath)
   if (error || !data) return new NextResponse('Archive file not found.', { status: 404 })

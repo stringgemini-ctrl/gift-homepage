@@ -2,7 +2,7 @@ import { unstable_noStore as noStore } from "next/cache"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import ArchiveViewer from "@/features/archive/components/ArchiveViewer"
-import { createServiceClient, getCurrentUserAndRole } from "@/features/auth/lib/server"
+import { createCookieAuthClient, getCurrentUserAndRole } from "@/features/auth/lib/server"
 
 export const revalidate = 0
 
@@ -35,7 +35,8 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
   const { user } = await getCurrentUserAndRole()
   if (!user) redirect(`/login?redirectTo=${encodeURIComponent(`/archive/${id}`)}`)
 
-  const supabase = createServiceClient()
+  // Preserve the database's min_role policy for every detail request.
+  const supabase = await createCookieAuthClient()
 
   let archive: ArchiveDetail | null = null
   try {

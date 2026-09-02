@@ -12,6 +12,18 @@ type Activity = {
   created_at: string
 }
 
+type HomeArchive = {
+  id: string
+  title: string
+  category: string
+  created_at: string
+  min_role: string | null
+}
+
+function isPublicArchive(archive: HomeArchive) {
+  return !archive.min_role || archive.min_role.toLowerCase() === 'user'
+}
+
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error('Home data request timed out.')), timeoutMs)
@@ -39,7 +51,7 @@ export async function GET() {
       Promise.all([
         supabase
           .from('archive')
-          .select('id, title, category, created_at')
+          .select('id, title, category, created_at, min_role')
           .order('created_at', { ascending: false })
           .limit(8),
         supabase
@@ -60,7 +72,14 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        posts: postsResult.data ?? [],
+        posts: ((postsResult.data as HomeArchive[] | null) ?? [])
+          .filter(isPublicArchive)
+          .map((archive) => ({
+            id: archive.id,
+            title: archive.title,
+            category: archive.category,
+            created_at: archive.created_at,
+          })),
         activities: (activitiesResult.data as Activity[] | null ?? []).map((activity) => ({
           ...activity,
           image_url: activity.image_url

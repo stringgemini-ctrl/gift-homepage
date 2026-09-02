@@ -2,7 +2,7 @@ import Link from "next/link"
 import { unstable_noStore as noStore } from "next/cache"
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { createServiceClient, getCurrentUserAndRole } from "@/features/auth/lib/server"
+import { createCookieAuthClient, getCurrentUserAndRole } from "@/features/auth/lib/server"
 
 export const metadata: Metadata = {
   title: '자료실 — GIFT 글로벌사중복음연구소',
@@ -62,7 +62,9 @@ export default async function ArchivePage({ searchParams }: PageProps) {
   const { user } = await getCurrentUserAndRole()
   if (!user) redirect('/login?redirectTo=/archive')
 
-  const supabase = createServiceClient()
+  // Use the member's session so RLS also applies to server-rendered lists.
+  // A service client here would unintentionally bypass admin-only archive rules.
+  const supabase = await createCookieAuthClient()
 
   let archives: ArchiveListItem[] = []
   let categories: string[] = []
