@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/features/database/lib/supabase'
 import { useAuth } from '@/features/auth/components/AuthProvider'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -85,15 +84,13 @@ export default function ContactDetailPage() {
     if (!confirm('정말 삭제하시겠습니까?')) return
     setDeleting(true)
 
-    const { error } = await supabase
-      .from('inquiries')
-      .delete()
-      .eq('id', id)
+    const response = await fetch(`/api/inquiries/${id}`, { method: 'DELETE' })
 
-    if (!error) {
+    if (response.ok) {
       router.push('/contact')
     } else {
-      alert('삭제에 실패했습니다.')
+      const payload = await response.json().catch(() => null)
+      alert(payload?.error || '삭제에 실패했습니다.')
       setDeleting(false)
     }
   }

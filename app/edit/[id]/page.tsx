@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, use } from 'react'
-import { supabase } from '@/features/database/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { getArchiveById, updateArchive } from '@/app/admin/actions'
 
 export default function EditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -12,10 +12,10 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
 
   useEffect(() => {
     const fetchPost = async () => {
-      const { data } = await supabase.from('archive').select('*').eq('id', id).single()
+      const { data } = await getArchiveById(id)
       if (data) {
         setTitle(data.title)
-        setContent(data.content)
+        setContent(data.content ?? '')
       }
       setLoading(false)
     }
@@ -24,8 +24,8 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
-    const { error } = await supabase.from('archive').update({ title, content }).eq('id', id)
-    if (error) alert('수정 실패: 본인 글이 아니거나 오류가 발생했습니다.')
+    const { error } = await updateArchive(id, { title, content })
+    if (error) alert('수정 실패: ' + error)
     else {
       alert('수정 완료!')
       router.push(`/archive/${id}`)

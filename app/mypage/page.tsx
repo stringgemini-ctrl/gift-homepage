@@ -133,10 +133,10 @@ export default function MyPage() {
             <div>
               <p className="text-[11px] font-black text-[#f68d2e] uppercase tracking-widest mb-1">관리자 전용</p>
               <p className="text-[16px] font-bold text-slate-800">관리자 센터</p>
-              <p className="text-[13px] text-slate-500 mt-0.5">회원 목록 조회 및 권한 관리</p>
+              <p className="text-[13px] text-slate-500 mt-0.5">자료, 문의, 회원 권한을 관리합니다.</p>
             </div>
             <Link
-              href="/admin/users"
+              href="/admin"
               className="shrink-0 flex items-center gap-2 bg-[#f68d2e] text-white text-[13px] font-bold px-5 py-2.5 rounded-xl hover:bg-orange-600 transition-colors shadow-sm"
             >
               입장하기 →

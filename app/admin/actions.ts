@@ -138,6 +138,21 @@ export type ArchiveItem = {
 
 export type ArchivePayload = Omit<ArchiveItem, 'id' | 'created_at'>
 
+export async function getArchiveById(id: string): Promise<{ data: ArchiveItem | null; error: string | null }> {
+    try {
+        const admin = await getVerifiedAdminClient()
+        const { data, error } = await admin
+            .from('archive')
+            .select('id, title, author, category, published_date, abstract_text, content, pdf_url, original_url, created_at')
+            .eq('id', id)
+            .single()
+        if (error) return { data: null, error: error.message }
+        return { data, error: null }
+    } catch (e) {
+        return { data: null, error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
 export async function getAllArchives(): Promise<{ data: ArchiveItem[] | null; error: string | null }> {
     try {
         const admin = await getVerifiedAdminClient()

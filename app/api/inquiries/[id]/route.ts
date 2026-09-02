@@ -57,3 +57,37 @@ export async function GET(
     },
   })
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { user, role } = await getCurrentUserAndRole()
+  if (!user) {
+    return NextResponse.json({ error: '인증 필요' }, { status: 401 })
+  }
+
+  const { id } = await params
+  const admin = createServiceClient()
+  const { data, error: findError } = await admin
+    .from('inquiries')
+    .select('id, user_id')
+    .eq('id', id)
+    .single()
+
+  if (findError || !data) {
+    return NextResponse.json({ error: '문의글을 찾을 수 없습니다.' }, { status: 404 })
+  }
+
+  const isAdmin = role?.toLowerCase() === 'admin'
+  if (!isAdmin && data.user_id !== user.id) {
+    return NextResponse.json({ error: '삭제 권한이 없습니다.' }, { status: 403 })
+  }
+
+  const { error: deleteError } = await admin.from('inquiries').delete().eq('id', id)
+  if (deleteError) {
+    return NextResponse.json({ error: '문의글 삭제에 실패했습니다.' }, { status: 500 })
+  }
+
+  return new NextResponse(null, { status: 204 })
+}
