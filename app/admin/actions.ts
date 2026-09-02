@@ -4,6 +4,7 @@ import { createServiceClient, requireAdmin } from '@/features/auth/lib/server'
 import { z } from 'zod'
 
 const uuidSchema = z.string().uuid()
+const activityIdSchema = z.coerce.number().int().positive()
 const roleSchema = z.enum(['user', 'admin'])
 const nullableText = (max: number) => z.string().trim().max(max).nullable()
 const nullableUrl = z.string().trim().max(2048).url().refine((value) => {
@@ -303,7 +304,7 @@ export async function deleteArchive(id: string): Promise<{ error: string | null 
 // ================================================================
 
 export type ActivityItem = {
-    id: string
+    id: number
     title: string | null
     image_url: string | null
     created_at: string
@@ -352,11 +353,11 @@ export async function createActivity(title: string, imageUrl: string): Promise<{
 }
 
 export async function updateActivity(
-    id: string,
+    id: number,
     payload: { title: string; imageUrl?: string }
 ): Promise<{ error: string | null }> {
     try {
-        const parsedId = uuidSchema.safeParse(id)
+        const parsedId = activityIdSchema.safeParse(id)
         const parsedTitle = activityTitleSchema.safeParse(payload.title)
         const parsedUrl = payload.imageUrl === undefined
             ? { success: true as const, data: undefined }
@@ -387,9 +388,9 @@ export async function updateActivity(
     }
 }
 
-export async function deleteActivity(id: string): Promise<{ error: string | null }> {
+export async function deleteActivity(id: number): Promise<{ error: string | null }> {
     try {
-        const parsedId = uuidSchema.safeParse(id)
+        const parsedId = activityIdSchema.safeParse(id)
         if (!parsedId.success) return { error: '갤러리 식별값이 올바르지 않습니다.' }
         const admin = await getVerifiedAdminClient()
         const { data: current, error: findError } = await admin

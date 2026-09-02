@@ -15,7 +15,7 @@ export default function GalleryUpload() {
     const [title, setTitle] = useState('')
     const [file, setFile] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
-    const [editingId, setEditingId] = useState<string | null>(null)
+    const [editingId, setEditingId] = useState<number | null>(null)
     const [loading, setLoading] = useState(false)
     const [listLoading, setListLoading] = useState(true)
     const [message, setMessage] = useState<string | null>(null)
