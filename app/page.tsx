@@ -1,6 +1,5 @@
 'use client'
 
-import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import GallerySection from '@/features/main/components/GallerySection'
@@ -128,8 +127,7 @@ export default function Home() {
 
   useEffect(() => {
     setIsLoaded(true);
-    fetchLatestPosts();
-    fetchActivities();
+    fetchHomeData();
     const timer = setInterval(() => {
       setLeftIndex((prev) => (prev + 1) % leftFigures.length);
       setRightIndex((prev) => (prev + 1) % rightFigures.length);
@@ -137,50 +135,39 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  const fetchLatestPosts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('archive').select('id, title, category, created_at').order('created_at', { ascending: false }).limit(8)
-      if (error) throw error;
+  const fetchHomeData = async () => {
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 8_000)
 
-      if (data && data.length > 0) {
-        setPosts(data as HomePost[]);
-      } else {
-        // Fallback
-        setPosts([
-          { id: 'fb1', title: '연구소 시스템 점검 또는 데이터가 없습니다.', category: '안내', created_at: new Date().toISOString() }
-        ])
+    try {
+      const response = await fetch('/api/home', {
+        cache: 'no-store',
+        signal: controller.signal,
+      })
+
+      if (!response.ok) throw new Error(`Home data request failed: ${response.status}`)
+
+      const data = await response.json() as {
+        posts?: HomePost[]
+        activities?: HomeActivity[]
       }
+
+      setPosts(data.posts?.length ? data.posts : [
+        { id: 'fb1', title: '연구소 시스템 점검 또는 데이터가 없습니다.', category: '안내', created_at: new Date().toISOString() }
+      ])
+      setActivities(data.activities?.length ? data.activities : [
+        { id: 'fb1', title: '갤러리 등록 예정입니다.', image_url: null, created_at: new Date().toISOString() }
+      ])
     } catch (e) {
-      console.error('[fetchLatestPosts] 예기치 못한 에러:', e)
+      console.error('[fetchHomeData] 예기치 못한 에러:', e)
       setPosts([
-        { id: 'err1', title: '자료 서버에 연결할 수 없습니다. (Fallback)', category: '시스템', created_at: new Date().toISOString() }
+        { id: 'err1', title: '자료 서버에 연결할 수 없습니다.', category: '시스템', created_at: new Date().toISOString() }
       ])
-    }
-  };
-
-  const fetchActivities = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('Activity')
-        .select('id, title, image_url, created_at')
-        .order('created_at', { ascending: false })
-        .limit(8)
-      if (error) throw error;
-
-      if (data && data.length > 0) {
-        setActivities(data);
-      } else {
-        // Fallback
-        setActivities([
-          { id: 'fb1', title: '갤러리 등록 예정입니다.', image_url: null, created_at: new Date().toISOString() }
-        ])
-      }
-    } catch (e) {
-      console.error('[fetchActivities] 예기치 못한 에러:', e)
       setActivities([
-        { id: 'err1', title: '갤러리 서버에 연결할 수 없습니다. (Fallback)', image_url: null, created_at: new Date().toISOString() }
+        { id: 'err1', title: '갤러리 서버에 연결할 수 없습니다.', image_url: null, created_at: new Date().toISOString() }
       ])
+    } finally {
+      window.clearTimeout(timeout)
     }
   };
 
