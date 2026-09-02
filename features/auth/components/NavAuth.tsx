@@ -6,22 +6,13 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function NavAuth() {
-  const { user, isLoading } = useAuth()
+  const { user } = useAuth()
   const router = useRouter()
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/')
     router.refresh()
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center gap-2 md:gap-6">
-        <div className="h-5 w-16 bg-slate-100 animate-pulse rounded"></div>
-        <div className="hidden h-5 w-16 animate-pulse rounded bg-slate-100 md:block"></div>
-      </div>
-    )
   }
 
   if (user) {

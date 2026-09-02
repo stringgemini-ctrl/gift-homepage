@@ -9,10 +9,11 @@ type Activity = {
 
 interface Props {
     activities: Activity[]
+    isLoading: boolean
     onImageClick: (url: string) => void
 }
 
-export default function GallerySection({ activities, onImageClick }: Props) {
+export default function GallerySection({ activities, isLoading, onImageClick }: Props) {
     return (
         <section className="py-32 bg-slate-50 px-8 w-full text-left relative overflow-hidden">
             {/* 상단 섹션과의 연결을 위한 부드러운 그라디언트 */}
@@ -23,7 +24,9 @@ export default function GallerySection({ activities, onImageClick }: Props) {
             <div className="mx-auto max-w-[1200px] relative z-10">
                 <h2 className="text-4xl font-black text-slate-900 mb-16 tracking-tighter drop-shadow-sm">최근 활동 갤러리</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {activities.length > 0 ? (
+                    {isLoading ? (
+                        <div className="col-span-full py-20 text-center text-slate-500 font-medium">활동을 불러오는 중입니다.</div>
+                    ) : activities.length > 0 ? (
                         activities.map((item) => (
                             <div
                                 key={item.id}

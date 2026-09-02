@@ -119,6 +119,7 @@ const fourfoldGospel = [
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isHomeLoading, setIsHomeLoading] = useState(true);
   const [posts, setPosts] = useState<HomePost[]>([]);
   const [activities, setActivities] = useState<HomeActivity[]>([]);
   const [leftIndex, setLeftIndex] = useState(0);
@@ -168,6 +169,7 @@ export default function Home() {
       ])
     } finally {
       window.clearTimeout(timeout)
+      setIsHomeLoading(false)
     }
   };
 
@@ -346,10 +348,14 @@ export default function Home() {
       </section>
 
       {/* 4. 활동 갤러리 */}
-      <GallerySection activities={activities} onImageClick={setSelectedImage} />
+      <GallerySection
+        activities={activities}
+        isLoading={isHomeLoading}
+        onImageClick={setSelectedImage}
+      />
 
       {/* 5. 자료실 */}
-      <ResourceSection posts={posts} />
+      <ResourceSection posts={posts} isLoading={isHomeLoading} />
 
       {/* 6. 푸터 */}
       <footer className="bg-slate-950 pt-24 pb-12 w-full text-left relative z-20 border-t-4 border-slate-800 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]">
