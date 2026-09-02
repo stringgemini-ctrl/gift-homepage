@@ -202,3 +202,103 @@ export async function deleteArchive(id: string): Promise<{ error: string | null 
         return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
     }
 }
+
+// ================================================================
+// 🖼️ 활동 갤러리(Activity) 서버 액션
+// ================================================================
+
+export type ActivityItem = {
+    id: string
+    title: string | null
+    image_url: string | null
+    created_at: string
+}
+
+function getActivityImagePath(imageUrl: string | null): string | null {
+    if (!imageUrl) return null
+
+    try {
+        const url = new URL(imageUrl)
+        const supabaseUrl = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!)
+        const prefix = '/storage/v1/object/public/activity-images/'
+        if (url.origin !== supabaseUrl.origin || !url.pathname.startsWith(prefix)) return null
+        return decodeURIComponent(url.pathname.slice(prefix.length))
+    } catch {
+        return null
+    }
+}
+
+export async function getAllActivities(): Promise<{ data: ActivityItem[] | null; error: string | null }> {
+    try {
+        const admin = await getVerifiedAdminClient()
+        const { data, error } = await admin
+            .from('Activity')
+            .select('id, title, image_url, created_at')
+            .order('created_at', { ascending: false })
+        if (error) return { data: null, error: error.message }
+        return { data, error: null }
+    } catch (e) {
+        return { data: null, error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
+export async function createActivity(title: string, imageUrl: string): Promise<{ error: string | null }> {
+    try {
+        const admin = await getVerifiedAdminClient()
+        const { error } = await admin.from('Activity').insert([{ title, image_url: imageUrl }])
+        if (error) return { error: error.message }
+        return { error: null }
+    } catch (e) {
+        return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
+export async function updateActivity(
+    id: string,
+    payload: { title: string; imageUrl?: string }
+): Promise<{ error: string | null }> {
+    try {
+        const admin = await getVerifiedAdminClient()
+        const { data: current, error: findError } = await admin
+            .from('Activity')
+            .select('image_url')
+            .eq('id', id)
+            .single()
+        if (findError || !current) return { error: '갤러리 항목을 찾을 수 없습니다.' }
+
+        const updates: { title: string; image_url?: string } = { title: payload.title }
+        if (payload.imageUrl) updates.image_url = payload.imageUrl
+
+        const { error } = await admin.from('Activity').update(updates).eq('id', id)
+        if (error) return { error: error.message }
+
+        const oldImagePath = payload.imageUrl ? getActivityImagePath(current.image_url) : null
+        if (oldImagePath) await admin.storage.from('activity-images').remove([oldImagePath])
+
+        return { error: null }
+    } catch (e) {
+        return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
+
+export async function deleteActivity(id: string): Promise<{ error: string | null }> {
+    try {
+        const admin = await getVerifiedAdminClient()
+        const { data: current, error: findError } = await admin
+            .from('Activity')
+            .select('image_url')
+            .eq('id', id)
+            .single()
+        if (findError || !current) return { error: '갤러리 항목을 찾을 수 없습니다.' }
+
+        const { error } = await admin.from('Activity').delete().eq('id', id)
+        if (error) return { error: error.message }
+
+        const imagePath = getActivityImagePath(current.image_url)
+        if (imagePath) await admin.storage.from('activity-images').remove([imagePath])
+
+        return { error: null }
+    } catch (e) {
+        return { error: e instanceof Error ? e.message : '알 수 없는 오류' }
+    }
+}
