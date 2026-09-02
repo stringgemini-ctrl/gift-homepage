@@ -25,7 +25,7 @@ const AuthContext = createContext<AuthContextType>({
 
 const AUTH_REQUEST_TIMEOUT_MS = 8_000
 
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+function withTimeout<T>(promise: PromiseLike<T>, timeoutMs: number): Promise<T> {
     return new Promise((resolve, reject) => {
         const timeout = window.setTimeout(
             () => reject(new Error('Authentication request timed out.')),
