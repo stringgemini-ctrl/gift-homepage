@@ -65,7 +65,22 @@ export default function BookManagement() {
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null
         if (!file) return
-        setCoverPreview(URL.createObjectURL(file))  // 로컈 미리보기
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+        if (!allowedTypes.includes(file.type)) {
+            e.target.value = ''
+            showToast('JPG, PNG, WebP 이미지만 업로드할 수 있습니다.', 'error')
+            return
+        }
+        if (file.size > 10 * 1024 * 1024) {
+            e.target.value = ''
+            showToast('이미지 크기는 10MB 이하여야 합니다.', 'error')
+            return
+        }
+
+        if (coverPreview?.startsWith('blob:')) URL.revokeObjectURL(coverPreview)
+        const localPreview = URL.createObjectURL(file)
+        setCoverPreview(localPreview)
         setUploadStatus('uploading')
         setIsUploading(true)
         try {
@@ -84,6 +99,7 @@ export default function BookManagement() {
                 .getPublicUrl(fileName)
             // 폼 cover_url 상태에 바로 동기화 → 제운시 이 URL을 바로 사용
             setField('cover_url', urlData.publicUrl)
+            URL.revokeObjectURL(localPreview)
             setCoverPreview(urlData.publicUrl)
             setUploadStatus('success')
             showToast('✅ 이미지 업로드 성공!')
@@ -97,6 +113,7 @@ export default function BookManagement() {
 
     // 수정 버튼 클릭 → 폼에 기존값 채워넣기
     const startEdit = (book: Book) => {
+        if (coverPreview?.startsWith('blob:')) URL.revokeObjectURL(coverPreview)
         setEditingId(book.id)
         setForm({
             title: book.title,
@@ -124,6 +141,7 @@ export default function BookManagement() {
     }
 
     const cancelEdit = () => {
+        if (coverPreview?.startsWith('blob:')) URL.revokeObjectURL(coverPreview)
         setEditingId(null)
         setForm(EMPTY_FORM)
         setCoverPreview(null)
@@ -542,7 +560,7 @@ export default function BookManagement() {
                                     <p className="text-[12px] font-bold text-amber-600">업로드 중...</p>
                                 </div>
                             )}
-                            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" disabled={isUploading} />
+                            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileChange} className="hidden" disabled={isUploading} />
                         </label>
 
                         {/* 업로드 상태 메시지 */}

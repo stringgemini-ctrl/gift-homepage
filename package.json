@@ -11,14 +11,15 @@
     "scrape:archive:full": "tsx scripts/archive-crawler.ts"
   },
   "dependencies": {
-    "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.97.0",
-    "axios": "^1.13.6",
+    "axios": "^1.18.0",
     "cheerio": "^1.2.0",
-    "next": "16.1.6",
+    "dompurify": "^3.4.14",
+    "next": "^16.3.4",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,9 +27,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "^16.3.4",
     "tailwindcss": "^4",
-    "tsx": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
   }
 }

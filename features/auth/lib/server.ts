@@ -4,6 +4,20 @@ import { cookies } from 'next/headers'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { createClient, type User } from '@supabase/supabase-js'
 
+export function isSameOriginRequest(request: Request) {
+  const origin = request.headers.get('origin')
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host')
+  const protocol = request.headers.get('x-forwarded-proto') ?? new URL(request.url).protocol.replace(':', '')
+
+  if (!origin || !host) return false
+
+  try {
+    return new URL(origin).origin === `${protocol}://${host}`
+  } catch {
+    return false
+  }
+}
+
 export function createServiceClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY

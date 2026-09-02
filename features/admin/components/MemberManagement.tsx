@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useAuth } from '@/features/auth/components/AuthProvider'
 import { useRouter } from 'next/navigation'
 import { getAllProfiles, updateUserRole, type Profile } from '@/app/admin/actions'
@@ -11,7 +11,16 @@ export default function MemberManagement() {
     const [loading, setLoading] = useState(true)
     const [fetchError, setFetchError] = useState<string | null>(null)
     const [isUpdating, setIsUpdating] = useState<string | null>(null)
+    const [search, setSearch] = useState('')
     const router = useRouter()
+
+    const filteredProfiles = useMemo(() => {
+        const keyword = search.trim().toLowerCase()
+        if (!keyword) return profiles
+        return profiles.filter((profile) =>
+            profile.email?.toLowerCase().includes(keyword) || profile.role?.toLowerCase().includes(keyword)
+        )
+    }, [profiles, search])
 
     const fetchData = useCallback(async () => {
         setLoading(true)
@@ -93,7 +102,7 @@ export default function MemberManagement() {
 
     return (
         <div>
-            <div className="mb-6 flex items-end justify-between">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <p className="text-[11px] font-black text-emerald-500 uppercase tracking-widest mb-1">Member Management</p>
                     <h2 className="text-2xl font-black text-slate-900 tracking-tighter">전체 회원 관리</h2>
@@ -101,15 +110,27 @@ export default function MemberManagement() {
                         총 <span className="text-[#f68d2e] font-black">{profiles.length}</span>명의 회원 권한을 관리합니다.
                     </p>
                 </div>
-                <button
-                    onClick={fetchData}
-                    className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-500 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
-                >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    새로고침
-                </button>
+                <div className="flex w-full gap-2 sm:w-auto">
+                    <label className="relative flex-1 sm:w-64">
+                        <span className="sr-only">회원 검색</span>
+                        <input
+                            type="search"
+                            value={search}
+                            onChange={(event) => setSearch(event.target.value)}
+                            placeholder="이메일 또는 권한 검색"
+                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                        />
+                    </label>
+                    <button
+                        onClick={fetchData}
+                        title="회원 목록 새로고침"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50"
+                    >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-lg shadow-slate-200/40">
@@ -124,7 +145,7 @@ export default function MemberManagement() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50 text-sm">
-                            {profiles.length > 0 ? profiles.map((p) => (
+                            {filteredProfiles.length > 0 ? filteredProfiles.map((p) => (
                                 <tr key={p.id} className="hover:bg-slate-50/60 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
@@ -149,6 +170,8 @@ export default function MemberManagement() {
                                             <select
                                                 value={p.role?.toUpperCase()}
                                                 onChange={(e) => handleRoleChange(p.id, e.target.value)}
+                                                disabled={p.id === user?.id}
+                                                title={p.id === user?.id ? '현재 로그인한 관리자 자신의 권한은 변경할 수 없습니다.' : '회원 권한 변경'}
                                                 className="bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer"
                                             >
                                                 <option value="USER">USER (일반)</option>

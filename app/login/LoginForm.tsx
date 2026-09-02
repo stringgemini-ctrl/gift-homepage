@@ -4,13 +4,14 @@ import { supabase } from '@/features/database/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import OAuthButtons from '@/features/auth/components/OAuthButtons'
+import { getSafeRedirectPath } from '@/features/auth/lib/redirect'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirectTo') || '/archive'
+  const redirectTo = getSafeRedirectPath(searchParams.get('redirectTo'))
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()

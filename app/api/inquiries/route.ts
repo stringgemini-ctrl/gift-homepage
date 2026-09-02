@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server'
-import { createServiceClient, getCurrentUserAndRole } from '@/features/auth/lib/server'
+import { z } from 'zod'
+import { createServiceClient, getCurrentUserAndRole, isSameOriginRequest } from '@/features/auth/lib/server'
+
+const inquirySchema = z.object({
+  title: z.string().trim().min(1).max(100),
+  content: z.string().trim().min(1).max(20_000),
+  isPrivate: z.boolean(),
+}).strict()
 
 type InquiryRow = {
   id: string
@@ -38,11 +45,44 @@ export async function GET() {
       is_private: isPrivate,
       accessible,
       user_id: item.user_id,
-      user_email: item.user_email,
+      user_email: isAdmin || user.id === item.user_id ? item.user_email : '',
       has_answer: Boolean(item.answer),
       created_at: item.created_at,
     }
   })
 
   return NextResponse.json({ inquiries })
+}
+
+export async function POST(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: '허용되지 않은 요청입니다.' }, { status: 403 })
+  }
+
+  const { user } = await getCurrentUserAndRole()
+  if (!user) {
+    return NextResponse.json({ error: '인증 필요' }, { status: 401 })
+  }
+
+  let parsed: z.infer<typeof inquirySchema>
+  try {
+    parsed = inquirySchema.parse(await request.json())
+  } catch {
+    return NextResponse.json({ error: '문의 내용을 확인해 주세요.' }, { status: 400 })
+  }
+
+  const admin = createServiceClient()
+  const { error } = await admin.from('inquiries').insert([{
+    title: parsed.title,
+    content: parsed.content,
+    password: parsed.isPrivate ? 'private' : null,
+    user_id: user.id,
+    user_email: user.email ?? '',
+  }])
+
+  if (error) {
+    return NextResponse.json({ error: '문의 등록에 실패했습니다.' }, { status: 500 })
+  }
+
+  return NextResponse.json({ ok: true }, { status: 201 })
 }

@@ -1,11 +1,18 @@
 "use client"
 
+import DOMPurify from 'dompurify'
+import { useMemo } from 'react'
+
 interface ArchiveViewerProps {
     pdfUrl?: string | null
     content?: string | null
 }
 
 export default function ArchiveViewer({ pdfUrl, content }: ArchiveViewerProps) {
+    const sanitizedContent = useMemo(() => DOMPurify.sanitize(content || '', {
+        FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form'],
+    }), [content])
+
     if (!pdfUrl && !content) {
         return (
             <div
@@ -89,7 +96,7 @@ export default function ArchiveViewer({ pdfUrl, content }: ArchiveViewerProps) {
                     className="p-8 leading-relaxed text-sm md:text-base"
                     style={{ color: "#44403c" }}
                 >
-                    <div dangerouslySetInnerHTML={{ __html: content || "" }} />
+                    <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
                 </div>
             )}
         </div>

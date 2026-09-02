@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
-import { createServiceClient, getCurrentUserAndRole } from '@/features/auth/lib/server'
+import { z } from 'zod'
+import { createServiceClient, getCurrentUserAndRole, isSameOriginRequest } from '@/features/auth/lib/server'
+
+const inquiryIdSchema = z.string().uuid()
 
 type InquiryDetailRow = {
   id: string
@@ -23,6 +26,9 @@ export async function GET(
   }
 
   const { id } = await params
+  if (!inquiryIdSchema.safeParse(id).success) {
+    return NextResponse.json({ error: '문의글을 찾을 수 없습니다.' }, { status: 404 })
+  }
   const admin = createServiceClient()
   const { data, error } = await admin
     .from('inquiries')
@@ -50,7 +56,7 @@ export async function GET(
       content: inquiry.content,
       is_private: isPrivate,
       user_id: inquiry.user_id,
-      user_email: inquiry.user_email,
+      user_email: isAdmin || user.id === inquiry.user_id ? inquiry.user_email : '',
       answer: inquiry.answer,
       answered_at: inquiry.answered_at,
       created_at: inquiry.created_at,
@@ -59,15 +65,22 @@ export async function GET(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: '허용되지 않은 요청입니다.' }, { status: 403 })
+  }
+
   const { user, role } = await getCurrentUserAndRole()
   if (!user) {
     return NextResponse.json({ error: '인증 필요' }, { status: 401 })
   }
 
   const { id } = await params
+  if (!inquiryIdSchema.safeParse(id).success) {
+    return NextResponse.json({ error: '문의글을 찾을 수 없습니다.' }, { status: 404 })
+  }
   const admin = createServiceClient()
   const { data, error: findError } = await admin
     .from('inquiries')

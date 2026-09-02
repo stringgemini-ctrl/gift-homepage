@@ -1,11 +1,23 @@
 import { NextResponse } from 'next/server'
-import { createServiceClient, requireAdmin } from '@/features/auth/lib/server'
+import { z } from 'zod'
+import { createServiceClient, isSameOriginRequest, requireAdmin } from '@/features/auth/lib/server'
+
+const answerSchema = z.object({
+  inquiryId: z.string().uuid(),
+  answer: z.string().trim().min(1).max(20_000),
+}).strict()
 
 export async function POST(request: Request) {
-  const { inquiryId, answer } = await request.json()
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: '허용되지 않은 요청입니다.' }, { status: 403 })
+  }
 
-  if (!inquiryId || !answer) {
-    return NextResponse.json({ error: '필수 항목 누락' }, { status: 400 })
+  let inquiryId: string
+  let answer: string
+  try {
+    ({ inquiryId, answer } = answerSchema.parse(await request.json()))
+  } catch {
+    return NextResponse.json({ error: '답변 내용을 확인해 주세요.' }, { status: 400 })
   }
 
   let user

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/features/database/lib/supabase'
 import { useAuth } from '@/features/auth/components/AuthProvider'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -12,8 +11,7 @@ export default function ContactWritePage() {
 
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [password, setPassword] = useState('')
-  const [usePassword, setUsePassword] = useState(false)
+  const [isPrivate, setIsPrivate] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -24,29 +22,29 @@ export default function ContactWritePage() {
       setError('제목과 내용을 모두 입력해 주세요.')
       return
     }
-    if (usePassword && password.length < 4) {
-      setError('비밀번호는 4자 이상이어야 합니다.')
-      return
-    }
-
     setSubmitting(true)
     setError(null)
 
-    const { error: insertError } = await supabase.from('inquiries').insert([{
-      title: title.trim(),
-      content: content.trim(),
-      password: usePassword ? password : null,
-      user_id: user.id,
-      user_email: user.email ?? '',
-    }])
+    try {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content, isPrivate }),
+      })
 
-    if (insertError) {
-      setError(insertError.message)
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null)
+        setError(payload?.error ?? '문의 등록에 실패했습니다.')
+        return
+      }
+
+      router.push('/contact')
+      router.refresh()
+    } catch {
+      setError('네트워크 연결을 확인한 후 다시 시도해 주세요.')
+    } finally {
       setSubmitting(false)
-      return
     }
-
-    router.push('/contact')
   }
 
   return (
@@ -104,11 +102,8 @@ export default function ContactWritePage() {
                 <div className="relative">
                   <input
                     type="checkbox"
-                    checked={usePassword}
-                    onChange={(e) => {
-                      setUsePassword(e.target.checked)
-                      if (!e.target.checked) setPassword('')
-                    }}
+                    checked={isPrivate}
+                    onChange={(e) => setIsPrivate(e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-10 h-6 bg-slate-200 rounded-full peer-checked:bg-emerald-500 transition-colors" />
@@ -122,22 +117,6 @@ export default function ContactWritePage() {
                 </div>
               </label>
 
-              {usePassword && (
-                <div className="mt-4">
-                  <label className="block text-[13px] font-medium text-slate-600 mb-1.5">
-                    글 비밀번호 (4자 이상)
-                  </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="비밀번호를 설정하세요"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
-                    minLength={4}
-                    autoComplete="off"
-                  />
-                </div>
-              )}
             </div>
 
             {error && (

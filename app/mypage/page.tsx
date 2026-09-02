@@ -278,12 +278,14 @@ export default function MyPage() {
                   <p className="text-[13px] text-slate-400 mb-6">
                     자료실에서 첫 글을 작성해 보세요.
                   </p>
-                  <Link
-                    href="/write"
-                    className="inline-block px-6 py-3 rounded-xl bg-[#0098a6] text-white text-[14px] font-semibold hover:bg-[#007c88] transition-colors"
-                  >
-                    글쓰기
-                  </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/write"
+                      className="inline-block px-6 py-3 rounded-xl bg-[#0098a6] text-white text-[14px] font-semibold hover:bg-[#007c88] transition-colors"
+                    >
+                      글쓰기
+                    </Link>
+                  )}
                 </div>
               )}
             </div>

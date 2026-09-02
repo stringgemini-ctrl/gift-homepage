@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { getSafeRedirectPath } from '@/features/auth/lib/redirect'
 
 /**
  * OAuth 콜백 라우트
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as 'email' | 'recovery' | 'invite' | null
-  const next = searchParams.get('next') || '/archive'
+  const next = getSafeRedirectPath(searchParams.get('next'))
 
   const cookieStore = await cookies()
   const supabase = createServerClient(

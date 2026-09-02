@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const response = await fetch(imageUrl, { next: { revalidate: 86_400 } })
+    const response = await fetch(imageUrl, { cache: 'no-store' })
     const contentType = response.headers.get('content-type')
     if (!response.ok || !contentType?.startsWith('image/')) {
       return new NextResponse('Image is unavailable.', { status: 502 })

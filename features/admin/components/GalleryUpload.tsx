@@ -31,6 +31,7 @@ export default function GalleryUpload() {
     useEffect(() => { void loadItems() }, [loadItems])
 
     const clearForm = () => {
+        if (preview?.startsWith('blob:')) URL.revokeObjectURL(preview)
         setTitle('')
         setFile(null)
         setPreview(null)
@@ -44,8 +45,21 @@ export default function GalleryUpload() {
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selected = event.target.files?.[0] ?? null
+        if (!selected) return
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+        if (!allowedTypes.includes(selected.type)) {
+            event.target.value = ''
+            return showMessage('JPG, PNG, WebP 이미지만 업로드할 수 있습니다.')
+        }
+        if (selected.size > 10 * 1024 * 1024) {
+            event.target.value = ''
+            return showMessage('이미지 크기는 10MB 이하여야 합니다.')
+        }
+
+        if (preview?.startsWith('blob:')) URL.revokeObjectURL(preview)
         setFile(selected)
-        setPreview(selected ? URL.createObjectURL(selected) : null)
+        setPreview(URL.createObjectURL(selected))
     }
 
     const uploadImage = async (selected: File): Promise<string> => {
@@ -84,6 +98,7 @@ export default function GalleryUpload() {
     }
 
     const startEdit = (item: ActivityItem) => {
+        if (preview?.startsWith('blob:')) URL.revokeObjectURL(preview)
         setEditingId(item.id)
         setTitle(item.title ?? '')
         setFile(null)

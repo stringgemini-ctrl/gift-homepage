@@ -39,24 +39,28 @@ export default function ContactDetailPage() {
     if (isAuthLoading) return
 
     async function fetchInquiry() {
-      const res = await fetch(`/api/inquiries/${id}`, { cache: 'no-store' })
-      const payload = await res.json()
+      try {
+        const res = await fetch(`/api/inquiries/${id}`, { cache: 'no-store' })
+        const payload = await res.json()
 
-      if (res.status === 403) {
-        setDenied(true)
-        setLoading(false)
-        return
-      }
+        if (res.status === 403) {
+          setDenied(true)
+          return
+        }
 
-      if (!res.ok || !payload.inquiry) {
+        if (!res.ok || !payload.inquiry) {
+          router.push('/contact')
+          return
+        }
+
+        const data = payload.inquiry as Inquiry
+        setInquiry(data)
+        if (data.answer) setAnswerText(data.answer)
+      } catch {
         router.push('/contact')
-        return
+      } finally {
+        setLoading(false)
       }
-
-      const data = payload.inquiry as Inquiry
-      setInquiry(data)
-      if (data.answer) setAnswerText(data.answer)
-      setLoading(false)
     }
 
     fetchInquiry()
@@ -66,18 +70,25 @@ export default function ContactDetailPage() {
     if (!answerText.trim()) return
     setAnswerSubmitting(true)
 
-    // 관리자 답변은 service role이 필요하므로 서버 액션 사용
-    const res = await fetch('/api/inquiry/answer', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inquiryId: id, answer: answerText.trim() }),
-    })
+    try {
+      const res = await fetch('/api/inquiry/answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inquiryId: id, answer: answerText.trim() }),
+      })
 
-    if (res.ok) {
-      const updated = await res.json()
-      setInquiry((prev) => prev ? { ...prev, answer: updated.answer, answered_at: updated.answered_at } : prev)
+      if (res.ok) {
+        const updated = await res.json()
+        setInquiry((prev) => prev ? { ...prev, answer: updated.answer, answered_at: updated.answered_at } : prev)
+      } else {
+        const payload = await res.json().catch(() => null)
+        alert(payload?.error || '답변 저장에 실패했습니다.')
+      }
+    } catch {
+      alert('네트워크 연결을 확인한 후 다시 시도해 주세요.')
+    } finally {
+      setAnswerSubmitting(false)
     }
-    setAnswerSubmitting(false)
   }
 
   const handleDelete = async () => {

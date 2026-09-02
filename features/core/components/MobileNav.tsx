@@ -31,11 +31,11 @@ export default function MobileNav() {
       </div>
 
       {/* 모바일: 로그인/마이페이지 + 햄버거 */}
-      <div className="flex md:hidden items-center gap-3">
+      <div className="flex shrink-0 items-center gap-1 md:hidden">
         <NavAuth />
         <button
           type="button"
-          className="flex flex-col justify-center items-center w-10 h-10 gap-1.5"
+          className="flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-1.5"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="메뉴 열기"
         >

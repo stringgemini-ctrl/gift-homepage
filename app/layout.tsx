@@ -25,14 +25,14 @@ export default function RootLayout({
         <AuthProvider>
           {/* 상단 헤더: 화면 끝까지 늘어나는 레이아웃 */}
           <nav className="fixed top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-100">
-            <div className="w-full px-10 h-20 flex items-center justify-between">
+            <div className="flex h-20 w-full items-center justify-between px-3 sm:px-6 lg:px-10">
 
               {/* 왼쪽: 로고 영역 */}
-              <div className="flex items-center">
+              <div className="min-w-0 flex items-center">
                 <Link href="/" className="flex items-center gap-3">
                   {/* ⚠️ 로고가 안 보이면 public 폴더의 파일명을 확인해서 수정하세요 (예: logo.png) */}
-                  <img src="/logo.png" alt="GIFT Logo" className="h-10 w-auto" />
-                  <div className="flex flex-col">
+                  <img src="/logo.png" alt="GIFT Logo" className="h-8 w-auto shrink-0 sm:h-10" />
+                  <div className="hidden flex-col sm:flex">
                     <span className="text-xl font-black text-slate-900 leading-none">글로벌사중복음연구소</span>
                     <span className="text-[10px] font-bold text-emerald-600 tracking-tighter uppercase mt-1">Seoul Theological University</span>
                   </div>

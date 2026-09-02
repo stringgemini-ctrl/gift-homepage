@@ -1,40 +1,36 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { supabase } from '@/features/database/lib/supabase'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { User } from '@supabase/supabase-js'
+import { createArchive } from '@/app/admin/actions'
 
 export default function WritePage() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [category, setCategory] = useState('채널소식')
-  const [user, setUser] = useState<User | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        alert('로그인이 필요한 서비스입니다.')
-        router.push('/login')
-      }
-      setUser(user)
-    }
-    getUser()
-  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user) return
+    setIsSubmitting(true)
+    const { error } = await createArchive({
+      title,
+      content,
+      category,
+      author: '관리자',
+      published_date: null,
+      abstract_text: null,
+      pdf_url: null,
+      original_url: null,
+    })
 
-    const { error } = await supabase
-      .from('archive')
-      .insert([{ title, content, category, user_id: user.id, author: '관리자' }])
-
-    if (error) alert('저장 실패: ' + error.message)
-    else {
+    if (error) {
+      alert('저장 실패: ' + error)
+      setIsSubmitting(false)
+    } else {
       alert('저장 완료!')
       router.push('/archive')
+      router.refresh()
     }
   }
 
@@ -50,7 +46,13 @@ export default function WritePage() {
           </select>
           <input type="text" placeholder="제목" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full rounded-lg border p-3" required />
           <textarea placeholder="내용" value={content} onChange={(e) => setContent(e.target.value)} className="h-64 w-full rounded-lg border p-3" required />
-          <button type="submit" className="w-full rounded-lg bg-[#0098a6] py-3 font-bold text-white">저장하기</button>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full rounded-lg bg-[#0098a6] py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isSubmitting ? '저장 중...' : '저장하기'}
+          </button>
         </form>
       </div>
     </div>

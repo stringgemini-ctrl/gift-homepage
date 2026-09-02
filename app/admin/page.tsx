@@ -9,6 +9,7 @@ import MemberManagement from '@/features/admin/components/MemberManagement'
 import GalleryUpload from '@/features/admin/components/GalleryUpload'
 import BookManagement from '@/features/admin/components/BookManagement'
 import ArchiveManagement from '@/features/admin/components/ArchiveManagement'
+import InquiryManagement from '@/features/admin/components/InquiryManagement'
 
 // 사이드바 메뉴 정의
 const NAV_ITEMS = [
@@ -48,6 +49,15 @@ const NAV_ITEMS = [
       </svg>
     ),
   },
+  {
+    id: 'inquiries',
+    label: '문의 관리',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 01-9 9 9.8 9.8 0 01-4-.8L3 21l.8-4A9 9 0 1121 12z" />
+      </svg>
+    ),
+  },
 ] as const
 
 type TabId = typeof NAV_ITEMS[number]['id']
@@ -59,12 +69,12 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20">
-      <div className="max-w-7xl mx-auto flex">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row">
 
         {/* ─── 사이드바 ─── */}
-        <aside className="w-64 shrink-0 min-h-[calc(100vh-80px)] bg-white border-r border-slate-100 flex flex-col pt-8 px-4">
+        <aside className="w-full shrink-0 border-b border-slate-100 bg-white px-4 py-4 lg:min-h-[calc(100vh-80px)] lg:w-64 lg:border-b-0 lg:border-r lg:pt-8">
           {/* 관리자 프로필 영역 */}
-          <div className="mb-8 px-2">
+          <div className="mb-5 hidden px-2 sm:block lg:mb-8">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">ADMIN PANEL</p>
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-black text-sm shrink-0">
@@ -80,17 +90,17 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* 구분선 */}
-          <div className="h-px bg-slate-100 mb-4 mx-2" />
+          <div className="mx-2 mb-4 hidden h-px bg-slate-100 lg:block" />
 
           {/* 내비게이션 메뉴 */}
-          <nav className="flex-1">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-2">관리 메뉴</p>
-            <ul className="space-y-1">
+          <nav className="min-w-0 flex-1 overflow-x-auto">
+            <p className="mb-3 hidden px-2 text-[10px] font-black uppercase tracking-widest text-slate-400 lg:block">관리 메뉴</p>
+            <ul className="flex gap-2 lg:block lg:space-y-1">
               {NAV_ITEMS.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-semibold transition-all ${activeTab === item.id
+                    className={`flex w-full shrink-0 items-center gap-2 rounded-lg px-3 py-2.5 text-[14px] font-semibold transition-all lg:gap-3 ${activeTab === item.id
                       ? 'bg-slate-900 text-white'
                       : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                       }`}
@@ -106,7 +116,7 @@ export default function AdminDashboardPage() {
           </nav>
 
           {/* 하단 링크 */}
-          <div className="mt-auto pb-8 px-2">
+          <div className="mt-auto hidden px-2 pb-8 lg:block">
             <div className="h-px bg-slate-100 mb-4" />
             <Link
               href="/mypage"
@@ -121,11 +131,12 @@ export default function AdminDashboardPage() {
         </aside>
 
         {/* ─── 콘텐츠 영역 ─── */}
-        <main className="flex-1 p-8 min-h-[calc(100vh-80px)]">
+        <main className="min-h-[calc(100vh-80px)] min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
           {activeTab === 'members' && <MemberManagement />}
           {activeTab === 'gallery' && <GalleryUpload />}
           {activeTab === 'books' && <BookManagement />}
           {activeTab === 'archive' && <ArchiveManagement />}
+          {activeTab === 'inquiries' && <InquiryManagement />}
         </main>
 
       </div>

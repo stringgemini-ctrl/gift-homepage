@@ -17,26 +17,26 @@ export default function NavAuth() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 md:gap-6">
         <div className="h-5 w-16 bg-slate-100 animate-pulse rounded"></div>
-        <div className="h-5 w-16 bg-slate-100 animate-pulse rounded"></div>
+        <div className="hidden h-5 w-16 animate-pulse rounded bg-slate-100 md:block"></div>
       </div>
     )
   }
 
   if (user) {
     return (
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 md:gap-6">
         <Link
           href="/mypage"
-          className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors"
+          className="whitespace-nowrap text-[14px] font-bold text-slate-600 transition-colors hover:text-emerald-600 md:text-[15px]"
         >
           마이페이지
         </Link>
         <button
           type="button"
           onClick={handleLogout}
-          className="text-[15px] font-bold text-slate-600 hover:text-emerald-600 transition-colors cursor-pointer"
+          className="hidden cursor-pointer whitespace-nowrap text-[15px] font-bold text-slate-600 transition-colors hover:text-emerald-600 md:inline"
         >
           로그아웃
         </button>
@@ -45,16 +45,16 @@ export default function NavAuth() {
   }
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-2 md:gap-6">
       <Link
         href="/login"
-        className="text-[15px] font-bold text-black hover:text-emerald-600 transition-colors"
+        className="whitespace-nowrap text-[14px] font-bold text-black transition-colors hover:text-emerald-600 md:text-[15px]"
       >
         로그인
       </Link>
       <Link
         href="/signup"
-        className="text-[15px] font-bold text-black hover:text-emerald-600 transition-colors"
+        className="hidden whitespace-nowrap text-[15px] font-bold text-black transition-colors hover:text-emerald-600 md:inline"
       >
         회원가입
       </Link>

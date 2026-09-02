@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '@/features/database/lib/supabase'
+import { getSafeRedirectPath } from '@/features/auth/lib/redirect'
 
 type OAuthProvider = 'google'
 
@@ -13,7 +14,7 @@ export default function OAuthButtons({ redirectTo = '/archive' }: { redirectTo?:
     setError(null)
     try {
       const callbackUrl = new URL('/auth/callback', window.location.origin)
-      callbackUrl.searchParams.set('next', redirectTo)
+      callbackUrl.searchParams.set('next', getSafeRedirectPath(redirectTo))
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {

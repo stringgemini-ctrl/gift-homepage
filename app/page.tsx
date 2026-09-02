@@ -219,15 +219,15 @@ export default function Home() {
         </div>
 
         {/* 중앙 텍스트 */}
-        <div className={`relative z-20 px-5 max-w-[700px] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-black tracking-[0.4em] text-emerald-900 bg-emerald-100/80 border border-emerald-400/40 backdrop-blur-md rounded-full animate-fadeInUp shadow-[0_0_15px_rgba(16,185,129,0.2)]">THE GOOD NEWS</span>
-          <h1 className="text-6xl font-black tracking-tighter text-stone-900 md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_2px_10px_rgba(0,0,0,0.05)]">하나님의 선물 <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]">사중복음</span></h1>
-          <p className="mt-8 text-sm md:text-lg font-bold text-stone-600 tracking-wide animate-fadeInUp uppercase leading-relaxed drop-shadow-sm">
+        <div className={`relative z-20 w-full max-w-[700px] px-4 transition-opacity duration-1000 sm:px-5 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+          <span className="mb-6 inline-block rounded-full border border-emerald-400/40 bg-emerald-100/80 px-4 py-1.5 text-xs font-black tracking-[0.25em] text-emerald-900 shadow-[0_0_15px_rgba(16,185,129,0.2)] backdrop-blur-md animate-fadeInUp sm:tracking-[0.4em]">THE GOOD NEWS</span>
+          <h1 className="text-5xl font-black tracking-normal text-stone-900 sm:text-6xl md:text-8xl leading-[1.1] animate-fadeInUp drop-shadow-[0_2px_10px_rgba(0,0,0,0.05)]">하나님의 선물 <br /><span className="text-glory drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]">사중복음</span></h1>
+          <p className="mt-8 text-xs font-bold uppercase leading-relaxed tracking-normal text-stone-600 drop-shadow-sm animate-fadeInUp sm:text-sm md:text-lg">
             <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">G</span>lobal <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">I</span>nstitute for the <br className="hidden md:block" />
             <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">F</span>ourfold-gospel <span className="text-emerald-700 text-xl md:text-2xl drop-shadow-sm">T</span>heology
           </p>
           <div className="mt-12 animate-fadeInUp">
-            <Link href="/archive" className="inline-block rounded-full bg-[#10b981] px-14 py-6 text-xl font-black text-white hover:scale-105 shadow-[0_8px_30px_rgba(16,185,129,0.4)] transition-all border border-emerald-400/50">연구소 자료실 바로가기</Link>
+            <Link href="/archive" className="inline-block rounded-full border border-emerald-400/50 bg-[#10b981] px-8 py-4 text-base font-black text-white shadow-[0_8px_30px_rgba(16,185,129,0.4)] transition-all hover:scale-105 sm:px-14 sm:py-6 sm:text-xl">연구소 자료실 바로가기</Link>
           </div>
         </div>
 

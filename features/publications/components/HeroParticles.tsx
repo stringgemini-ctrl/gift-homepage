@@ -1,7 +1,5 @@
 'use client'
 
-import { useMemo } from 'react'
-
 type Particle = {
     id: number
     left: string
@@ -17,19 +15,19 @@ const particleValue = (seed: number) => {
     return value - Math.floor(value)
 }
 
-export default function HeroParticles() {
-    const particles = useMemo<Particle[]>(() => {
-        return Array.from({ length: 25 }, (_, i) => ({
-            id: i,
-            left: `${particleValue(i + 1) * 95}%`,
-            bottom: `${particleValue(i + 31) * 70}%`,
-            size: particleValue(i + 61) > 0.6 ? 4 : particleValue(i + 91) > 0.3 ? 3 : 2,
-            delay: `-${particleValue(i + 121) * 20}s`, // 음수 딜레이로 처음부터 화면 곳곳에 애니메이션 진행 상태로 존재하게 함
-            duration: `${8 + particleValue(i + 151) * 6}s`,
-            opacity: particleValue(i + 181) > 0.5 ? 0.9 : 0.6, // 투명도 대폭 증가로 밝기(조도) 상승
-        }))
-    }, [])
+const rounded = (value: number) => Number(value.toFixed(3))
 
+const particles: Particle[] = Array.from({ length: 25 }, (_, i) => ({
+    id: i,
+    left: `${rounded(particleValue(i + 1) * 95)}%`,
+    bottom: `${rounded(particleValue(i + 31) * 70)}%`,
+    size: particleValue(i + 61) > 0.6 ? 4 : particleValue(i + 91) > 0.3 ? 3 : 2,
+    delay: `-${rounded(particleValue(i + 121) * 20)}s`,
+    duration: `${rounded(8 + particleValue(i + 151) * 6)}s`,
+    opacity: particleValue(i + 181) > 0.5 ? 0.9 : 0.6,
+}))
+
+export default function HeroParticles() {
     return (
         <>
             <style>{`
