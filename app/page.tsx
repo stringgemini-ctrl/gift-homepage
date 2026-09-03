@@ -367,8 +367,7 @@ export default function Home() {
               <h2 className="text-2xl font-black text-white mb-6 tracking-tighter drop-shadow-sm">GIFT<span className="text-emerald-500 text-3xl">.</span></h2>
               <p className="text-[11px] font-bold text-slate-500 leading-relaxed">
                 소장: 김성원<br />
-                주소: 경기도 부천시 소사구 호현로 489번길 52, 서울신학대학교 100주년기념관 306호<br />
-                전화: 032-340-9271
+                주소: 경기도 부천시 소사구 호현로 489번길 52, 서울신학대학교 이명직 기념관 404호
               </p>
             </div>
 
