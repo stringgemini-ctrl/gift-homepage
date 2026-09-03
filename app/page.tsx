@@ -250,7 +250,7 @@ export default function Home() {
           <div className="bg-[#0c5c57] border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
             <div className="flex flex-col lg:flex-row items-center gap-16">
               <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
-                <div className="relative w-full max-w-[300px] flex justify-center items-center flex-col">
+                <div className="relative w-full max-w-[440px] flex justify-center items-center flex-col">
                   <img src="/missionary-fourfold-gospel-ministry.jpg" alt="선교적 사중복음 목회 표지" className="w-full h-auto rounded-sm animate-book-float drop-shadow-[0_30px_50px_rgba(0,0,0,0.38)] relative z-10" />
                   <div className="absolute -bottom-10 w-[60%] h-6 bg-black/35 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
                 </div>
@@ -259,10 +259,12 @@ export default function Home() {
                 <span className="text-amber-200 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">New Release</span>
                 <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-6 leading-tight tracking-tighter">선교적 사중복음 목회</h2>
                 <p className="text-emerald-50/90 text-xl leading-relaxed mb-12 font-medium">평신도를 세상 속 사역자로 세우는 훈련 체계</p>
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_1.6fr_1fr] gap-6 border-t border-emerald-200/25 pt-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 border-t border-emerald-200/25 pt-10">
                   <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">장헌익</span></div>
                   <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Editor</span><span className="text-white font-black text-base whitespace-nowrap">글로벌사중복음연구소</span></div>
                   <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">동연</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Publication Date</span><span className="text-white font-black text-lg">2026년 5월</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">182쪽</span></div>
                 </div>
               </div>
             </div>
