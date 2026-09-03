@@ -19,10 +19,18 @@ async function refreshSessionWithTimeout(refresh: Promise<unknown>) {
   }
 }
 
-function setSecurityHeaders(response: NextResponse) {
-  response.headers.set('Content-Security-Policy', "base-uri 'self'; frame-ancestors 'none'; object-src 'none'")
+function setSecurityHeaders(response: NextResponse, allowEmbeddedDocument = false) {
+  // PDF bytes from the authenticated archive endpoint must be embeddable by
+  // the same site's reader. Applying DENY here blocks that iframe before the
+  // browser has a chance to inspect its application/pdf response.
+  response.headers.set(
+    'Content-Security-Policy',
+    allowEmbeddedDocument
+      ? "base-uri 'self'; object-src 'none'"
+      : "base-uri 'self'; frame-ancestors 'none'; object-src 'none'"
+  )
   response.headers.set('X-Content-Type-Options', 'nosniff')
-  response.headers.set('X-Frame-Options', 'DENY')
+  if (!allowEmbeddedDocument) response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
 }
@@ -60,7 +68,7 @@ export async function proxy(request: NextRequest) {
     await refreshSessionWithTimeout(supabase.auth.getUser())
   }
 
-  setSecurityHeaders(supabaseResponse)
+  setSecurityHeaders(supabaseResponse, request.nextUrl.pathname === '/api/archive/file')
 
   return supabaseResponse
 }

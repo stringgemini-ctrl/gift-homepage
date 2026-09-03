@@ -186,7 +186,7 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
 
         {/* PDF 뷰어 */}
         <ArchiveViewer
-          pdfUrl={getProtectedPdfUrl(archive.pdf_url)}
+          pdfUrl={getProtectedPdfUrl(archive.id, archive.pdf_url)}
           content={archive.content}
         />
 
@@ -195,7 +195,7 @@ export default async function ArchiveDetailPage({ params }: PageProps) {
   )
 }
 
-function getProtectedPdfUrl(pdfUrl: string | null): string | null {
+function getProtectedPdfUrl(id: string, pdfUrl: string | null): string | null {
   if (!pdfUrl) return null
 
   try {
@@ -203,9 +203,12 @@ function getProtectedPdfUrl(pdfUrl: string | null): string | null {
     const projectHost = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).hostname
     if (
       url.hostname === projectHost
-      && url.pathname.startsWith('/storage/v1/object/public/archives/')
+      && /^\/storage\/v1\/object\/(?:public|authenticated|sign)\/archives\//.test(url.pathname)
     ) {
-      return `/api/archive/file?src=${encodeURIComponent(pdfUrl)}`
+      // The database record, rather than the client-supplied Storage URL,
+      // is the source of truth. This also works after a public URL becomes
+      // private or a previously stored signed URL expires.
+      return `/api/archive/file?id=${encodeURIComponent(id)}`
     }
   } catch {
     return pdfUrl

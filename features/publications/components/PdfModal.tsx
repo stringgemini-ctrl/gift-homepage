@@ -54,7 +54,7 @@ export default function PdfModal({ pdfUrl, title, onClose }: PdfModalProps) {
       pdfUrl이 없거나 http/https로 시작하지 않으면 iframe 렌더링 자체를 막음.
       브라우저는 빈 src나 상대경로를 현재 페이지 URL로 해석하여 자기 자신을 렌더링.
     */
-    const isSafeUrl = !!pdfUrl && pdfUrl.startsWith('http')
+    const isSafeUrl = /^https?:\/\/.+/.test(pdfUrl)
 
     return (
         <div
@@ -140,22 +140,15 @@ export default function PdfModal({ pdfUrl, title, onClose }: PdfModalProps) {
                     </button>
                 </div>
 
-                {/* PDF 뷰어 — object 태그로 type 강제 명시, contentType 없는 구파일도 렌더링 */}
+                {/* PDF 뷰어: iframe은 Chrome/Safari의 네이티브 PDF 리더를 일관되게 사용한다. */}
                 <div className="flex-1 bg-slate-100">
                     {isSafeUrl ? (
-                        <object
-                            data={`${pdfUrl}#view=FitH`}
-                            type="application/pdf"
+                        <iframe
+                            src={pdfUrl}
                             className="w-full h-full border-none"
                             aria-label={title}
-                        >
-                            {/* object 미지원 브라우저 폴백: embed 태그 */}
-                            <embed
-                                src={`${pdfUrl}#view=FitH`}
-                                type="application/pdf"
-                                className="w-full h-full border-none"
-                            />
-                        </object>
+                            title={`${title} PDF`}
+                        />
                     ) : (
                         /* URL 없거나 비정상일 때: 인셉션 방지 에러 UI */
                         <div className="w-full h-full flex flex-col items-center justify-center gap-4">

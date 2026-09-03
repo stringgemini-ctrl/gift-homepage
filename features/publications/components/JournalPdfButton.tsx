@@ -27,10 +27,13 @@ export default function JournalPdfButton({ pdfUrl, title }: Props) {
       3) 상대경로(pdfs/journal_1.pdf) → Supabase Storage public URL로 변환
     */
     const resolvedUrl = (() => {
-        if (!pdfUrl) return ''
-        if (pdfUrl.startsWith('http://') || pdfUrl.startsWith('https://')) return pdfUrl
+        const source = pdfUrl?.trim()
+        // A placeholder such as "#" must not be appended to the bucket URL:
+        // doing so loads a non-PDF endpoint and leaves the embedded viewer blank.
+        if (!source || source === '#') return ''
+        if (source.startsWith('http://') || source.startsWith('https://')) return source
         // 상대경로 → Supabase Storage journals 버킷 public URL 조립
-        return `${SUPABASE_URL}/storage/v1/object/public/journals/${pdfUrl}`
+        return `${SUPABASE_URL}/storage/v1/object/public/journals/${source.replace(/^\/+/, '')}`
     })()
 
     const handleOpen = (e: React.MouseEvent) => {
@@ -52,9 +55,9 @@ export default function JournalPdfButton({ pdfUrl, title }: Props) {
                 disabled={!resolvedUrl}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-[14px] font-black transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{ background: 'linear-gradient(135deg, #065f46, #059669)', color: '#a7f3d0' }}
-                title={resolvedUrl ? 'PDF 저널 보기' : 'PDF가 등록되지 않았습니다'}
+                title={resolvedUrl ? 'PDF 저널 보기' : '이 저널의 PDF가 아직 등록되지 않았습니다'}
             >
-                <span>📄</span> PDF 저널 보기
+                <span>📄</span> {resolvedUrl ? 'PDF 저널 보기' : 'PDF 준비 중'}
             </button>
 
             {isPdfOpen && resolvedUrl && (
