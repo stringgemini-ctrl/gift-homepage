@@ -249,8 +249,11 @@ export default function Home() {
         <div className="mx-auto max-w-[1300px] relative z-10 space-y-16">
           <div className="bg-[#0c5c57] border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
             <div className="flex flex-col lg:flex-row items-center gap-16">
-              <div className="relative w-full lg:w-1/2 flex justify-center">
-                <img src="/missionary-fourfold-gospel-ministry.jpg" alt="선교적 사중복음 목회 표지" className="w-full max-w-[300px] h-auto rounded-sm shadow-[0_28px_50px_rgba(0,0,0,0.38)]" />
+              <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
+                <div className="relative w-full max-w-[300px] flex justify-center items-center flex-col">
+                  <img src="/missionary-fourfold-gospel-ministry.jpg" alt="선교적 사중복음 목회 표지" className="w-full h-auto rounded-sm animate-book-float drop-shadow-[0_30px_50px_rgba(0,0,0,0.38)] relative z-10" />
+                  <div className="absolute -bottom-10 w-[60%] h-6 bg-black/35 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
+                </div>
               </div>
               <div className="w-full lg:w-1/2 text-left">
                 <span className="text-amber-200 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">New Release</span>
