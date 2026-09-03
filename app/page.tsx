@@ -200,6 +200,11 @@ export default function Home() {
           100% { transform: rotateY(-12deg) rotateX(5deg) translate3d(0, 0, 0); } 
         }
         .animate-book-float { animation: book-float-rotate 3.5s ease-in-out infinite; transform-style: preserve-3d; will-change: transform; }
+        @keyframes missionary-book-float {
+          0%, 100% { transform: translate3d(0, 0, 0) rotateY(-22deg) rotateX(5deg) rotateZ(-1deg); }
+          50% { transform: translate3d(0, -24px, 35px) rotateY(-7deg) rotateX(-2deg) rotateZ(1deg); }
+        }
+        .animate-missionary-book { animation: missionary-book-float 4s ease-in-out infinite; transform-style: preserve-3d; will-change: transform; }
         @keyframes shadow-pulse { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(0.7); opacity: 0.1; } }
         .animate-shadow-pulse { animation: shadow-pulse 3.5s ease-in-out infinite; }
         .text-glory { background: linear-gradient(135deg, #b491ff 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
@@ -249,9 +254,9 @@ export default function Home() {
         <div className="mx-auto max-w-[1300px] relative z-10 space-y-16">
           <div className="bg-[#0c5c57] border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
             <div className="flex flex-col lg:flex-row items-center gap-16">
-              <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
+              <div className="relative w-full lg:w-1/2 flex justify-center perspective-[1200px]">
                 <div className="relative w-full max-w-[440px] flex justify-center items-center flex-col">
-                  <img src="/missionary-fourfold-gospel-ministry.jpg" alt="선교적 사중복음 목회 표지" className="w-full h-auto rounded-sm animate-book-float drop-shadow-[0_30px_50px_rgba(0,0,0,0.38)] relative z-10" />
+                  <img src="/missionary-fourfold-gospel-ministry-3d.jpg" alt="선교적 사중복음 목회 3D 표지" className="w-full h-auto rounded-sm animate-missionary-book drop-shadow-[0_38px_60px_rgba(0,0,0,0.46)] relative z-10" />
                   <div className="absolute -bottom-10 w-[60%] h-6 bg-black/35 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
                 </div>
               </div>
@@ -264,7 +269,7 @@ export default function Home() {
                   <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Editor</span><span className="text-white font-black text-base whitespace-nowrap">글로벌사중복음연구소</span></div>
                   <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">동연</span></div>
                   <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Publication Date</span><span className="text-white font-black text-lg">2026년 5월</span></div>
-                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">182쪽</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">182p</span></div>
                 </div>
               </div>
             </div>
