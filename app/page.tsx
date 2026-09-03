@@ -201,8 +201,8 @@ export default function Home() {
         }
         .animate-book-float { animation: book-float-rotate 3.5s ease-in-out infinite; transform-style: preserve-3d; will-change: transform; }
         @keyframes missionary-book-float {
-          0%, 100% { transform: translate3d(0, 0, 0) rotateY(-22deg) rotateX(5deg) rotateZ(-1deg); }
-          50% { transform: translate3d(0, -24px, 35px) rotateY(-7deg) rotateX(-2deg) rotateZ(1deg); }
+          0%, 100% { transform: translate3d(0, 0, 0) rotateZ(-0.5deg); }
+          50% { transform: translate3d(0, -16px, 0) rotateZ(0.5deg); }
         }
         .animate-missionary-book { animation: missionary-book-float 4s ease-in-out infinite; transform-style: preserve-3d; will-change: transform; }
         @keyframes shadow-pulse { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(0.7); opacity: 0.1; } }
@@ -254,10 +254,10 @@ export default function Home() {
         <div className="mx-auto max-w-[1300px] relative z-10 space-y-16">
           <div className="bg-[#0c5c57] border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
             <div className="flex flex-col lg:flex-row items-center gap-16">
-              <div className="relative w-full lg:w-1/2 flex justify-center perspective-[1200px]">
+              <div className="relative w-full lg:w-1/2 flex justify-center">
                 <div className="relative w-full max-w-[440px] flex justify-center items-center flex-col">
-                  <img src="/missionary-fourfold-gospel-ministry-transparent.png" alt="선교적 사중복음 목회 3D 표지" className="w-full h-auto animate-missionary-book drop-shadow-[0_38px_60px_rgba(0,0,0,0.46)] relative z-10" />
-                  <div className="absolute -bottom-10 w-[60%] h-6 bg-black/35 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
+                  <img src="/missionary-fourfold-gospel-ministry-clean.png" alt="선교적 사중복음 목회 3D 표지" className="w-full h-auto animate-missionary-book drop-shadow-[0_24px_30px_rgba(0,0,0,0.28)] relative z-10" />
+                  <div className="absolute -bottom-4 w-[42%] h-3 bg-black/20 blur-[16px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
                 </div>
               </div>
               <div className="w-full lg:w-1/2 text-left">
