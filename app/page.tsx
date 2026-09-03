@@ -246,26 +246,46 @@ export default function Home() {
       <section className="relative z-20 bg-stone-100/80 pt-56 pb-32 px-8 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-stone-100/80 to-transparent pointer-events-none z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none"></div>
-        <div className="mx-auto max-w-[1300px] relative z-10 bg-emerald-950/60 backdrop-blur-2xl border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all hover:bg-emerald-950/70 hover:shadow-[0_20px_50px_rgba(16,185,129,0.1)]">
-          <div className="flex flex-col lg:flex-row items-center gap-20">
-            <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
-              <div className="relative w-full max-w-[380px] flex justify-center items-center flex-col">
-                <img src="/holyjumpers3d.png" alt="Holy Jumpers 3D" className="w-full h-auto object-contain animate-book-float drop-shadow-[0_30px_50px_rgba(0,0,0,0.25)] relative z-10" />
-                <div className="absolute -bottom-10 w-[60%] h-6 bg-black/30 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
+        <div className="mx-auto max-w-[1300px] relative z-10 space-y-16">
+          <div className="bg-[#0c5c57] border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
+            <div className="flex flex-col lg:flex-row items-center gap-16">
+              <div className="relative w-full lg:w-1/2 flex justify-center">
+                <img src="/missionary-fourfold-gospel-ministry.jpg" alt="선교적 사중복음 목회 표지" className="w-full max-w-[300px] h-auto rounded-sm shadow-[0_28px_50px_rgba(0,0,0,0.38)]" />
+              </div>
+              <div className="w-full lg:w-1/2 text-left">
+                <span className="text-amber-200 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">New Release</span>
+                <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-6 leading-tight tracking-tighter">선교적 사중복음 목회</h2>
+                <p className="text-emerald-50/90 text-xl leading-relaxed mb-12 font-medium">평신도를 세상 속 사역자로 세우는 훈련 체계</p>
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_1.6fr_1fr] gap-6 border-t border-emerald-200/25 pt-10">
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">장헌익</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Editor</span><span className="text-white font-black text-base whitespace-nowrap">글로벌사중복음연구소</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-100/75 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">동연</span></div>
+                </div>
               </div>
             </div>
-            <div className="w-full lg:w-1/2 text-left">
-              <span className="text-emerald-400 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
-              <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-emerald-100/70 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
-              <p className="text-emerald-50/90 text-lg leading-relaxed mb-12 font-medium">
-                윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 &apos;메트로폴리탄교회연합(MCA)&apos;의 역사를 다룬 선구적인 연구서입니다. &apos;점퍼스&apos;라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-emerald-800/50 pt-10">
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">William Kostlevy</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg">김상기, 오주영, 장혜선</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">도서출판 선인</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publication Year</span><span className="text-white font-black text-lg">2025년 2월</span></div>
-                <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">432p</span></div>
+          </div>
+
+          <div className="bg-emerald-950/60 backdrop-blur-2xl border border-white/20 rounded-3xl p-10 md:p-16 shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all hover:bg-emerald-950/70 hover:shadow-[0_20px_50px_rgba(16,185,129,0.1)]">
+            <div className="flex flex-col lg:flex-row items-center gap-20">
+              <div className="relative w-full lg:w-1/2 flex justify-center perspective-[2000px]">
+                <div className="relative w-full max-w-[380px] flex justify-center items-center flex-col">
+                  <img src="/holyjumpers3d.png" alt="Holy Jumpers 3D" className="w-full h-auto object-contain animate-book-float drop-shadow-[0_30px_50px_rgba(0,0,0,0.25)] relative z-10" />
+                  <div className="absolute -bottom-10 w-[60%] h-6 bg-black/30 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
+                </div>
+              </div>
+              <div className="w-full lg:w-1/2 text-left">
+                <span className="text-emerald-400 font-extrabold tracking-[0.4em] text-sm uppercase mb-4 block">GIFT Theology Series No. 11</span>
+                <h2 className="text-5xl md:text-6xl font-black text-white mt-2 mb-8 leading-tight tracking-tighter">홀리 점퍼스 <br /><span className="text-2xl text-emerald-100/70 font-bold tracking-normal">19세기 미국 성결 운동의 역사</span></h2>
+                <p className="text-emerald-50/90 text-lg leading-relaxed mb-12 font-medium">
+                  윌리엄 코슬레비의 『홀리 점퍼스』는 1890년대 초 시카고에서 설립된 급진적 종교 공동체인 &apos;메트로폴리탄교회연합(MCA)&apos;의 역사를 다룬 선구적인 연구서입니다. &apos;점퍼스&apos;라는 명칭은 그들의 역동적인 예배 방식에서 유래했습니다. 본서는 오순절 운동의 기원이 훨씬 더 혁명적이었음을 밝혀내며, 잊힌 성결 운동의 한 페이지를 생생하게 복원해냅니다.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-8 border-t border-emerald-800/50 pt-10">
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Author</span><span className="text-white font-black text-lg">William Kostlevy</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Translators</span><span className="text-white font-black text-lg">김상기, 오주영, 장혜선</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publisher</span><span className="text-white font-black text-lg">도서출판 선인</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Publication Year</span><span className="text-white font-black text-lg">2025년 2월</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1">Pages</span><span className="text-white font-black text-lg">432p</span></div>
+                </div>
               </div>
             </div>
           </div>
