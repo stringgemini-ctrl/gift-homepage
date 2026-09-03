@@ -11,7 +11,7 @@ const greetingContent = {
     "사중복음은 철저한 하나님 나라 중심의 세계관을 보여주며, 예수 그리스도의 십자가 정신과 성령세례를 통해 열려지는 거룩한 삶으로 우리를 이끕니다.",
     "주님의 교회들이 이러한 사중복음의 정신과 그 능력으로 날마다 새로운 존재로 살아 갈 수 있도록 사중복음의 전통과 정신을 연구하기 위하여 태어난 본 연구소가 그 소명을 잘 감당할 수 있도록 기도해주시고 참여해주시면 감사하겠습니다."
   ],
-  director: "글로벌사중복음연구소 소장 이용호"
+  director: "글로벌사중복음연구소 소장 김성원"
 };
 
 const missionData = [
@@ -32,7 +32,7 @@ const bylawsData = [
 ];
 
 const familyData = [
-  { role: '소장 / Director', name: '이용호 교수', bio: '서울신학대학교 전임교수.\n글로벌사중복음연구소(GIFT) 소장.', img: '/director.png?v=2' },
+  { role: '소장 / Director', name: '김성원 교수', bio: '서울신학대학교 전임교수.\n글로벌사중복음연구소(GIFT) 소장.', img: '' },
   { role: '사무국장, 전임연구원 / Chief of Administration, Senior Researcher', name: '장혜선 박사', bio: '서강대학교 생명과학과\n서울신학대학교 신학대학원(M.Div)\n서울신학대학교 대학원(Th.M)\n서울신학대학교 대학원(Ph.D)\n조직신학박사', img: '/jang.png?v=2' },
   { role: '연구원 / Researcher', name: '김상기 박사', bio: '서울신대 신학과(B.A.)\n연세대학교 연합 신학대학원(M.A.)\n연세대학교 대학원 기독교 윤리학(Ph.D)\n센프란시스코 신학교(Cad.D.Min)\n현 갈릴리겨자나무교회 담임목사', img: '/kim.png?v=2', objectPosition: 'object-[40%_center]' },
   { role: '객원연구원 / Visiting Researcher', name: '초빙 예정', bio: '국내외 사중복음 신학 전문가 초빙 예정.', img: '' },

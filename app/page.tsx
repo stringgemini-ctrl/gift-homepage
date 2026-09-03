@@ -365,11 +365,8 @@ export default function Home() {
             {/* 왼쪽: 브랜드 및 정보 */}
             <div className="lg:w-1/3">
               <h2 className="text-2xl font-black text-white mb-6 tracking-tighter drop-shadow-sm">GIFT<span className="text-emerald-500 text-3xl">.</span></h2>
-              <p className="text-sm font-medium text-slate-400 leading-relaxed mb-6">
-                글로벌 사중복음 신학연구소는 성결교회의 핵심적인 네 가지 신학적 기둥인 사중복음의 은혜를 전 세계와 나눕니다.
-              </p>
               <p className="text-[11px] font-bold text-slate-500 leading-relaxed">
-                소장: 이용호<br />
+                소장: 김성원<br />
                 주소: 경기도 부천시 소사구 호현로 489번길 52, 서울신학대학교 100주년기념관 306호<br />
                 전화: 032-340-9271
               </p>

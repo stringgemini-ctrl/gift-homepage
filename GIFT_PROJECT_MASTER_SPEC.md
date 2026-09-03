@@ -11,7 +11,7 @@
 ### 1.1 기관 소개
 - **기관명**: 글로벌사중복음연구소 (GIFT · Global Institute for the Fourfold-Gospel Theology)
 - **모기관**: 기독교대한성결교회 (Korea Evangelical Holiness Church)
-- **소장**: 이용호
+- **소장**: 김성원
 - **주소**: 경기도 부천시 소사구 호현로 489번길 52, 서울신학대학교 100주년기념관 306호
 - **전화**: 032-340-9271
 - **GitHub Repository**: `stringgemini-ctrl/gift-homepage`
