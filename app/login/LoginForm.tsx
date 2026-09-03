@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { supabase } from '@/features/database/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import OAuthButtons from '@/features/auth/components/OAuthButtons'
 import { getSafeRedirectPath } from '@/features/auth/lib/redirect'
 
 export default function LoginForm() {
@@ -27,16 +26,6 @@ export default function LoginForm() {
     <div className="flex min-h-screen items-center justify-center bg-[#f5f5f7]">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm text-center">
         <h1 className="mb-6 text-2xl font-bold text-black text-center">로그인</h1>
-
-        {/* 소셜 로그인 버튼 */}
-        <OAuthButtons redirectTo={redirectTo} />
-
-        {/* 구분선 */}
-        <div className="flex items-center gap-3 my-6">
-          <hr className="flex-1 border-slate-200" />
-          <span className="text-xs text-black whitespace-nowrap">또는 이메일로 계속하기</span>
-          <hr className="flex-1 border-slate-200" />
-        </div>
 
         {/* 이메일/비밀번호 폼 */}
         <form onSubmit={handleLogin} className="space-y-4 text-left">

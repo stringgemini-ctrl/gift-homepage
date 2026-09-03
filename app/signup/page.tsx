@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { supabase } from '@/features/database/lib/supabase'
 import Link from 'next/link'
-import OAuthButtons from '@/features/auth/components/OAuthButtons'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -16,9 +15,6 @@ export default function SignupPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/`,
-      },
     })
     if (error) {
       setError(error.message)
@@ -31,16 +27,10 @@ export default function SignupPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f5f5f7]">
         <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm text-center space-y-4">
-          <div className="text-5xl">📬</div>
-          <h1 className="text-2xl font-bold">이메일을 확인해 주세요</h1>
-          <p className="text-slate-500 text-sm">
-            <span className="font-semibold text-black">{email}</span>으로 인증 링크를 보냈습니다.
-            <br />
-            링크를 클릭하면 가입이 완료됩니다.
-          </p>
-          <p className="text-xs text-slate-400">스팸 폴더도 확인해 보세요.</p>
-          <Link href="/login" className="inline-block mt-4 text-sm font-bold text-[#0098a6] hover:underline">
-            로그인 페이지로 이동
+          <h1 className="text-2xl font-bold">회원가입이 완료되었습니다</h1>
+          <p className="text-slate-500 text-sm">입력하신 이메일과 비밀번호로 서비스를 이용하실 수 있습니다.</p>
+          <Link href="/" className="inline-block mt-4 text-sm font-bold text-[#0098a6] hover:underline">
+            홈으로 이동
           </Link>
         </div>
       </div>
@@ -51,16 +41,6 @@ export default function SignupPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#f5f5f7]">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm text-center">
         <h1 className="mb-6 text-2xl font-bold text-black text-center">연구소 회원가입</h1>
-
-        {/* 소셜 로그인 버튼 */}
-        <OAuthButtons />
-
-        {/* 구분선 */}
-        <div className="flex items-center gap-3 my-6">
-          <hr className="flex-1 border-slate-200" />
-          <span className="text-xs text-black whitespace-nowrap">또는 이메일로 계속하기</span>
-          <hr className="flex-1 border-slate-200" />
-        </div>
 
         {/* 이메일/비밀번호 폼 */}
         <form onSubmit={handleSignup} className="space-y-4 text-left">
