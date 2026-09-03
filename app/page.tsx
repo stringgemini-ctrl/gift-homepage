@@ -256,7 +256,7 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row items-center gap-16">
               <div className="relative w-full lg:w-1/2 flex justify-center perspective-[1200px]">
                 <div className="relative w-full max-w-[440px] flex justify-center items-center flex-col">
-                  <img src="/missionary-fourfold-gospel-ministry-3d.jpg" alt="선교적 사중복음 목회 3D 표지" className="w-full h-auto rounded-sm animate-missionary-book drop-shadow-[0_38px_60px_rgba(0,0,0,0.46)] relative z-10" />
+                  <img src="/missionary-fourfold-gospel-ministry-transparent.png" alt="선교적 사중복음 목회 3D 표지" className="w-full h-auto animate-missionary-book drop-shadow-[0_38px_60px_rgba(0,0,0,0.46)] relative z-10" />
                   <div className="absolute -bottom-10 w-[60%] h-6 bg-black/35 blur-[20px] rounded-[100%] animate-shadow-pulse pointer-events-none"></div>
                 </div>
               </div>
